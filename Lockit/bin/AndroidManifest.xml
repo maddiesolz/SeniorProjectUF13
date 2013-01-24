@@ -46,6 +46,14 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="amazenite.Lockit" />
         </activity>
+        <activity
+            android:name="amazenite.lockit.OpenImages"
+            android:label="@string/title_activity_open_images"
+            android:parentActivityName="amazenite.Lockit" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="amazenite.Lockit" />
+        </activity>
     </application>
 
 </manifest>

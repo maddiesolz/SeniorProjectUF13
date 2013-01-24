@@ -11,7 +11,7 @@
     <string name="title_activity_set__pic">Set_Pic</string>
     <string name="title_activity_set_pic">SetPic</string>
     <string name="edit_message">Enter a message</string>
-    <string name="button_send">Send</string>
-
+    <string name="dummy">Select Pic</string>
+    <string name="title_activity_open_images">OpenImages</string>
 
 </resources>

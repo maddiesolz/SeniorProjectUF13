@@ -20,6 +20,15 @@ import android.widget.TextView;
 
 public class Lockit extends FragmentActivity implements ActionBar.TabListener {
 
+	
+	/** Called when the user clicks the get image button */
+	public void viewImages(View view) {
+	    // Do something in response to button
+		Intent intent = new Intent(this, OpenImages.class);
+		startActivity(intent);
+		
+	}
+	
 	/**
 	 * The serialization (saved instance state) Bundle key representing the
 	 * current tab position.
@@ -118,7 +127,7 @@ public class Lockit extends FragmentActivity implements ActionBar.TabListener {
 			textView.setGravity(Gravity.CENTER);
 			if(getArguments().getInt(ARG_SECTION_NUMBER) == 1)
 			{
-			return inflater.inflate(R.layout.sample, container, false);
+			return inflater.inflate(R.layout.set_picture, container, false);
 			}
 			if(getArguments().getInt(ARG_SECTION_NUMBER) == 2)
 			{
