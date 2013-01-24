@@ -14,7 +14,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.TabHost;
 import android.widget.TextView;
 
 
@@ -39,7 +38,7 @@ public class Lockit extends FragmentActivity implements ActionBar.TabListener {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_lockit);
-		
+
 		// Set up the action bar to show tabs.
 		final ActionBar actionBar = getActionBar();
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
@@ -51,7 +50,6 @@ public class Lockit extends FragmentActivity implements ActionBar.TabListener {
 				.setTabListener(this));
 		actionBar.addTab(actionBar.newTab().setText(R.string.title_section3)
 				.setTabListener(this));
-	
 	}
 
 	@Override
@@ -97,6 +95,7 @@ public class Lockit extends FragmentActivity implements ActionBar.TabListener {
 			FragmentTransaction fragmentTransaction) {
 	}
 	
+
 
 	@Override
 	public void onTabReselected(ActionBar.Tab tab,
