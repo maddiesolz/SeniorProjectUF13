@@ -1,6 +1,12 @@
 package amazenite.lockit;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Vector;
+
 import android.content.Context;
+import android.graphics.drawable.Drawable;
+import android.os.Environment;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -8,14 +14,52 @@ import android.widget.GridView;
 import android.widget.ImageView;
 
 public class ImageAdapter extends BaseAdapter {
-    private Context mContext;
+    private Context context;
+    private Vector<ImageView> SDCardImages;
+    boolean empty = false;
 
     public ImageAdapter(Context c) {
-        mContext = c;
+        context = c;
+        SDCardImages = new Vector<ImageView>();
+        loadImages();
     }
 
+    public void loadImages()
+    {
+    	ArrayList<Integer> picID = new ArrayList<Integer>();
+    	int picNum = 0;
+    	File picFolder = new File(Environment.getExternalStorageDirectory().getPath() + "/DCIM/100MEDIA");
+    	if (!picFolder.exists())
+        {
+    		empty = true;
+        }
+    	else
+    	{
+	    	File[] folderPics = picFolder.listFiles();
+	    	for(File singleFile : folderPics)
+	    	{
+	    		 ImageView myImageView = new ImageView(context);
+	    		 myImageView.setImageDrawable(Drawable.createFromPath(singleFile.getAbsolutePath()));
+	    		 myImageView.setId(picNum);
+	    		 picNum++;
+	    		 picID.add(myImageView.getId());
+	    		 SDCardImages.add(myImageView);
+	    	}
+    	}
+    	
+    }
+    
     public int getCount() {
-        return mThumbIds.length;
+    	int num = 0;
+    	if(empty)
+    	{
+    		num= mThumbIds.length;
+    	}
+    	else
+    	{
+    		num= SDCardImages.capacity();
+    	}
+    	return num;
     }
 
     public Object getItem(int position) {
@@ -30,15 +74,22 @@ public class ImageAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         ImageView imageView;
         if (convertView == null) {  // if it's not recycled, initialize some attributes
-            imageView = new ImageView(mContext);
+            imageView = new ImageView(context);
             imageView.setLayoutParams(new GridView.LayoutParams(85, 85));
             imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-            imageView.setPadding(8, 8, 8, 8);
+            imageView.setPadding(4, 4, 4, 4);
         } else {
             imageView = (ImageView) convertView;
         }
-
-        imageView.setImageResource(mThumbIds[position]);
+        if(empty)
+        {
+        	imageView.setImageResource(mThumbIds[position]);
+        }
+        else
+        {
+        	imageView.setImageDrawable(SDCardImages.get(position).getDrawable());
+        }
+        
         return imageView;
     }
 
