@@ -34,23 +34,25 @@ public final class R {
         public static final int progress_horizontal_lockit_theme=0x7f02000b;
         public static final int progress_primary_lockit_theme=0x7f02000c;
         public static final int progress_secondary_lockit_theme=0x7f02000d;
-        public static final int selectable_background_lockit_theme=0x7f02000e;
-        public static final int spinner_ab_default_lockit_theme=0x7f02000f;
-        public static final int spinner_ab_disabled_lockit_theme=0x7f020010;
-        public static final int spinner_ab_focused_lockit_theme=0x7f020011;
-        public static final int spinner_ab_pressed_lockit_theme=0x7f020012;
-        public static final int spinner_background_ab_lockit_theme=0x7f020013;
-        public static final int tab_indicator_ab_lockit_theme=0x7f020014;
-        public static final int tab_selected_focused_lockit_theme=0x7f020015;
-        public static final int tab_selected_lockit_theme=0x7f020016;
-        public static final int tab_selected_pressed_lockit_theme=0x7f020017;
-        public static final int tab_unselected_focused_lockit_theme=0x7f020018;
-        public static final int tab_unselected_pressed_lockit_theme=0x7f020019;
+        public static final int rainbow=0x7f02000e;
+        public static final int selectable_background_lockit_theme=0x7f02000f;
+        public static final int spinner_ab_default_lockit_theme=0x7f020010;
+        public static final int spinner_ab_disabled_lockit_theme=0x7f020011;
+        public static final int spinner_ab_focused_lockit_theme=0x7f020012;
+        public static final int spinner_ab_pressed_lockit_theme=0x7f020013;
+        public static final int spinner_background_ab_lockit_theme=0x7f020014;
+        public static final int tab_indicator_ab_lockit_theme=0x7f020015;
+        public static final int tab_selected_focused_lockit_theme=0x7f020016;
+        public static final int tab_selected_lockit_theme=0x7f020017;
+        public static final int tab_selected_pressed_lockit_theme=0x7f020018;
+        public static final int tab_unselected_focused_lockit_theme=0x7f020019;
+        public static final int tab_unselected_pressed_lockit_theme=0x7f02001a;
     }
     public static final class id {
+        public static final int GridView1=0x7f0a0001;
         public static final int container=0x7f0a0000;
-        public static final int imageButton1=0x7f0a0001;
-        public static final int menu_settings=0x7f0a0002;
+        public static final int imageButton1=0x7f0a0002;
+        public static final int menu_settings=0x7f0a0003;
     }
     public static final class layout {
         public static final int activity_lockit=0x7f030000;
@@ -61,8 +63,6 @@ public final class R {
     public static final class menu {
         public static final int activity_lockit=0x7f090000;
         public static final int activity_open_images=0x7f090001;
-        public static final int activity_set__pic=0x7f090002;
-        public static final int activity_set_pic=0x7f090003;
     }
     public static final class string {
         /**  App Label On Top 
