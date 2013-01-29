@@ -83,7 +83,7 @@ public class ImageAdapter extends BaseAdapter {
 	    	{
 		    	String name = "";		    	
 		    	//for(File singleFile : folderPics)
-		    	for(int i = 50*pageNumber; i < 50*pageNumber+50; i++)
+		    	for(int i = 2*pageNumber; i < 2*pageNumber+2; i++)
 		    	{
 		    		File singleFile = folderPics[i];
 		    		name = singleFile.getName();
@@ -110,6 +110,11 @@ public class ImageAdapter extends BaseAdapter {
 	    	}
     	}
     	
+    }
+    
+    public Vector<String> getFiles()
+    {
+    	return SDCardImages;   	
     }
     
     public int getCount() {
