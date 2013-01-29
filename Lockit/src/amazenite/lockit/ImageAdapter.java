@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.Vector;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.os.Environment;
 import android.view.View;
@@ -15,20 +17,52 @@ import android.widget.ImageView;
 
 public class ImageAdapter extends BaseAdapter {
     private Context context;
-    private Vector<ImageView> SDCardImages;
+    //private Vector<ImageView> SDCardImages;
+    private Vector<String> SDCardImages;
     boolean empty = false;
 
     public ImageAdapter(Context c) {
         context = c;
-        SDCardImages = new Vector<ImageView>();
+        //SDCardImages = new Vector<ImageView>();
+        SDCardImages = new Vector<String>();
         loadImages();
+    }
+    
+    public static Bitmap decodeSampledBitmapFromFile(String imagePath, int reqWidth, int reqHeight) {
+
+        // First decode with inJustDecodeBounds=true to check dimensions
+        final BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+        BitmapFactory.decodeFile(imagePath, options);
+
+        // Calculate inSampleSize
+        options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
+
+        // Decode bitmap with inSampleSize set
+        options.inJustDecodeBounds = false;
+        return BitmapFactory.decodeFile(imagePath, options);
+    }
+        public static int calculateInSampleSize(BitmapFactory.Options options, int reqWidth, int reqHeight) {
+        // Raw height and width of image
+        final int height = options.outHeight;
+        final int width = options.outWidth;
+        int inSampleSize = 1;
+
+        if (height > reqHeight || width > reqWidth) {
+            if (width > height) {
+                inSampleSize = Math.round((float)height / (float)reqHeight);
+            } else {
+                inSampleSize = Math.round((float)width / (float)reqWidth);
+            }
+        }
+        return inSampleSize;
     }
 
     public void loadImages()
     {
     	ArrayList<Integer> picID = new ArrayList<Integer>();
     	int picNum = 0;
-    	File picFolder = new File(Environment.getExternalStorageDirectory().getPath());
+    	File picFolder = new File(Environment.getExternalStorageDirectory().getPath() + "/DCIM/100MEDIA/");
     	if (!picFolder.exists())
         {
     		empty = true;
@@ -42,14 +76,20 @@ public class ImageAdapter extends BaseAdapter {
 		    	for(File singleFile : folderPics)
 		    	{
 		    		 name = singleFile.getName();
+		    		 
 		    		 if(name.endsWith(".jpg") || name.endsWith(".png") || name.endsWith(".gif"))
 		    		 {
+		    			 /*
 			    		 ImageView myImageView = new ImageView(context);
 			    		 myImageView.setImageDrawable(Drawable.createFromPath(singleFile.getAbsolutePath()));
 			    		 myImageView.setId(picNum);
 			    		 picNum++;
 			    		 picID.add(myImageView.getId());
-			    		 SDCardImages.add(myImageView);
+			    		 myImageView.setImageBitmap(decodeSampledBitmapFromFile(singleFile.getAbsolutePath(), 500, 500));
+			    		 */		    			 
+			    		 //SDCardImages.add(myImageView);
+		    			 String path = singleFile.getAbsolutePath();
+		    			 SDCardImages.add(path);
 		    		 }
 		    	}
 	    	}
@@ -99,7 +139,8 @@ public class ImageAdapter extends BaseAdapter {
         }
         else
         {
-        	imageView.setImageDrawable(SDCardImages.get(position).getDrawable());
+        	//imageView.setImageDrawable(SDCardImages.get(position).getDrawable());
+        	imageView.setImageBitmap(decodeSampledBitmapFromFile(SDCardImages.get(position), 500, 500));
         }
         
         return imageView;
