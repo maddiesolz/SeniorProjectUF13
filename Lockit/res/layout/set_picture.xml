@@ -3,15 +3,16 @@
     android:layout_height="match_parent" >
     
 <!-- The method to be called on click is called viewImages -->
+
     <ImageButton
         android:id="@+id/imageButton1"
-        android:onClick="viewImages" 
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         android:layout_marginLeft="16dp"
         android:layout_marginTop="20dp"
+        android:onClick="viewImages"
         android:src="@drawable/ic_setpic" />
 
 </RelativeLayout>

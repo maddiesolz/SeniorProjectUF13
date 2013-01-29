@@ -4,20 +4,19 @@ import android.os.Build;
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Context;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
+import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.BaseAdapter;
 import android.widget.GridView;
-import android.widget.ImageView;
+import android.widget.ImageButton;
 import android.widget.Toast;
-import android.support.v4.app.NavUtils;
 
 public class OpenImages extends Activity {
-
+private int pageNumber = 0;
+private Context c;
+	
 	    @Override
 	    protected void onCreate(Bundle savedInstanceState) {
 	        super.onCreate(savedInstanceState);
@@ -29,8 +28,9 @@ public class OpenImages extends Activity {
 	            getActionBar().setDisplayHomeAsUpEnabled(true);
 	        }
 	        
-	        GridView gridview = (GridView) findViewById(R.id.GridView1);
-	        gridview.setAdapter(new ImageAdapter(this));
+	        final GridView gridview = (GridView) findViewById(R.id.GridView1);
+	        final ImageAdapter imageAdapt = new ImageAdapter(this, pageNumber);
+	        gridview.setAdapter(imageAdapt);
 
 	        gridview.setOnItemClickListener(new OnItemClickListener() {
 	            public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
@@ -42,7 +42,16 @@ public class OpenImages extends Activity {
 	                finish();
 	            }
 	        });
-	    }	   
+	        
+	        ImageButton b = (ImageButton) findViewById(R.id.moreImagesButton);
+	        b.setOnClickListener(new OnClickListener(){
+				@Override
+				public void onClick(View v) {
+					imageAdapt.changePage();
+					gridview.invalidateViews();
+				}
+	        });	  
+	    }
 	    
 	    public boolean onOptionsItemSelected(MenuItem item) {
 	        switch (item.getItemId()) {

@@ -7,7 +7,6 @@ import java.util.Vector;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.Drawable;
 import android.os.Environment;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,13 +18,15 @@ public class ImageAdapter extends BaseAdapter {
     private Context context;
     //private Vector<ImageView> SDCardImages;
     private Vector<String> SDCardImages;
-    boolean empty = false;
-
-    public ImageAdapter(Context c) {
+    private boolean empty = false;
+    private int pageNumber;
+    
+    public ImageAdapter(Context c, int pageNumber) {
         context = c;
         //SDCardImages = new Vector<ImageView>();
-        SDCardImages = new Vector<String>();
-        loadImages();
+        
+        this.pageNumber = pageNumber;
+        loadImages(pageNumber);
     }
     
     public static Bitmap decodeSampledBitmapFromFile(String imagePath, int reqWidth, int reqHeight) {
@@ -57,9 +58,16 @@ public class ImageAdapter extends BaseAdapter {
         }
         return inSampleSize;
     }
-
-    public void loadImages()
+        
+    public void changePage()
     {
+    	pageNumber++;
+    	loadImages(pageNumber);
+    }
+        
+    public void loadImages(int pageNumber)
+    {
+    	SDCardImages = new Vector<String>();
     	ArrayList<Integer> picID = new ArrayList<Integer>();
     	int picNum = 0;
     	File picFolder = new File(Environment.getExternalStorageDirectory().getPath() + "/DCIM/100MEDIA/");
@@ -70,12 +78,15 @@ public class ImageAdapter extends BaseAdapter {
     	else
     	{
 	    	File[] folderPics = picFolder.listFiles();
+	    	int totalNumberFiles = folderPics.length;
 	    	if(folderPics != null)
 	    	{
-		    	String name = "";
-		    	for(File singleFile : folderPics)
+		    	String name = "";		    	
+		    	//for(File singleFile : folderPics)
+		    	for(int i = 50*pageNumber; i < 50*pageNumber+50; i++)
 		    	{
-		    		 name = singleFile.getName();
+		    		File singleFile = folderPics[i];
+		    		name = singleFile.getName();
 		    		 
 		    		 if(name.endsWith(".jpg") || name.endsWith(".png") || name.endsWith(".gif"))
 		    		 {

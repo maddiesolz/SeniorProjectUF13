@@ -16,5 +16,6 @@
       
   <!-- Label For Open Image Page -->     
     <string name="title_activity_open_images">Select an Image</string>
+    <string name="load_more_images">Load More Images</string>
 
 </resources>
