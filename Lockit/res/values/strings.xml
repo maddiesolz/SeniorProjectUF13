@@ -18,6 +18,6 @@
     <string name="load_more_images">Load More Images</string>
     <string name="image_location"></string>
     <string name="hello_world">Hello world!</string>
-    <string name="title_activity_image_option_screen">ImageOptionScreen</string>
+    <string name="title_activity_image_option_screen">Image-Lock Options</string>
 
 </resources>

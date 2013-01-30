@@ -31,7 +31,6 @@ public class Lockit extends FragmentActivity implements ActionBar.TabListener {
 	    // Do something in response to button
 		Intent intent = new Intent(this, OpenImages.class);
 		startActivity(intent);
-		
 	}
 	
 	/**

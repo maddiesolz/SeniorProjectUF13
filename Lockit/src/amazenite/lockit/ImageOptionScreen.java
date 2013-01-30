@@ -1,7 +1,12 @@
 package amazenite.lockit;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+
 import android.os.Bundle;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.view.Menu;
@@ -30,26 +35,68 @@ public class ImageOptionScreen extends Activity {
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 		
 		
-        // Get the path from the intent
+        /*******************************
+         * Get the path from the intent
+         * *****************************/
 		Intent getPath = getIntent();
         String imagePath = getPath.getStringExtra(OpenImages.PIC_PATH);       
         
+        /*******************************
+         * Create Preview Image
+         * *****************************/
         ImageView img = (ImageView) findViewById(R.id.preview);
         
         if(img == null){
         	Toast.makeText(ImageOptionScreen.this, "" + "NULL!!", Toast.LENGTH_SHORT).show();
-
         }
         else{
-        
         Drawable d = Drawable.createFromPath(imagePath);
-
+        
         if (d!=null)
         {
         img.setImageResource(0);
         img.setImageDrawable(d);	                	
         	Toast.makeText(ImageOptionScreen.this, "" + "Not Null", Toast.LENGTH_SHORT).show();
         }
+        
+        /*******************************
+         * Save Image in Internal Storage
+         * *****************************/
+        String FILENAME = "lockimg";
+        if(imagePath.endsWith(".jpg")){
+        	FILENAME = "lockimg.jpg";
+        	
+        }
+        else if (imagePath.endsWith(".png")){
+        	FILENAME = "lockimg.png";
+        }
+        else if (imagePath.endsWith(".gif")){
+        	FILENAME = "lockimg.gif";
+        }
+        else{
+        	Toast.makeText(ImageOptionScreen.this, "" + "Invalid image file extension", Toast.LENGTH_SHORT).show();
+        }
+        String file = imagePath;
+
+        FileOutputStream fos;
+		try {
+			fos = openFileOutput(FILENAME, Context.MODE_PRIVATE);
+			try {
+				fos.write(file.getBytes());
+				   fos.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		 
+		} catch (FileNotFoundException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		String test[] =  fileList();  //generates a list of files saved in internal storage for testing
+    	Toast.makeText(ImageOptionScreen.this, "" + test[0], Toast.LENGTH_SHORT).show();
+
+
         }
         
        
