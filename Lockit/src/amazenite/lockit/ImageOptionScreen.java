@@ -1,5 +1,7 @@
 package amazenite.lockit;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -8,6 +10,9 @@ import android.os.Bundle;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Bitmap.CompressFormat;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -51,7 +56,7 @@ public class ImageOptionScreen extends Activity {
         }
         else{
         Drawable d = Drawable.createFromPath(imagePath);
-        
+        Bitmap b = BitmapFactory.decodeFile(imagePath);
         if (d!=null)
         {
         img.setImageResource(0);
@@ -65,7 +70,6 @@ public class ImageOptionScreen extends Activity {
         String FILENAME = "lockimg";
         if(imagePath.endsWith(".jpg")){
         	FILENAME = "lockimg.jpg";
-        	
         }
         else if (imagePath.endsWith(".png")){
         	FILENAME = "lockimg.png";
@@ -76,30 +80,19 @@ public class ImageOptionScreen extends Activity {
         else{
         	Toast.makeText(ImageOptionScreen.this, "" + "Invalid image file extension", Toast.LENGTH_SHORT).show();
         }
-        String file = imagePath;
 
         FileOutputStream fos;
 		try {
 			fos = openFileOutput(FILENAME, Context.MODE_PRIVATE);
-			try {
-				fos.write(file.getBytes());
-				   fos.close();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		 
+			b.compress(CompressFormat.PNG, 90, fos); 
 		} catch (FileNotFoundException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-		String test[] =  fileList();  //generates a list of files saved in internal storage for testing
-    	Toast.makeText(ImageOptionScreen.this, "" + test[0], Toast.LENGTH_SHORT).show();
-
 
         }
         
-       
+    
 		
 	}
 
