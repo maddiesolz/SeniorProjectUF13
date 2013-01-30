@@ -1,8 +1,14 @@
 package amazenite.lockit;
 
+import java.io.File;
+
 import android.app.ActionBar;
 import android.app.FragmentTransaction;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -11,11 +17,14 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 public class Lockit extends FragmentActivity implements ActionBar.TabListener {
 
+	
 	
 	/** Called when the user clicks the get image button */
 	public void viewImages(View view) {
@@ -47,6 +56,7 @@ public class Lockit extends FragmentActivity implements ActionBar.TabListener {
 				.setTabListener(this));
 		actionBar.addTab(actionBar.newTab().setText(R.string.title_section3)
 				.setTabListener(this));
+  
 	}
 
 	@Override
@@ -108,6 +118,7 @@ public class Lockit extends FragmentActivity implements ActionBar.TabListener {
 		 * The fragment argument representing the section number for this
 		 * fragment.
 		 */
+		
 		public static final String ARG_SECTION_NUMBER = "section_number";
 
 		public SectionFragment() {
@@ -119,11 +130,15 @@ public class Lockit extends FragmentActivity implements ActionBar.TabListener {
 				Bundle savedInstanceState) {
 			// Create a new TextView and set its text to the fragment's section
 			// number argument value.
+
+			
+			
 			TextView textView = new TextView(getActivity());
 			textView.setGravity(Gravity.CENTER);
 			if(getArguments().getInt(ARG_SECTION_NUMBER) == 1)
-			{
-			return inflater.inflate(R.layout.set_picture, container, false);
+			{	
+			return inflater.inflate(R.layout.activity_image_option_screen, container, false);
+		      
 			}
 			if(getArguments().getInt(ARG_SECTION_NUMBER) == 2)
 			{
