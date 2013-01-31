@@ -1,4 +1,4 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/container"
     android:layout_width="match_parent"
@@ -6,6 +6,42 @@
     tools:context=".Lockit"
     tools:ignore="MergeRootFrame" >
 
+    <ImageButton
+        android:id="@+id/VoiceSettings"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignTop="@+id/PictureSettings"
+        android:layout_marginRight="60dp"
+        android:onClick="voiceSettings"
+        android:src="@drawable/ic_launcher" />
 
-    
-    </FrameLayout>
+    <ImageButton
+        android:id="@+id/PictureSettings"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="15dp"
+        android:layout_toRightOf="@+id/ChoosePicture"
+        android:onClick="pictureSettings"
+        android:src="@drawable/ic_launcher" />
+
+    <ImageButton
+        android:id="@+id/ChoosePicture"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/PictureSettings"
+        android:layout_marginTop="38dp"
+        android:onClick="viewPictures"
+        android:src="@drawable/ic_setpic" />
+
+    <ImageView
+        android:id="@+id/preview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/ChoosePicture"
+        android:layout_alignRight="@+id/VoiceSettings"
+        android:src="@drawable/ic_setpic" />
+
+</RelativeLayout>

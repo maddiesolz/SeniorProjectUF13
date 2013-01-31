@@ -59,8 +59,8 @@ public class ImageOptionScreen extends Activity {
         Bitmap b = BitmapFactory.decodeFile(imagePath);
         if (d!=null)
         {
-        img.setImageResource(0);
-        img.setImageDrawable(d);	                	
+        	img.setImageResource(0);
+        	img.setImageDrawable(d);	                	
         	Toast.makeText(ImageOptionScreen.this, "" + "Not Null", Toast.LENGTH_SHORT).show();
         }
         

@@ -90,15 +90,6 @@ public class ImageAdapter extends BaseAdapter {
 		    		 
 		    		 if(name.endsWith(".jpg") || name.endsWith(".png") || name.endsWith(".gif"))
 		    		 {
-		    			 /*
-			    		 ImageView myImageView = new ImageView(context);
-			    		 myImageView.setImageDrawable(Drawable.createFromPath(singleFile.getAbsolutePath()));
-			    		 myImageView.setId(picNum);
-			    		 picNum++;
-			    		 picID.add(myImageView.getId());
-			    		 myImageView.setImageBitmap(decodeSampledBitmapFromFile(singleFile.getAbsolutePath(), 500, 500));
-			    		 */		    			 
-			    		 //SDCardImages.add(myImageView);
 		    			 String path = singleFile.getAbsolutePath();
 		    			 SDCardImages.add(path);
 		    		 }
