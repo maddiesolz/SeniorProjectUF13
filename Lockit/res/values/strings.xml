@@ -19,5 +19,6 @@
     <string name="image_location"></string>
     <string name="hello_world">Hello world!</string>
     <string name="title_activity_image_option_screen">Image-Lock Options</string>
+    <string name="title_activity_set_points">SetPoints</string>
 
 </resources>

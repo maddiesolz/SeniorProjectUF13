@@ -16,6 +16,12 @@ public class Lockit extends FragmentActivity {
 		startActivity(intent);
 	}
 	
+	public void setPoints(View view)
+	{
+		Intent intent = new Intent(this, SetPoints.class);
+		startActivity(intent);
+	}
+	
 	public void pictureSettings()
 	{
 		setContentView(R.layout.activity_lockit);

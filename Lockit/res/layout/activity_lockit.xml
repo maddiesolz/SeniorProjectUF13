@@ -16,14 +16,6 @@
         android:onClick="voiceSettings"
         android:src="@drawable/voiceMenu" />
 
-    <ImageView
-        android:id="@+id/preview"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignRight="@+id/VoiceSettings"
-        android:layout_alignTop="@+id/ChoosePicture"
-        android:src="@drawable/ic_setpic" />
-
     <ImageButton
         android:id="@+id/PictureSettings"
         android:layout_width="wrap_content"
@@ -39,10 +31,28 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-        android:layout_below="@+id/PictureSettings"
-        android:layout_marginLeft="15dp"
-        android:layout_marginTop="32dp"
+        android:layout_below="@+id/VoiceSettings"
+        android:layout_marginLeft="18dp"
+        android:layout_marginTop="22dp"
         android:onClick="viewPictures"
         android:src="@drawable/imageSelect" />
+
+    <ImageView
+        android:id="@+id/preview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/ChoosePicture"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="36dp"
+        android:src="@drawable/ic_setpic" />
+
+    <ImageButton
+        android:id="@+id/setPoints"
+        android:onClick="setPoints"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/ChoosePicture"
+        android:layout_centerVertical="true"
+        android:src="@drawable/pointSet" />
 
 </RelativeLayout>

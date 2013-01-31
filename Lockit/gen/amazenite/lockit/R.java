@@ -7,6 +7,8 @@
 
 package amazenite.lockit;
 
+import android.view.View;
+
 public final class R {
     public static final class array {
         public static final int pref_example_list_titles=0x7f070000;
@@ -65,11 +67,13 @@ public final class R {
         public static final int activity_image_option_screen=0x7f030000;
         public static final int activity_lockit=0x7f030001;
         public static final int activity_open_images=0x7f030002;
+		public static View activity_set_points;
     }
     public static final class menu {
         public static final int activity_image_option_screen=0x7f090000;
         public static final int activity_lockit=0x7f090001;
         public static final int activity_open_images=0x7f090002;
+		public static int activity_set_points;
     }
     public static final class string {
         /**  App Label On Top 
