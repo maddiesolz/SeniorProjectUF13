@@ -16,9 +16,9 @@ import android.widget.ImageView;
 
 public class ImageAdapter extends BaseAdapter {
     private Context context;
-    //private Vector<ImageView> SDCardImages;
     private Vector<String> SDCardImages;
-    private boolean empty = false;
+    private Vector<Integer> DefaultImages;
+    public boolean empty = false;
     private int pageNumber;
     
     public ImageAdapter(Context c, int pageNumber) {
@@ -100,19 +100,35 @@ public class ImageAdapter extends BaseAdapter {
 	    		empty = true;
 	    	}
     	}
-    	
+    	if(empty)
+    	{
+    		DefaultImages.add(R.drawable.rainbow);
+    		DefaultImages.add(R.drawable.rainbow);
+    		DefaultImages.add(R.drawable.rainbow);
+    		DefaultImages.add(R.drawable.rainbow);
+    		DefaultImages.add(R.drawable.rainbow);
+    		DefaultImages.add(R.drawable.rainbow);
+    		DefaultImages.add(R.drawable.rainbow);
+    		DefaultImages.add(R.drawable.rainbow);
+    		DefaultImages.add(R.drawable.rainbow);
+    		DefaultImages.add(R.drawable.rainbow);
+    	}
     }
     
     public Vector<String> getFiles()
     {
     	return SDCardImages;   	
     }
+    public Vector<Integer> getFiles2()
+    {
+    	return DefaultImages;
+    }
     
     public int getCount() {
     	int num = 0;
     	if(empty)
     	{
-    		num= mThumbIds.length;
+    		num= DefaultImages.size();
     	}
     	else
     	{
@@ -142,30 +158,13 @@ public class ImageAdapter extends BaseAdapter {
         }
         if(empty)
         {
-        	imageView.setImageResource(mThumbIds[position]);
+        	imageView.setImageResource(DefaultImages.get(position));
         }
         else
         {
         	//imageView.setImageDrawable(SDCardImages.get(position).getDrawable());
         	imageView.setImageBitmap(decodeSampledBitmapFromFile(SDCardImages.get(position), 500, 500));
-        }
-        
+        }        
         return imageView;
     }
-
-    // references to our images
-    private Integer[] mThumbIds = {
-            R.drawable.rainbow, R.drawable.rainbow,
-            R.drawable.rainbow, R.drawable.rainbow,
-            R.drawable.rainbow, R.drawable.rainbow,
-            R.drawable.rainbow, R.drawable.rainbow,
-            R.drawable.rainbow, R.drawable.rainbow,
-            R.drawable.rainbow, R.drawable.rainbow,
-            R.drawable.rainbow, R.drawable.rainbow,
-            R.drawable.rainbow, R.drawable.rainbow,
-            R.drawable.rainbow, R.drawable.rainbow,
-            R.drawable.rainbow, R.drawable.rainbow,
-            R.drawable.rainbow, R.drawable.rainbow
-            
-    };
 }

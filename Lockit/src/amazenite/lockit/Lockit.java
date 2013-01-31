@@ -7,7 +7,6 @@ import android.view.Menu;
 import android.view.View;
 import android.widget.Toast;
 
-
 public class Lockit extends FragmentActivity {	
 	
 	/** Called when the user clicks the get image button */
