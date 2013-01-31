@@ -141,7 +141,6 @@ public final static String PIC_PATH = "amazenite.lockit.MESSAGE";
         	BitmapFactory.Options o2 = new BitmapFactory.Options();
         	o2.inSampleSize=scale;
         	Bitmap chosenImage = BitmapFactory.decodeFile(imagePath, o2);
-
 	        try {
 	        	FileOutputStream fos = openFileOutput("lockimg", Context.MODE_PRIVATE);
 	        	chosenImage.compress(CompressFormat.JPEG, 100, fos);
