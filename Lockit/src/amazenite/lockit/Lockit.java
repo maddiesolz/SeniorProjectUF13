@@ -1,6 +1,7 @@
 package amazenite.lockit;
 
 import java.io.File;
+import java.util.Vector;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -48,6 +49,10 @@ public class Lockit extends Activity {
 		    }
 		    else{
 		    	Toast.makeText(Lockit.this, "" + "Unable To Find File", Toast.LENGTH_SHORT).show();
+		    	Vector<Integer> defaultPic = new Vector<Integer>();
+		    	defaultPic.add(R.drawable.ic_launcher);
+		    	OpenImages images = new OpenImages();
+		    	images.saveImage2(defaultPic, 0);
 		    }
 	    }
     }
