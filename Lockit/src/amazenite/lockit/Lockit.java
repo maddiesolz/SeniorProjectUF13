@@ -2,25 +2,30 @@ package amazenite.lockit;
 
 import java.io.File;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.view.Menu;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-public class Lockit extends FragmentActivity {	
+public class Lockit extends Activity {	
 	
 	/** Called when the user clicks the get image button */
 	public void viewPictures(View view) {
 	    // Do something in response to button
-		Intent intent = new Intent(this, OpenImages.class);
+		final Intent intent = new Intent(this, OpenImages.class);
 		startActivity(intent);
-		getPreview();
-		view.invalidate();
 	}
+	
+	@Override
+	public void onResume() {
+		super.onResume();
+		getPreview();
+	}
+	
 	
 	public void getPreview(){
 		//pictureSettings();
@@ -35,10 +40,11 @@ public class Lockit extends FragmentActivity {
 		    if (file.exists()) {
 		    	 internalPath = file.getAbsolutePath();
 		        	Toast.makeText(Lockit.this, "" + internalPath, Toast.LENGTH_SHORT).show();
-		         Drawable d = Drawable.createFromPath(internalPath);
+		        	Drawable d = Drawable.createFromPath(internalPath);
 		         if(d!=null){
 		        	 Toast.makeText(Lockit.this, "" + "drawable not null", Toast.LENGTH_SHORT).show();
 		        	 img.setImageDrawable(d);
+		        	 img.invalidate();
 		         }
 		
 		    }
@@ -72,5 +78,4 @@ public class Lockit extends FragmentActivity {
 		getMenuInflater().inflate(R.menu.activity_lockit, menu);
 		return true;
 	}
-
 }

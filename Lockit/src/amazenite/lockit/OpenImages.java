@@ -133,10 +133,10 @@ public final static String PIC_PATH = "amazenite.lockit.MESSAGE";
 	        BitmapFactory.Options o = new BitmapFactory.Options();
 	        o.inJustDecodeBounds = true;
 	        final int size = 70;
-	        int scale = 1;
+	        int scale = 2;
 	        while(o.outWidth/scale/2 >= size && o.outHeight/scale/2 >= size)
 	        {
-	        	scale *=2;
+	        	scale *= 2;
 	        }
         	BitmapFactory.Options o2 = new BitmapFactory.Options();
         	o2.inSampleSize=scale;
