@@ -33,11 +33,8 @@ public class Lockit extends Activity {
 	public void getPreview(){
 		//pictureSettings();
 	    ImageView img = (ImageView) findViewById(R.id.preview);
-	    if(img == null){
-	    	Toast.makeText(Lockit.this, "" + "img is null", Toast.LENGTH_SHORT).show();
-	    }
-	    else{
-			//img.setImageResource(0);
+	    if(img != null)
+	    {
 		    File file = getBaseContext().getFileStreamPath("lockimg");
 		    String internalPath = "data/data/files/lockimg";
 		    if (file.exists()) {

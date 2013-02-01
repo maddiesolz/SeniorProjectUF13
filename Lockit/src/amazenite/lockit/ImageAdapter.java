@@ -8,11 +8,13 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Environment;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 public class ImageAdapter extends BaseAdapter {
     private Context context;
@@ -22,9 +24,7 @@ public class ImageAdapter extends BaseAdapter {
     private int pageNumber;
     
     public ImageAdapter(Context c, int pageNumber) {
-        context = c;
-        //SDCardImages = new Vector<ImageView>();
-        
+        context = c;        
         this.pageNumber = pageNumber;
         loadImages(pageNumber);
     }
@@ -43,7 +43,8 @@ public class ImageAdapter extends BaseAdapter {
         options.inJustDecodeBounds = false;
         return BitmapFactory.decodeFile(imagePath, options);
     }
-        public static int calculateInSampleSize(BitmapFactory.Options options, int reqWidth, int reqHeight) {
+    
+    public static int calculateInSampleSize(BitmapFactory.Options options, int reqWidth, int reqHeight) {
         // Raw height and width of image
         final int height = options.outHeight;
         final int width = options.outWidth;
@@ -68,8 +69,6 @@ public class ImageAdapter extends BaseAdapter {
     public void loadImages(int pageNumber)
     {
     	SDCardImages = new Vector<String>();
-    	ArrayList<Integer> picID = new ArrayList<Integer>();
-    	int picNum = 0;
     	File picFolder = new File(Environment.getExternalStorageDirectory().getPath() + "/DCIM/100MEDIA/");
     	if (!picFolder.exists())
         {
@@ -81,8 +80,8 @@ public class ImageAdapter extends BaseAdapter {
 	    	int totalNumberFiles = folderPics.length;
 	    	if(folderPics != null)
 	    	{
-		    	String name = "";		    	
-		    	//for(File singleFile : folderPics)
+		    	String name = "";
+		    	SDCardImages.removeAllElements();
 		    	for(int i = 2*pageNumber; i < 2*pageNumber+2; i++)
 		    	{
 		    		File singleFile = folderPics[i];
@@ -94,6 +93,7 @@ public class ImageAdapter extends BaseAdapter {
 		    			 SDCardImages.add(path);
 		    		 }
 		    	}
+		    	
 	    	}
 	    	else
 	    	{
@@ -102,6 +102,7 @@ public class ImageAdapter extends BaseAdapter {
     	}
     	if(empty)
     	{
+    		DefaultImages = new Vector<Integer>();
     		DefaultImages.add(R.drawable.rainbow);
     		DefaultImages.add(R.drawable.rainbow);
     		DefaultImages.add(R.drawable.rainbow);
@@ -117,6 +118,10 @@ public class ImageAdapter extends BaseAdapter {
     
     public Vector<String> getFiles()
     {
+    	for(int i = 0; i<SDCardImages.size(); i++)
+    	{
+    		Toast.makeText(context, SDCardImages.get(i), Toast.LENGTH_SHORT).show();
+    	}
     	return SDCardImages;   	
     }
     public Vector<Integer> getFiles2()

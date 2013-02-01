@@ -6,37 +6,6 @@
     tools:context=".Lockit"
     tools:ignore="MergeRootFrame" >
 
-    <ImageButton
-        android:id="@+id/VoiceSettings"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_alignTop="@+id/PictureSettings"
-        android:layout_marginRight="60dp"
-        android:onClick="voiceSettings"
-        android:src="@drawable/voicemenu" />
-
-    <ImageButton
-        android:id="@+id/PictureSettings"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="25dp"
-        android:onClick="pictureSettings"
-        android:src="@drawable/picturemenu" />
-
-    <ImageButton
-        android:id="@+id/ChoosePicture"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/VoiceSettings"
-        android:layout_marginLeft="18dp"
-        android:layout_marginTop="22dp"
-        android:onClick="viewPictures"
-        android:src="@drawable/imageselect" />
-
     <ImageView
         android:id="@+id/preview"
         android:layout_width="70dp"
@@ -44,7 +13,7 @@
         android:layout_alignBottom="@+id/ChoosePicture"
         android:layout_alignParentRight="true"
         android:layout_marginRight="36dp"
-        android:src="@drawable/ic_setpic" />
+        android:src="@drawable/ic_launcher" />
 
     <ImageButton
         android:id="@+id/setPoints"
@@ -54,5 +23,35 @@
         android:layout_alignLeft="@+id/ChoosePicture"
         android:layout_centerVertical="true"
         android:src="@drawable/pointset" />
+
+    <ImageButton
+        android:id="@+id/PictureSettings"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="14dp"
+        android:layout_toLeftOf="@+id/VoiceSettings"
+        android:onClick="pictureSettings"
+        android:src="@drawable/picturemenu" />
+
+    <ImageButton
+        android:id="@+id/VoiceSettings"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignRight="@+id/preview"
+        android:layout_alignTop="@+id/PictureSettings"
+        android:layout_marginRight="24dp"
+        android:onClick="voiceSettings"
+        android:src="@drawable/voicemenu" />
+
+    <ImageButton
+        android:id="@+id/ChoosePicture"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/PictureSettings"
+        android:layout_below="@+id/PictureSettings"
+        android:layout_marginTop="24dp"
+        android:onClick="viewPictures"
+        android:src="@drawable/imageselect" />
 
 </RelativeLayout>

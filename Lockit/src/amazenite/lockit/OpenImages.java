@@ -12,6 +12,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Bitmap.CompressFormat;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -26,7 +27,6 @@ private int pageNumber = 0;
 private ImageAdapter imageAdapt;
 private Vector<String> images;
 private Vector<Integer> images2;
-public final static String PIC_PATH = "amazenite.lockit.MESSAGE";
 	
 	    @Override
 	    protected void onCreate(Bundle savedInstanceState) {
@@ -61,7 +61,7 @@ public final static String PIC_PATH = "amazenite.lockit.MESSAGE";
 	            	{
 		                if(images.get(position) != null)
 		                {
-		                	Toast.makeText(OpenImages.this, "" + images.get(position), Toast.LENGTH_SHORT).show();
+		                	Toast.makeText(OpenImages.this, "" + images.get(position), Toast.LENGTH_LONG).show();
 		                	try {
 								saveImage(images.get(position));
 							} catch (IOException e) {
@@ -74,7 +74,7 @@ public final static String PIC_PATH = "amazenite.lockit.MESSAGE";
 	            	{
 	            		if(images2.get(position) != null)
 	            		{
-	            			Toast.makeText(OpenImages.this, "" + images.get(position), Toast.LENGTH_SHORT).show();
+	            			Toast.makeText(OpenImages.this, "" + images2.get(position), Toast.LENGTH_SHORT).show();
 		                	saveImage2(images2, position);
 	            		}
 	            	}
@@ -87,6 +87,7 @@ public final static String PIC_PATH = "amazenite.lockit.MESSAGE";
 	        b.setOnClickListener(new OnClickListener(){
 				@Override
 				public void onClick(View v) {
+					pageNumber++;
 					imageAdapt.changePage();
 					gridview.invalidateViews();
 				}
@@ -99,7 +100,7 @@ public final static String PIC_PATH = "amazenite.lockit.MESSAGE";
 	    	BitmapFactory.Options o = new BitmapFactory.Options();
 		    o.inJustDecodeBounds = true;
 	        final int size = 70;
-	        int scale = 1;
+	        int scale = 2;
 	        while(o.outWidth/scale/2 >= size && o.outHeight/scale/2 >= size)
 	        {
 	        	scale *=2;
