@@ -4,6 +4,9 @@ import java.io.File;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.Menu;
@@ -39,20 +42,19 @@ public class Lockit extends Activity {
 		    String internalPath = "data/data/files/lockimg";
 		    if (file.exists()) {
 		    	 internalPath = file.getAbsolutePath();
-		        	Toast.makeText(Lockit.this, "" + internalPath, Toast.LENGTH_SHORT).show();
 		        	Drawable d = Drawable.createFromPath(internalPath);
-		         if(d!=null){
-		        	 Toast.makeText(Lockit.this, "" + "drawable not null", Toast.LENGTH_SHORT).show();
+		         if(d!=null)
+		         {
 		        	 img.setImageDrawable(d);
 		        	 img.invalidate();
 		         }
-		
 		    }
 		    else{
 		    	Toast.makeText(Lockit.this, "" + "Unable To Find File", Toast.LENGTH_SHORT).show();
 		    }
 	    }
     }
+
 	
 	public void setPoints(View view)
 	{
