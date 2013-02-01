@@ -10,6 +10,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.ImageView;
@@ -51,8 +52,11 @@ public class Lockit extends Activity {
 		    	Toast.makeText(Lockit.this, "" + "Unable To Find File", Toast.LENGTH_SHORT).show();
 		    	Vector<Integer> defaultPic = new Vector<Integer>();
 		    	defaultPic.add(R.drawable.ic_launcher);
-		    	OpenImages images = new OpenImages();
-		    	images.saveImage2(defaultPic, 0);
+		    	if(defaultPic.get(0) != null)
+		    	{
+			    	OpenImages images = new OpenImages();
+			    	images.saveImage2(defaultPic, 0);
+		    	}
 		    }
 	    }
     }
