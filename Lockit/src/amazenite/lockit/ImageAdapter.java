@@ -1,21 +1,17 @@
 package amazenite.lockit;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Vector;
 
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Environment;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 public class ImageAdapter extends BaseAdapter {
     private Context context;

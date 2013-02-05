@@ -18,7 +18,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.Toast;
@@ -72,13 +71,9 @@ private Vector<Integer> images2;
 	            	{
 		                if(images.get(position) != null)
 		                {
-		               // 	Toast.makeText(OpenImages.this, "" + images.get(position), Toast.LENGTH_LONG).show();
-		                //	Toast.makeText(OpenImages.this, "" + position, Toast.LENGTH_SHORT).show();
-
 		                	try {
 								saveImage(images.get(position));
 							} catch (IOException e) {
-								// TODO Auto-generated catch block
 								e.printStackTrace();
 							}
 		                }   
@@ -91,7 +86,6 @@ private Vector<Integer> images2;
 		                	saveImage2(images2, position);
 	            		}
 	            	}
-	                
 	                finish();
 	            }
 	        });
@@ -150,13 +144,11 @@ private Vector<Integer> images2;
 		        		fos = null;
 		        	} 
 		        	catch (IOException e) {
-		        	// TODO Auto-generated catch block
 		        		e.printStackTrace();
 		        	}
 	        	samplePic.recycle();
 	        	} 
 		        catch (FileNotFoundException e1) {
-		        	// TODO Auto-generated catch block
 		        	e1.printStackTrace();
 		        }
     		}
@@ -184,13 +176,11 @@ private Vector<Integer> images2;
 		        		fos = null;
 		        	} 
 		        	catch (IOException e) {
-		        	// TODO Auto-generated catch block
 		        		e.printStackTrace();
 		        	}
 		        	chosenImage.recycle();
 	        	} 
 	        catch (FileNotFoundException e1) {
-	        	// TODO Auto-generated catch block
 	        	e1.printStackTrace();
 	        	}
 	        

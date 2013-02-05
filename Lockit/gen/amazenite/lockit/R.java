@@ -60,11 +60,11 @@ public final class R {
         public static final int PictureSettings=0x7f0a0004;
         public static final int VoiceSettings=0x7f0a0005;
         public static final int container=0x7f0a0000;
-        public static final int imageView1=0x7f0a0009;
         public static final int menu_settings=0x7f0a000a;
         public static final int moreImagesButton=0x7f0a0008;
         public static final int preview=0x7f0a0001;
         public static final int setPoints=0x7f0a0003;
+        public static final int setPointsPic=0x7f0a0009;
     }
     public static final class layout {
         public static final int activity_lockit=0x7f030000;
