@@ -118,15 +118,20 @@ private Vector<Integer> images2;
 
 	    public void saveImage2(Vector<Integer> images, int num)
 	    {
+	    	Log.d("save images", "im in it");
 	    	BitmapFactory.Options o = new BitmapFactory.Options();
+	    	Log.d("save images", "bit mpa factory open");
 		    o.inJustDecodeBounds = true;
+		    Log.d("save images", "w/e this thing is");
 	        final int size = 70;
 	        int scale = 2;
 	        while(o.outWidth/scale/2 >= size && o.outHeight/scale/2 >= size)
 	        {
 	        	scale *=2;
 	        }
+	        Log.d("save images", "did that");
         	BitmapFactory.Options o2 = new BitmapFactory.Options();
+        	Log.d("save images", "made it");
         	o2.inSampleSize=scale;
         	if(images.get(num) == null)
         	{
@@ -135,9 +140,11 @@ private Vector<Integer> images2;
         	Bitmap samplePic = BitmapFactory.decodeResource(getResources(), images.get(num), o2); //THIS LINE OF CODE DOESN'T WORK!
     		if(samplePic != null)
     		{
+    		Log.d("open Images", "Got the samplePic");
     		 try {
 	        	FileOutputStream fos = openFileOutput("lockimg", Context.MODE_PRIVATE);
 	        	samplePic.compress(CompressFormat.JPEG, 100, fos);
+	        	Log.d("open images", "compressed it");
 		        	try {
 		        		fos.close();
 		        		fos = null;
