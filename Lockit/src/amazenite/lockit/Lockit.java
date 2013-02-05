@@ -1,13 +1,17 @@
 package amazenite.lockit;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.Vector;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Bitmap.CompressFormat;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
@@ -51,16 +55,53 @@ public class Lockit extends Activity {
 		    else{
 		    	Toast.makeText(Lockit.this, "" + "Unable To Find File", Toast.LENGTH_SHORT).show();
 		    	Vector<Integer> defaultPic = new Vector<Integer>();
-		    	defaultPic.add(R.drawable.ic_launcher);
+		    	defaultPic.add(R.drawable.origami);
 		    	if(defaultPic.get(0) != null)
 		    	{
-			    	OpenImages images = new OpenImages();
-			    	images.saveImage2(defaultPic, 0);
+			    	saveImage2(defaultPic, 0);
 		    	}
 		    }
 	    }
     }
 
+	public void saveImage2(Vector<Integer> images, int num)
+    {
+    	BitmapFactory.Options o = new BitmapFactory.Options();
+	    o.inJustDecodeBounds = true;
+        final int size = 70;
+        int scale = 2;
+        while(o.outWidth/scale/2 >= size && o.outHeight/scale/2 >= size)
+        {
+        	scale *=2;
+        }
+    	BitmapFactory.Options o2 = new BitmapFactory.Options();
+    	o2.inSampleSize=scale;
+    	if(images.get(num) == null)
+    	{
+    		Log.d("open images", "image null");
+    	}
+    	Bitmap samplePic = BitmapFactory.decodeResource(getResources(), images.get(num), o2); //THIS LINE OF CODE DOESN'T WORK!
+		if(samplePic != null)
+		{
+		 try {
+        	FileOutputStream fos = openFileOutput("lockimg", Context.MODE_PRIVATE);
+        	samplePic.compress(CompressFormat.JPEG, 100, fos);
+	        	try {
+	        		fos.close();
+	        		fos = null;
+	        	} 
+	        	catch (IOException e) {
+	        	// TODO Auto-generated catch block
+	        		e.printStackTrace();
+	        	}
+        	samplePic.recycle();
+        	} 
+	        catch (FileNotFoundException e1) {
+	        	// TODO Auto-generated catch block
+	        	e1.printStackTrace();
+	        }
+		}
+    }
 	
 	public void setPoints(View view)
 	{

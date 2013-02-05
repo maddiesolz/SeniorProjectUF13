@@ -30,7 +30,7 @@ public final class R {
         public static final int list_focused_lockit_theme=0x7f020007;
         public static final int menu_dropdown_panel_lockit_theme=0x7f020008;
         public static final int menu_hardkey_panel_lockit_theme=0x7f020009;
-        public static final int moreimages=0x7f02000a;
+        public static final int origami=0x7f02000a;
         public static final int picturemenu=0x7f02000b;
         public static final int pointset=0x7f02000c;
         public static final int pressed_background_lockit_theme=0x7f02000d;
