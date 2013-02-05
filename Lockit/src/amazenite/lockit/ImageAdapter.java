@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -22,6 +23,7 @@ public class ImageAdapter extends BaseAdapter {
     private Vector<Integer> DefaultImages;
     public boolean empty = false;
     private int pageNumber;
+    private int totalNumberFiles = 0;
     
     public ImageAdapter(Context c, int pageNumber) {
         context = c;        
@@ -68,6 +70,8 @@ public class ImageAdapter extends BaseAdapter {
         
     public void loadImages(int pageNumber)
     {
+    	int maxPicNumbers = 12; 
+    	
     	SDCardImages = new Vector<String>();
     	File picFolder = new File(Environment.getExternalStorageDirectory().getPath() + "/DCIM/100MEDIA/");
     	if (!picFolder.exists())
@@ -77,23 +81,32 @@ public class ImageAdapter extends BaseAdapter {
     	else
     	{
 	    	File[] folderPics = picFolder.listFiles();
-	    	int totalNumberFiles = folderPics.length;
+	    	totalNumberFiles = folderPics.length - (pageNumber*maxPicNumbers);
+	    	int endingPicNum = maxPicNumbers;
+		    	if(totalNumberFiles < 12){
+		    		endingPicNum = totalNumberFiles;
+		    	}
+	    	
 	    	if(folderPics != null)
 	    	{
-		    	String name = "";
-		    	SDCardImages.removeAllElements();
-		    	for(int i = 2*pageNumber; i < 2*pageNumber+2; i++)
-		    	{
-		    		File singleFile = folderPics[i];
-		    		name = singleFile.getName();
-		    		 
-		    		 if(name.endsWith(".jpg") || name.endsWith(".png") || name.endsWith(".gif"))
-		    		 {
-		    			 String path = singleFile.getAbsolutePath();
-		    			 SDCardImages.add(path);
-		    		 }
-		    	}
-		    	
+	    		
+			    	String name = "";
+			    	SDCardImages.removeAllElements();
+			    	for(int i = maxPicNumbers*pageNumber; i < maxPicNumbers*pageNumber+endingPicNum; i++)
+			    	{
+			    		File singleFile = folderPics[i];
+			    		name = singleFile.getName();
+			    		 
+			    		 if(name.endsWith(".jpg") || name.endsWith(".png") || name.endsWith(".gif"))
+			    		 {
+			    			 String path = singleFile.getAbsolutePath();
+			    			 SDCardImages.add(path);
+			    		 }
+			    		 
+			    		 
+			    	}
+			    	
+			    	  								
 	    	}
 	    	else
 	    	{
@@ -113,6 +126,23 @@ public class ImageAdapter extends BaseAdapter {
     		DefaultImages.add(R.drawable.rainbow);
     		DefaultImages.add(R.drawable.rainbow);
     		DefaultImages.add(R.drawable.rainbow);
+    	}
+    }
+    
+    public int getFileCount(){
+
+    	return totalNumberFiles;
+    	
+    }
+    
+    public boolean getCurrentCount(){
+    	//Returns true if don't need to display button
+    	if ((totalNumberFiles - 12) < 12){
+    		return true;
+    	}
+    	else
+    	{
+    		return false;
     	}
     }
     
@@ -155,7 +185,7 @@ public class ImageAdapter extends BaseAdapter {
         ImageView imageView;
         if (convertView == null) {  // if it's not recycled, initialize some attributes
             imageView = new ImageView(context);
-            imageView.setLayoutParams(new GridView.LayoutParams(85, 85));
+            imageView.setLayoutParams(new GridView.LayoutParams(150, 150));
             imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
             imageView.setPadding(4, 4, 4, 4);
         } else {

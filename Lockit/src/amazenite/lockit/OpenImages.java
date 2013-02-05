@@ -18,6 +18,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.Toast;
@@ -95,16 +96,24 @@ private Vector<Integer> images2;
 	            }
 	        });
 	        
-	        ImageButton b = (ImageButton) findViewById(R.id.moreImagesButton);
-	        b.setOnClickListener(new OnClickListener(){
-				@Override
-				public void onClick(View v) {
-					pageNumber++;
-					imageAdapt.changePage();
-					gridview.invalidateViews();
-				}
-	        });	  
 	        
+	        if(imageAdapt.getFileCount() > 12){
+		        final ImageButton b = (ImageButton) findViewById(R.id.moreImagesButton);
+		        b.setOnClickListener(new OnClickListener(){
+					@Override
+					public void onClick(View v) {
+						pageNumber++;
+						imageAdapt.changePage();
+					
+						gridview.invalidateViews();
+						if(imageAdapt.getCurrentCount())
+						{
+							b.setEnabled(false);
+							b.setVisibility(View.GONE);
+						}
+					}
+		        });	  
+	        }
 	    }
 
 	    public void saveImage2(Vector<Integer> images, int num)
