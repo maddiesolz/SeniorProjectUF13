@@ -57,11 +57,23 @@ private Vector<Integer> images2;
 	        gridview.setOnItemClickListener(new OnItemClickListener() {
 	            public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
 	                
+	                if(!empty)
+	    	        {
+	    	        	images = imageAdapt.getFiles();
+	    	        }
+	    	        else
+	    	        {
+	    	        	images2 = imageAdapt.getFiles2();
+	    	        }	        	
+	    	        
+	            	
 	            	if(!empty)
 	            	{
 		                if(images.get(position) != null)
 		                {
-		                	Toast.makeText(OpenImages.this, "" + images.get(position), Toast.LENGTH_LONG).show();
+		               // 	Toast.makeText(OpenImages.this, "" + images.get(position), Toast.LENGTH_LONG).show();
+		                //	Toast.makeText(OpenImages.this, "" + position, Toast.LENGTH_SHORT).show();
+
 		                	try {
 								saveImage(images.get(position));
 							} catch (IOException e) {
@@ -94,7 +106,7 @@ private Vector<Integer> images2;
 	        });	  
 	        
 	    }
-	   
+
 	    public void saveImage2(Vector<Integer> images, int num)
 	    {
 	    	Log.d("save images", "im in it");
@@ -116,7 +128,7 @@ private Vector<Integer> images2;
         	{
         		Log.d("open images", "image null");
         	}
-    		Bitmap samplePic = BitmapFactory.decodeResource(getResources(), images.get(num), o2); //THIS LINE OF CODE DOESN'T WORK!
+        	Bitmap samplePic = BitmapFactory.decodeResource(getResources(), images.get(num), o2); //THIS LINE OF CODE DOESN'T WORK!
     		if(samplePic != null)
     		{
     		Log.d("open Images", "Got the samplePic");

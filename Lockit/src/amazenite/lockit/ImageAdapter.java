@@ -120,7 +120,7 @@ public class ImageAdapter extends BaseAdapter {
     {
     	for(int i = 0; i<SDCardImages.size(); i++)
     	{
-    		Toast.makeText(context, SDCardImages.get(i), Toast.LENGTH_SHORT).show();
+    	//	Toast.makeText(context, SDCardImages.get(i), Toast.LENGTH_SHORT).show();
     	}
     	return SDCardImages;   	
     }
