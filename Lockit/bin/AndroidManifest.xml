@@ -64,6 +64,14 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="amazenite.lockit" />
         </activity>
+        <activity
+            android:name="amazenite.lockit.LockScreen"
+            android:label="@string/title_activity_lock_screen"
+            android:parentActivityName="amazenite.lockit" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="amazenite.lockit" />
+        </activity>
     </application>
 
 </manifest>
