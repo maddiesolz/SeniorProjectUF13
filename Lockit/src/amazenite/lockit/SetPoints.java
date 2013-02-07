@@ -2,7 +2,9 @@ package amazenite.lockit;
 
 import java.io.File;
 
+import android.os.Build;
 import android.os.Bundle;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Canvas;
@@ -25,32 +27,39 @@ public class SetPoints extends Activity {
  	private GraphicView graphView; 
  	private GestureDetectorCompat mDetector; 
 
+	@SuppressLint("NewApi")
+	@SuppressWarnings("deprecation")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		graphView = new GraphicView(this);
 		//setContentView(R.layout.activity_set_points);
-		setContentView(graphView);
+		
 		
 		// Show the Up button in the action bar.
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 		
 		//Set As Background Image
-	    ImageView img = (ImageView) findViewById(R.id.setPointsPic);
-	    if(img != null)
-	    {
-		    File file = getBaseContext().getFileStreamPath("lockimg");
-		    String internalPath = "data/data/files/lockimg";
-		    if (file.exists()) {
-		    	 internalPath = file.getAbsolutePath();
-		    }
-		        	Drawable d = Drawable.createFromPath(internalPath);
-		        if(d!=null)
-		        {
-		        	 img.setImageDrawable(d);
-		        	 img.invalidate();
-		         }
-		    }		   
+	    
+	    File file = getBaseContext().getFileStreamPath("lockimg");
+	    String internalPath = "data/data/files/lockimg";
+	    if (file.exists()) {
+	    	 internalPath = file.getAbsolutePath();
+	    }
+        Drawable d = Drawable.createFromPath(internalPath);
+        if(d!=null)
+        {
+        	 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
+        		 setContentView(graphView);
+        		 graphView.setBackground(d);
+        	 }
+        	 else
+        	 {
+        		 setContentView(graphView);
+        		 graphView.setBackgroundDrawable(d);
+        	 }
+         }
+		    		   
 	    
 	    mDetector = new GestureDetectorCompat(this, new MyGestureListener());
 	}
@@ -92,8 +101,8 @@ public class SetPoints extends Activity {
 		  @Override
 		    public boolean onSingleTapUp(MotionEvent event) {
 		        Log.d(DEBUG_TAG, "onSingleTapUp: " + event.toString());
-		        x = event.getX();
-		        y = event.getY();
+		        x = event.getRawX();
+		        y = event.getRawY()-75.0f;
 		        
 		        Log.d(DEBUG_TAG, "X is: " + x);
 			    Log.d(DEBUG_TAG, "Y is: " + y);
@@ -113,11 +122,8 @@ public class SetPoints extends Activity {
 	        public void onDraw(Canvas canvas){
 	        	dotColor.setColor(0xff0000ff);
 	        	super.onDraw(canvas);
-	        	   Log.d("Graphic View","IM HERE");
-	        	
-	        		dotColor.setStyle(Paint.Style.FILL);
-	        	       canvas.drawCircle(x, y, 20, dotColor);
-	        	       Log.d("Graphic View","IM DRAWING");
+	        	dotColor.setStyle(Paint.Style.FILL);
+	        	canvas.drawCircle(x, y, 20, dotColor);
 	        }	          
 	   }
 }
