@@ -98,7 +98,7 @@ public class Lockit extends Activity {
      	{
      		Log.d("open images", "image null");
      	}
-     	Bitmap samplePic = BitmapFactory.decodeResource(getResources(), images.get(num), o2); //THIS LINE OF CODE DOESN'T WORK!
+     	Bitmap samplePic = BitmapFactory.decodeResource(getResources(), images.get(num), o2);
  		if(samplePic != null)
  		{
  		Log.d("open Images", "Got the samplePic");

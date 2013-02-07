@@ -20,20 +20,20 @@ import android.support.v4.view.GestureDetectorCompat;
 
 public class SetPoints extends Activity { 
 	private static final String DEBUG_TAG = "Gestures"; 	
-	private int x;
- 	private int y;
- 
- private GestureDetectorCompat mDetector; 
+	private static float x = -50;
+ 	private static float y = -50;
+ 	private GraphicView graphView; 
+ 	private GestureDetectorCompat mDetector; 
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		graphView = new GraphicView(this);
 		//setContentView(R.layout.activity_set_points);
-		setContentView(new GraphicView(this));
+		setContentView(graphView);
+		
 		// Show the Up button in the action bar.
 		getActionBar().setDisplayHomeAsUpEnabled(true);
-		
-
 		
 		//Set As Background Image
 	    ImageView img = (ImageView) findViewById(R.id.setPointsPic);
@@ -50,20 +50,17 @@ public class SetPoints extends Activity {
 		        	 img.setImageDrawable(d);
 		        	 img.invalidate();
 		         }
-		    }
-		   
+		    }		   
 	    
 	    mDetector = new GestureDetectorCompat(this, new MyGestureListener());
-
 	}
 	
-
-	
-	   @Override 
-	    public boolean onTouchEvent(MotionEvent event){ 
-	        this.mDetector.onTouchEvent(event);
-	        return super.onTouchEvent(event);
-	    }
+    @Override 
+    public boolean onTouchEvent(MotionEvent event){ 
+        this.mDetector.onTouchEvent(event);
+        graphView.invalidate();
+        return super.onTouchEvent(event);
+    }
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -72,7 +69,6 @@ public class SetPoints extends Activity {
 		return true;
 	}
 	
-
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
@@ -91,40 +87,22 @@ public class SetPoints extends Activity {
 		return false;//return super.onOptionsItemSelected(item);
 	}
 	
-
-
-/* Gesture Dectector Class To Only listen On The Ones We Want */
-	
-	 public class MyGestureListener extends GestureDetector.SimpleOnGestureListener {
-
+	/* Gesture Dectector Class To Only listen On The Ones We Want */	
+	public class MyGestureListener extends GestureDetector.SimpleOnGestureListener {
 		  @Override
 		    public boolean onSingleTapUp(MotionEvent event) {
 		        Log.d(DEBUG_TAG, "onSingleTapUp: " + event.toString());
-		        x = (int)event.getRawX();
-		        y = (int)event.getRawY();
+		        x = event.getX();
+		        y = event.getY();
 		        
 		        Log.d(DEBUG_TAG, "X is: " + x);
 			    Log.d(DEBUG_TAG, "Y is: " + y);
-		
 		        return true;
 		    }
-		  
-		  
-		   }
-		 
-		  public final int getX(){
-			  return x;  
-		  }
-		  
-		  public final int getY(){
-			  return y;  
-		  }
+	 }
 	  
-	  
-	  public static  class GraphicView extends View{
-		  
+	 public class GraphicView extends View{		  
 		  Paint dotColor = new Paint(Paint.ANTI_ALIAS_FLAG);
-		  
 		  
 	        public GraphicView(Context context){
 	            super(context);
@@ -136,16 +114,12 @@ public class SetPoints extends Activity {
 	        	dotColor.setColor(0xff0000ff);
 	        	super.onDraw(canvas);
 	        	   Log.d("Graphic View","IM HERE");
-	        	if(getX() != 0 && getY() != 0){
+	        	
 	        		dotColor.setStyle(Paint.Style.FILL);
-	        	       canvas.drawCircle(getX(), getY(), 20, dotColor);
-
+	        	       canvas.drawCircle(x, y, 20, dotColor);
 	        	       Log.d("Graphic View","IM DRAWING");
-	        	   }
-	     
-	        	}
-	          
-	        }
-	  }
+	        }	          
+	   }
+}
 
 
