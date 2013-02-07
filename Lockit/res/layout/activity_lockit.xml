@@ -16,8 +16,8 @@
             android:id="@+id/PictureSettings"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="0dp"
             android:layout_marginRight="24dp"
+            android:layout_marginTop="0dp"
             android:onClick="pictureSettings"
             android:src="@drawable/picturemenu" />
 
@@ -25,8 +25,8 @@
             android:id="@+id/VoiceSettings"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="0dp"
             android:layout_marginRight="24dp"
+            android:layout_marginTop="0dp"
             android:onClick="voiceSettings"
             android:src="@drawable/voicemenu" />
     </LinearLayout>
@@ -52,7 +52,6 @@
             android:layout_marginRight="36dp"
             android:layout_marginTop="24dp"
             android:src="@drawable/ic_launcher" />
-
     </LinearLayout>
 
     <ImageButton
@@ -61,5 +60,12 @@
         android:layout_height="wrap_content"
         android:onClick="setPoints"
         android:src="@drawable/pointset" />
+
+    <ImageButton
+        android:id="@+id/enablePicturePassword"
+        android:onClick="enablePicPw"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/enable" />
 
 </LinearLayout>

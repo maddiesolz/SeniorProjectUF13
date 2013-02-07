@@ -7,8 +7,10 @@ import java.io.IOException;
 import java.util.Vector;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Bitmap.CompressFormat;
@@ -17,10 +19,14 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.Toast;
 
 public class Lockit extends Activity {	
+	
+	private static Context context;
 	
 	/** Called when the user clicks the get image button */
 	public void viewPictures(View view) {
@@ -113,12 +119,30 @@ public class Lockit extends Activity {
 		        	e1.printStackTrace();
 		        }
  		}
-	    }
+	}
 	    
+	public void enablePicPw(View view)
+	{
+		/*Window window = getWindow();
+		WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+		window.addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED);
+		*/
+		
+		BroadcastReceiver displayPicture = new BroadcastReceiver() {		    
+		    @Override
+			public void onReceive(Context arg0, Intent intent) {
+		    	Intent lockIntent = new Intent();  
+	            intent.setClass(context, LockScreen.class);
+	            startActivity(lockIntent);      
+				Log.d("hey", "hey");
+			}
+		};		
+		registerReceiver(displayPicture, new IntentFilter(Intent.ACTION_USER_PRESENT));		
+	}
 	
 	public void pictureSettings()
 	{
-		setContentView(R.layout.activity_lockit);
+		//
 	}
 	
 	@Override
