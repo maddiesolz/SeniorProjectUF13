@@ -120,7 +120,8 @@ public class SetPoints extends Activity {
 
 	        @Override
 	        public void onDraw(Canvas canvas){
-	        	dotColor.setColor(0xff0000ff);
+	        	dotColor.setColor(0xff33CCCC);
+	        	dotColor.setAlpha(80);
 	        	super.onDraw(canvas);
 	        	dotColor.setStyle(Paint.Style.FILL);
 	        	canvas.drawCircle(x, y, 20, dotColor);
