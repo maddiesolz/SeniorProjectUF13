@@ -1,9 +1,13 @@
 package amazenite.lockit;
 
+import java.io.File;
+
 import android.os.Bundle;
 import android.app.Activity;
+import android.graphics.drawable.Drawable;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageView;
 import android.support.v4.app.NavUtils;
 
 public class SetPoints extends Activity {
@@ -14,6 +18,26 @@ public class SetPoints extends Activity {
 		setContentView(R.layout.activity_set_points);
 		// Show the Up button in the action bar.
 		getActionBar().setDisplayHomeAsUpEnabled(true);
+		
+		
+		
+	    ImageView img = (ImageView) findViewById(R.id.setPointsPic);
+	    if(img != null)
+	    {
+		    File file = getBaseContext().getFileStreamPath("lockimg");
+		    String internalPath = "data/data/files/lockimg";
+		    if (file.exists()) {
+		    	 internalPath = file.getAbsolutePath();
+		        	Drawable d = Drawable.createFromPath(internalPath);
+		         if(d!=null)
+		         {
+		        	 img.setImageDrawable(d);
+		        	 img.invalidate();
+		         }
+		    }
+	    }
+		
+		
 	}
 
 	@Override

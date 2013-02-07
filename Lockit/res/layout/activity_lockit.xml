@@ -1,57 +1,65 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".Lockit"
     tools:ignore="MergeRootFrame" >
 
-    <ImageView
-        android:id="@+id/preview"
-        android:layout_width="70dp"
-        android:layout_height="70dp"
-        android:layout_alignBottom="@+id/ChoosePicture"
-        android:layout_alignParentRight="true"
-        android:layout_marginRight="36dp"
-        android:src="@drawable/ic_launcher" />
+    <LinearLayout
+        android:id="@+id/Tabs"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" >
+
+        <ImageButton
+            android:id="@+id/PictureSettings"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="0dp"
+            android:layout_marginRight="24dp"
+            android:onClick="pictureSettings"
+            android:src="@drawable/picturemenu" />
+
+        <ImageButton
+            android:id="@+id/VoiceSettings"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="0dp"
+            android:layout_marginRight="24dp"
+            android:onClick="voiceSettings"
+            android:src="@drawable/voicemenu" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ChoosePicturePreview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" >
+
+        <ImageButton
+            android:id="@+id/ChoosePicture"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="36dp"
+            android:layout_marginTop="24dp"
+            android:onClick="viewPictures"
+            android:src="@drawable/imageselect" />
+
+        <ImageView
+            android:id="@+id/preview"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_marginRight="36dp"
+            android:layout_marginTop="24dp"
+            android:src="@drawable/ic_launcher" />
+
+    </LinearLayout>
 
     <ImageButton
         android:id="@+id/setPoints"
-        android:onClick="setPoints"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/ChoosePicture"
-        android:layout_centerVertical="true"
+        android:onClick="setPoints"
         android:src="@drawable/pointset" />
 
-    <ImageButton
-        android:id="@+id/PictureSettings"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="14dp"
-        android:layout_toLeftOf="@+id/VoiceSettings"
-        android:onClick="pictureSettings"
-        android:src="@drawable/picturemenu" />
-
-    <ImageButton
-        android:id="@+id/VoiceSettings"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignRight="@+id/preview"
-        android:layout_alignTop="@+id/PictureSettings"
-        android:layout_marginRight="24dp"
-        android:onClick="voiceSettings"
-        android:src="@drawable/voicemenu" />
-
-    <ImageButton
-        android:id="@+id/ChoosePicture"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/PictureSettings"
-        android:layout_below="@+id/PictureSettings"
-        android:layout_marginTop="24dp"
-        android:onClick="viewPictures"
-        android:src="@drawable/imageselect" />
-
-</RelativeLayout>
+</LinearLayout>
