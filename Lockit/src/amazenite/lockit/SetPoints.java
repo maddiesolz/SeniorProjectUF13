@@ -19,13 +19,14 @@ import android.view.MotionEvent;
 import android.widget.ImageView;
 import android.support.v4.view.GestureDetectorCompat;
 
- 
+
 public class SetPoints extends Activity { 
 	private static final String DEBUG_TAG = "Gestures"; 	
 	private static float x = -50;
  	private static float y = -50;
  	private GraphicView graphView; 
  	private GestureDetectorCompat mDetector; 
+ 	private float[] coordinates = {-1.0f, -1.0f, -1.0f, -1.0f, -1.0f, -1.0f};
 
 	@SuppressLint("NewApi")
 	@SuppressWarnings("deprecation")
@@ -58,9 +59,7 @@ public class SetPoints extends Activity {
         		 setContentView(graphView);
         		 graphView.setBackgroundDrawable(d);
         	 }
-         }
-		    		   
-	    
+         }    
 	    mDetector = new GestureDetectorCompat(this, new MyGestureListener());
 	}
 	
@@ -96,6 +95,19 @@ public class SetPoints extends Activity {
 		return false;//return super.onOptionsItemSelected(item);
 	}
 	
+	public void storeCoordinates(float x, float y)
+	{
+		for(int i = 0; i<coordinates.length; i++)
+		{
+			if(coordinates[i] == -1)
+			{
+				coordinates[i] = x;
+				coordinates[i+1] = y;
+				break;
+			}
+		}
+	}
+	
 	/* Gesture Dectector Class To Only listen On The Ones We Want */	
 	public class MyGestureListener extends GestureDetector.SimpleOnGestureListener {
 		  @Override
@@ -106,6 +118,9 @@ public class SetPoints extends Activity {
 		        
 		        Log.d(DEBUG_TAG, "X is: " + x);
 			    Log.d(DEBUG_TAG, "Y is: " + y);
+			    
+			    storeCoordinates(x, y);
+			    
 		        return true;
 		    }
 	 }
