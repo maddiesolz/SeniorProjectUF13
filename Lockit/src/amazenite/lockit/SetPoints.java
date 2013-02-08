@@ -19,7 +19,7 @@ import android.view.MotionEvent;
 import android.widget.ImageView;
 import android.support.v4.view.GestureDetectorCompat;
 
-
+ 
 public class SetPoints extends Activity { 
 	private static final String DEBUG_TAG = "Gestures"; 	
 	private static float x = -50;
