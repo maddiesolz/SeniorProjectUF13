@@ -1,6 +1,9 @@
 package amazenite.lockit;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 import android.os.Build;
 import android.os.Bundle;
@@ -9,6 +12,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.Bitmap.CompressFormat;
 import android.graphics.drawable.Drawable;
 import android.view.View; 
 import android.util.Log;
@@ -17,6 +21,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.widget.ImageView;
+import android.widget.Toast;
 import android.support.v4.view.GestureDetectorCompat;
 
 
@@ -65,8 +70,7 @@ public class SetPoints extends Activity {
 	
     @Override 
     public boolean onTouchEvent(MotionEvent event){ 
-        this.mDetector.onTouchEvent(event);
-        graphView.invalidate();
+        this.mDetector.onTouchEvent(event);        
         return super.onTouchEvent(event);
     }
 
@@ -106,16 +110,56 @@ public class SetPoints extends Activity {
 				break;
 			}
 		}
+		checkFull();
+	}
+	
+	public void checkFull()
+	{
+		/*
+		if(coordinates[coordinates.length-1] != -1)
+		{
+			//Full, save the array
+			try {
+				String space = " ";
+	        	FileOutputStream fos = openFileOutput("coordinates", Context.MODE_PRIVATE);
+		        for(int i = 0; i<coordinates.length; i++)
+		        {
+		        	fos.write((space + Float.toString(coordinates[i])).getBytes());
+		        }
+	        	try {
+		        		fos.close();
+		        		fos = null;
+		        	} 
+		        	catch (IOException e) {
+		        		e.printStackTrace();
+		        	}
+		        	chosenImage.recycle();
+	        	} 
+	        catch (FileNotFoundException e1) {
+	        	e1.printStackTrace();
+	        	}
+			
+			finish();
+		}
+		*/
+	}
+	
+	public void clearCoordiantes()
+	{
+		for(int i = 0; i<coordinates.length; i++)
+		{
+			coordinates[i] = -1;
+		}
 	}
 	
 	/* Gesture Dectector Class To Only listen On The Ones We Want */	
 	public class MyGestureListener extends GestureDetector.SimpleOnGestureListener {
 		  @Override
-		    public boolean onSingleTapUp(MotionEvent event) {
+		    public boolean onSingleTapConfirmed(MotionEvent event) {
 		        Log.d(DEBUG_TAG, "onSingleTapUp: " + event.toString());
 		        x = event.getRawX();
 		        y = event.getRawY()-75.0f;
-		        
+		        graphView.invalidate();
 		        Log.d(DEBUG_TAG, "X is: " + x);
 			    Log.d(DEBUG_TAG, "Y is: " + y);
 			    
@@ -123,6 +167,17 @@ public class SetPoints extends Activity {
 			    
 		        return true;
 		    }
+		  
+		  @Override
+		  public boolean onDoubleTap(MotionEvent event)
+		  {
+			  clearCoordiantes();
+			  Toast.makeText(SetPoints.this, "Gestures reset, please make 3 gestures again", Toast.LENGTH_SHORT).show();
+			  x = -100;
+			  y = -100;
+			  graphView.invalidate();
+			  return true;
+		  }
 	 }
 	  
 	 public class GraphicView extends View{		  
@@ -140,6 +195,14 @@ public class SetPoints extends Activity {
 	        	super.onDraw(canvas);
 	        	dotColor.setStyle(Paint.Style.FILL);
 	        	canvas.drawCircle(x, y, 20, dotColor);
+	        	
+	        	for(int i = 0; i<coordinates.length; i++)
+	    		{
+	    			if(coordinates[i] != -1)
+	    			{
+	    				Log.d("coordinates", Float.toString(coordinates[i]));
+	    			}
+	    		}
 	        }	          
 	   }
 }
