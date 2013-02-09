@@ -30,6 +30,7 @@ public class SetPoints extends Activity {
 	private static final String DEBUG_TAG = "Gestures"; 	
 	private static float x = -50;
  	private static float y = -50;
+ 	private int numGestures = 4;
  	private GraphicView graphView; 
  	private GestureDetectorCompat mDetector; 
  	private float[] coordinates = {-1.0f, -1.0f, -1.0f, -1.0f, -1.0f, -1.0f};
@@ -157,21 +158,27 @@ public class SetPoints extends Activity {
 	public class MyGestureListener extends GestureDetector.SimpleOnGestureListener {
 		  @Override
 		    public boolean onSingleTapConfirmed(MotionEvent event) {
-		        Log.d(DEBUG_TAG, "onSingleTapUp: " + event.toString());
-		        x = event.getRawX();
-		        y = event.getRawY()-75.0f;
-		        graphView.invalidate();
-		        Log.d(DEBUG_TAG, "X is: " + x);
-			    Log.d(DEBUG_TAG, "Y is: " + y);
-			    
-			    storeCoordinates(x, y);
-			    
-			    Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-			    
-			    	if( v.hasVibrator()) {
-			    		 // Vibrate for 300 milliseconds
-						 v.vibrate(50);
-			    	}
+			  
+				numGestures--;
+				
+				if(numGestures > 0) {
+			  
+			        Log.d(DEBUG_TAG, "onSingleTapUp: " + event.toString());
+			        x = event.getRawX();
+			        y = event.getRawY()-75.0f;
+			        graphView.invalidate();
+			        Log.d(DEBUG_TAG, "X is: " + x);
+				    Log.d(DEBUG_TAG, "Y is: " + y);
+				    
+				    storeCoordinates(x, y);
+				    
+				    Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+				    
+				    	if( v.hasVibrator()) {
+				    		 // Vibrate for 300 milliseconds
+							 v.vibrate(50);
+				    	}
+				}
 			    
 		        return true;
 		    }
@@ -179,11 +186,13 @@ public class SetPoints extends Activity {
 		  @Override
 		  public boolean onDoubleTap(MotionEvent event)
 		  {
+			  numGestures = 4;
 			  clearCoordiantes();
 			  Toast.makeText(SetPoints.this, "Gestures reset, please make 3 gestures again", Toast.LENGTH_SHORT).show();
 			  x = -100;
 			  y = -100;
 			  graphView.invalidate();
+			  
 			  return true;
 		  }
 	 }
@@ -202,15 +211,18 @@ public class SetPoints extends Activity {
 	        	dotColor.setAlpha(80);
 	        	super.onDraw(canvas);
 	        	dotColor.setStyle(Paint.Style.FILL);
-	        	canvas.drawCircle(x, y, 20, dotColor);
 	        	
-	        	for(int i = 0; i<coordinates.length; i++)
-	    		{
-	    			if(coordinates[i] != -1)
-	    			{
-	    				Log.d("coordinates", Float.toString(coordinates[i]));
-	    			}
-	    		}
+	        	if(numGestures > 0) {
+		        	canvas.drawCircle(x, y, 20, dotColor);
+		        	
+		        	for(int i = 0; i<coordinates.length; i++)
+		    		{
+		    			if(coordinates[i] != -1)
+		    			{
+		    				Log.d("coordinates", Float.toString(coordinates[i]));
+		    			}
+		    		}
+	        	}
 	        }	          
 	   }
 }
