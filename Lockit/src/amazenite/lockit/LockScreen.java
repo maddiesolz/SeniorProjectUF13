@@ -1,13 +1,21 @@
 package amazenite.lockit;
 
+
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+
 import android.os.Bundle;
 import android.app.Activity;
+import android.content.Context;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.support.v4.app.NavUtils;
 
 public class LockScreen extends Activity {
+	
+	private float[] coordinates = {-1.0f, -1.0f, -1.0f, -1.0f, -1.0f, -1.0f};
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -16,7 +24,36 @@ public class LockScreen extends Activity {
 		Log.d("lockscreen", "in lockscreen");
 		// Show the Up button in the action bar.
 		//getActionBar().setDisplayHomeAsUpEnabled(true);
+		
+		getCoordinates();
 	}
+	
+	public void getCoordinates(){
+					
+        		try {
+    				String space = " ";
+    				FileInputStream fis = openFileInput("coordinates");
+    		        for(int i = 0; i<coordinates.length; i++)
+    		        {
+    		        	try {
+    						fis.read((space + Float.toString(coordinates[i])).getBytes());
+    					} catch (IOException e) {
+    						// TODO Auto-generated catch block
+    						e.printStackTrace();
+    					}
+    		        }
+    	        	try {
+    		        		fis.close();
+    		        		fis = null;
+    		        	} 
+    		        	catch (IOException e) {
+    		        		e.printStackTrace();
+    		        	}
+    	        	} 
+    	        catch (FileNotFoundException e1) {
+    	        	e1.printStackTrace();
+    	        	}	
+			}
 	
 	
 /*
