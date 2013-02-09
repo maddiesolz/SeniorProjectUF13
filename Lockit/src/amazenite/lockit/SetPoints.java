@@ -23,6 +23,7 @@ import android.view.MotionEvent;
 import android.widget.ImageView;
 import android.widget.Toast;
 import android.support.v4.view.GestureDetectorCompat;
+import android.os.Vibrator;
 
 
 public class SetPoints extends Activity { 
@@ -164,6 +165,13 @@ public class SetPoints extends Activity {
 			    Log.d(DEBUG_TAG, "Y is: " + y);
 			    
 			    storeCoordinates(x, y);
+			    
+			    Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+			    
+			    	if( v.hasVibrator()) {
+			    		 // Vibrate for 300 milliseconds
+						 v.vibrate(50);
+			    	}
 			    
 		        return true;
 		    }
