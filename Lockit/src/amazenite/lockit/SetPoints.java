@@ -117,7 +117,7 @@ public class SetPoints extends Activity {
 	
 	public void checkFull()
 	{
-		/*
+		
 		if(coordinates[coordinates.length-1] != -1)
 		{
 			//Full, save the array
@@ -126,7 +126,12 @@ public class SetPoints extends Activity {
 	        	FileOutputStream fos = openFileOutput("coordinates", Context.MODE_PRIVATE);
 		        for(int i = 0; i<coordinates.length; i++)
 		        {
-		        	fos.write((space + Float.toString(coordinates[i])).getBytes());
+		        	try {
+						fos.write((space + Float.toString(coordinates[i])).getBytes());
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 		        }
 	        	try {
 		        		fos.close();
@@ -135,15 +140,13 @@ public class SetPoints extends Activity {
 		        	catch (IOException e) {
 		        		e.printStackTrace();
 		        	}
-		        	chosenImage.recycle();
 	        	} 
 	        catch (FileNotFoundException e1) {
 	        	e1.printStackTrace();
 	        	}
 			
-			finish();
 		}
-		*/
+		
 	}
 	
 	public void clearCoordiantes()
@@ -214,7 +217,6 @@ public class SetPoints extends Activity {
 	        	
 	        	if(numGestures > 0) {
 		        	canvas.drawCircle(x, y, 20, dotColor);
-		        	
 		        	for(int i = 0; i<coordinates.length; i++)
 		    		{
 		    			if(coordinates[i] != -1)
