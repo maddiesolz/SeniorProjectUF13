@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.util.Vector;
 
 import android.app.Activity;
+import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -141,11 +142,9 @@ public class Lockit extends Activity {
 		*/
 		
 		final Intent intent = new Intent(this, ScreenReceiver.class);
+		PendingIntent sender = PendingIntent.getBroadcast(this, 123, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 		//startActivity(intent);
-		
-		//Intent intent = new Intent();
-		//intent.setAction("");
-		sendBroadcast(intent); 
+		//sendBroadcast(intent); 		
 	}
 	
 	public void pictureSettings()
