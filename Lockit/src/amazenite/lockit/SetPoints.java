@@ -43,6 +43,8 @@ public class SetPoints extends Activity {
 		graphView = new GraphicView(this);
 		//setContentView(R.layout.activity_set_points);
 		
+		 x = -50;
+		 y = -50;
 		
 		// Show the Up button in the action bar.
 		getActionBar().setDisplayHomeAsUpEnabled(true);
@@ -127,7 +129,7 @@ public class SetPoints extends Activity {
 		        for(int i = 0; i<coordinates.length; i++)
 		        {
 		        	try {
-						fos.write((space + Float.toString(coordinates[i])).getBytes());
+						fos.write(( Float.toString(coordinates[i]) + space).getBytes());
 					} catch (IOException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();

@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Scanner;
 
 import amazenite.lockit.SetPoints.GraphicView;
 import amazenite.lockit.SetPoints.MyGestureListener;
@@ -44,6 +45,8 @@ public class LockScreen extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		//setContentView(R.layout.activity_lock_screen);
+		 x = -50;
+		 y = -50;
 		Log.d("lockscreen", "in lockscreen");
 		// Show the Up button in the action bar.
 		//getActionBar().setDisplayHomeAsUpEnabled(true);
@@ -83,50 +86,22 @@ public class LockScreen extends Activity {
 	}
 	
 	public void getCoordinates(){
-					
-        		try {
-    				//String space = " ";
-    				FileInputStream fis = openFileInput("coordinates");
-    		        for(int i = 0; i<coordinates.length; i++)
-    		        {
-    		        	try {
-    						fis.read((Float.toString(coordinates[i])).getBytes());
-    				    	 Log.d(DEBUG_TAG2, "READING THE COORDS!!!");
+		try {
+			File file = getBaseContext().getFileStreamPath("coordinates");
+			Scanner sc = new Scanner(new File(file.getAbsolutePath()));
+			String line = sc.nextLine();
+			String[] numbers = line.split(" ");
 
-    						
-    					} catch (IOException e) {
-    						// TODO Auto-generated catch block
-    						e.printStackTrace();
-    					}
-    		        }
-    	        	try {
-    		        		fis.close();
-    		        		fis = null;
-    		        	} 
-    		        	catch (IOException e) {
-    		        		e.printStackTrace();
-    		        	}
-    	        	} 
-    	        catch (FileNotFoundException e1) {
-    	        	e1.printStackTrace();
-    	        	}	
-        		
-        		/*
-        		 * Scanner sc = new Scanner(new File("..\\unsorted.txt"));
-string line = sc.nextLine();
-String[] numbers = line.split(" ");
-
-Now, you have the numbers as strings in the array. If you need the numbers, just iterate through it.
-
-int nums = new int[numbers.length];
-for(int i=0;i<numbers.length;i++)
-nums[i] = Integer.parseInt(numbers[i]);
-        		 */
-        		
-        		
-        		
-        		
+		        for(int i = 0; i<coordinates.length; i++)
+		        {
+		        		coordinates[i] = Float.parseFloat(numbers[i].trim());
+		        }
+	    
 			}
+        catch (FileNotFoundException e1) {
+        	e1.printStackTrace();
+        	}
+		}
 	
 	 @Override 
 	    public boolean onTouchEvent(MotionEvent event){ 
