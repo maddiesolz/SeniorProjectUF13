@@ -32,9 +32,11 @@ public class LockScreen extends Activity {
 	private static float x = -50;
  	private static float y = -50;
  	private int numGestures = 4;
+	private static final String DEBUG_TAG2 = "Coordinates"; 
  	private GraphicView graphView;
  	private GestureDetectorCompat mDetector; 
 	private float[] coordinates = {-1.0f, -1.0f, -1.0f, -1.0f, -1.0f, -1.0f};
+	
 	
 	@Override
 	@SuppressLint("NewApi")
@@ -54,6 +56,8 @@ public class LockScreen extends Activity {
 	    String internalPath = "data/data/files/lockimg";
 	    if (file.exists()) {
 	    	 internalPath = file.getAbsolutePath();
+	    	 Log.d(DEBUG_TAG2, "Coordinates exist");
+
 	    }
         Drawable d = Drawable.createFromPath(internalPath);
         if(d!=null)
@@ -81,12 +85,15 @@ public class LockScreen extends Activity {
 	public void getCoordinates(){
 					
         		try {
-    				String space = " ";
+    				//String space = " ";
     				FileInputStream fis = openFileInput("coordinates");
     		        for(int i = 0; i<coordinates.length; i++)
     		        {
     		        	try {
-    						fis.read((space + Float.toString(coordinates[i])).getBytes());
+    						fis.read((Float.toString(coordinates[i])).getBytes());
+    				    	 Log.d(DEBUG_TAG2, "READING THE COORDS!!!");
+
+    						
     					} catch (IOException e) {
     						// TODO Auto-generated catch block
     						e.printStackTrace();
@@ -103,6 +110,22 @@ public class LockScreen extends Activity {
     	        catch (FileNotFoundException e1) {
     	        	e1.printStackTrace();
     	        	}	
+        		
+        		/*
+        		 * Scanner sc = new Scanner(new File("..\\unsorted.txt"));
+string line = sc.nextLine();
+String[] numbers = line.split(" ");
+
+Now, you have the numbers as strings in the array. If you need the numbers, just iterate through it.
+
+int nums = new int[numbers.length];
+for(int i=0;i<numbers.length;i++)
+nums[i] = Integer.parseInt(numbers[i]);
+        		 */
+        		
+        		
+        		
+        		
 			}
 	
 	 @Override 
