@@ -127,7 +127,7 @@ public class Lockit extends Activity {
 		WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
 		window.addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED);
 		*/
-		
+		/*
 		BroadcastReceiver displayPicture = new BroadcastReceiver() {		    
 		    @Override
 			public void onReceive(Context arg0, Intent intent) {
@@ -137,7 +137,12 @@ public class Lockit extends Activity {
 				Log.d("hey", "hey");
 			}
 		};		
-		registerReceiver(displayPicture, new IntentFilter(Intent.ACTION_USER_PRESENT));		
+		registerReceiver(displayPicture, new IntentFilter(Intent.ACTION_USER_PRESENT));
+		*/
+		
+		Intent intent = new Intent();
+		intent.setAction("amazenite.lockit.android.screenbroadcast");
+		sendBroadcast(intent); 
 	}
 	
 	public void pictureSettings()
