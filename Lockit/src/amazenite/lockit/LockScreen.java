@@ -33,7 +33,7 @@ public class LockScreen extends Activity {
 	private static float x = -50;
  	private static float y = -50;
  	private int numGestures = 4;
- 	private GraphicView graphView; 
+ 	private GraphicView graphView;
  	private GestureDetectorCompat mDetector; 
 	private float[] coordinates = {-1.0f, -1.0f, -1.0f, -1.0f, -1.0f, -1.0f};
 	
@@ -46,7 +46,8 @@ public class LockScreen extends Activity {
 		Log.d("lockscreen", "in lockscreen");
 		// Show the Up button in the action bar.
 		//getActionBar().setDisplayHomeAsUpEnabled(true);
-		//graphView = new GraphicView(this);
+		graphView = new GraphicView(this);
+				
 		
 		//Set As Background Image
 	    
@@ -71,6 +72,11 @@ public class LockScreen extends Activity {
 	    mDetector = new GestureDetectorCompat(this, new MyGestureListener());
 
 		getCoordinates();
+		
+		  for(int i = 0; i<coordinates.length; i++)
+	        {
+		Log.d("coordinates are: ", Float.toString(coordinates[i]));
+	        }
 	}
 	
 	public void getCoordinates(){
@@ -131,6 +137,7 @@ public class LockScreen extends Activity {
 				    
 			        return true;
 			    }
+		}
 		
 				 public class GraphicView extends View{		  
 					  Paint dotColor = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -185,4 +192,4 @@ public class LockScreen extends Activity {
 		return super.onOptionsItemSelected(item);
 	}
 */
-}
+

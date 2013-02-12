@@ -35,6 +35,13 @@ public class Lockit extends Activity {
 		startActivity(intent);
 	}
 	
+	/** Lockscreen Debug */
+	public void debugLockscreen(View view) {
+	    // debug the lockscreen
+		final Intent intent = new Intent(this, LockScreen.class);
+		startActivity(intent);
+	}
+	
 	@Override
 	public void onResume() {
 		super.onResume();
