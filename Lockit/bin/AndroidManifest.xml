@@ -25,6 +25,16 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            
+	        <receiver
+		        android:permission="android.permission.RECEIVE_BOOT_COMPLETED"
+		        android:name="displayPicture" >
+		        <intent-filter >
+		            <action android:name="android.intent.action.SCREEN_ON" />
+		            <action android:name="android.intent.action.BOOT_COMPLETED" />
+		        </intent-filter>
+		    </receiver>
+	    
         </activity>
         <activity
             android:name="amazenite.lockit.Getpicture"
@@ -82,6 +92,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="amazenite.lockit" />
         </activity>
+        
     </application>
 
 </manifest>

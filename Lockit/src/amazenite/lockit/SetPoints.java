@@ -144,7 +144,8 @@ public class SetPoints extends Activity {
 	        catch (FileNotFoundException e1) {
 	        	e1.printStackTrace();
 	        	}
-			
+			  Toast.makeText(SetPoints.this, "Coordinates Saved", Toast.LENGTH_SHORT).show();
+			  finish();
 		}
 		
 	}
@@ -160,12 +161,7 @@ public class SetPoints extends Activity {
 	/* Gesture Dectector Class To Only listen On The Ones We Want */	
 	public class MyGestureListener extends GestureDetector.SimpleOnGestureListener {
 		  @Override
-		    public boolean onSingleTapConfirmed(MotionEvent event) {
-			  
-				numGestures--;
-				
-				if(numGestures > 0) {
-			  
+		    public boolean onSingleTapConfirmed(MotionEvent event) {			  
 			        Log.d(DEBUG_TAG, "onSingleTapUp: " + event.toString());
 			        x = event.getRawX();
 			        y = event.getRawY()-75.0f;
@@ -181,7 +177,6 @@ public class SetPoints extends Activity {
 				    		 // Vibrate for 300 milliseconds
 							 v.vibrate(50);
 				    	}
-				}
 			    
 		        return true;
 		    }
@@ -189,7 +184,6 @@ public class SetPoints extends Activity {
 		  @Override
 		  public boolean onDoubleTap(MotionEvent event)
 		  {
-			  numGestures = 4;
 			  clearCoordiantes();
 			  Toast.makeText(SetPoints.this, "Gestures reset, please make 3 gestures again", Toast.LENGTH_SHORT).show();
 			  x = -100;
@@ -213,18 +207,17 @@ public class SetPoints extends Activity {
 	        	dotColor.setColor(0xff33CCCC);
 	        	dotColor.setAlpha(80);
 	        	super.onDraw(canvas);
-	        	dotColor.setStyle(Paint.Style.FILL);
+	        	dotColor.setStyle(Paint.Style.FILL);        	
+
+	        	canvas.drawCircle(x, y, 20, dotColor);
+	        	for(int i = 0; i<coordinates.length; i++)
+	    		{
+	    			if(coordinates[i] != -1)
+	    			{
+	    				Log.d("coordinates", Float.toString(coordinates[i]));
+	    			}
+	    		}
 	        	
-	        	if(numGestures > 0) {
-		        	canvas.drawCircle(x, y, 20, dotColor);
-		        	for(int i = 0; i<coordinates.length; i++)
-		    		{
-		    			if(coordinates[i] != -1)
-		    			{
-		    				Log.d("coordinates", Float.toString(coordinates[i]));
-		    			}
-		    		}
-	        	}
 	        }	          
 	   }
 }
