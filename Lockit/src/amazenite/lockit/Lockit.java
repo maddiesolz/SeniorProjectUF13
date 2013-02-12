@@ -140,8 +140,11 @@ public class Lockit extends Activity {
 		registerReceiver(displayPicture, new IntentFilter(Intent.ACTION_USER_PRESENT));
 		*/
 		
-		Intent intent = new Intent();
-		intent.setAction("amazenite.lockit.android.screenbroadcast");
+		final Intent intent = new Intent(this, ScreenReceiver.class);
+		//startActivity(intent);
+		
+		//Intent intent = new Intent();
+		//intent.setAction("");
 		sendBroadcast(intent); 
 	}
 	
