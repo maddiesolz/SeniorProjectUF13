@@ -20,39 +20,15 @@ public final class R {
         public static final int pressed_lockit_theme=0x7f050000;
     }
     public static final class drawable {
-        public static final int ab_bottom_solid_lockit_theme=0x7f020000;
-        public static final int ab_solid_lockit_theme=0x7f020001;
-        public static final int ab_stacked_solid_lockit_theme=0x7f020002;
-        public static final int ab_transparent_lockit_theme=0x7f020003;
-        public static final int enable=0x7f020004;
-        public static final int ic_launcher=0x7f020005;
-        public static final int ic_setpic=0x7f020006;
-        public static final int imageselect=0x7f020007;
-        public static final int list_focused_lockit_theme=0x7f020008;
-        public static final int menu_dropdown_panel_lockit_theme=0x7f020009;
-        public static final int menu_hardkey_panel_lockit_theme=0x7f02000a;
-        public static final int origami=0x7f02000b;
-        public static final int picturemenu=0x7f02000c;
-        public static final int pointset=0x7f02000d;
-        public static final int pressed_background_lockit_theme=0x7f02000e;
-        public static final int progress_bg_lockit_theme=0x7f02000f;
-        public static final int progress_horizontal_lockit_theme=0x7f020010;
-        public static final int progress_primary_lockit_theme=0x7f020011;
-        public static final int progress_secondary_lockit_theme=0x7f020012;
-        public static final int rainbow=0x7f020013;
-        public static final int selectable_background_lockit_theme=0x7f020014;
-        public static final int spinner_ab_default_lockit_theme=0x7f020015;
-        public static final int spinner_ab_disabled_lockit_theme=0x7f020016;
-        public static final int spinner_ab_focused_lockit_theme=0x7f020017;
-        public static final int spinner_ab_pressed_lockit_theme=0x7f020018;
-        public static final int spinner_background_ab_lockit_theme=0x7f020019;
-        public static final int tab_indicator_ab_lockit_theme=0x7f02001a;
-        public static final int tab_selected_focused_lockit_theme=0x7f02001b;
-        public static final int tab_selected_lockit_theme=0x7f02001c;
-        public static final int tab_selected_pressed_lockit_theme=0x7f02001d;
-        public static final int tab_unselected_focused_lockit_theme=0x7f02001e;
-        public static final int tab_unselected_pressed_lockit_theme=0x7f02001f;
-        public static final int voicemenu=0x7f020020;
+        public static final int enable=0x7f020000;
+        public static final int ic_launcher=0x7f020001;
+        public static final int ic_setpic=0x7f020002;
+        public static final int imageselect=0x7f020003;
+        public static final int origami=0x7f020004;
+        public static final int picturemenu=0x7f020005;
+        public static final int pointset=0x7f020006;
+        public static final int rainbow=0x7f020007;
+        public static final int voicemenu=0x7f020008;
     }
     public static final class id {
         public static final int ChoosePicture=0x7f0a0006;
@@ -156,17 +132,6 @@ public final class R {
  All customizations that are NOT specific to a particular API-level can go here. 
          */
         public static final int AppTheme=0x7f080001;
-        public static final int Theme_lockit_theme=0x7f080002;
-        /**  this style is only referenced in a Light.DarkActionBar based theme 
-         */
-        public static final int Theme_lockit_theme_widget=0x7f08000a;
-        public static final int lockit_theme_ActionBarTabStyle=0x7f080007;
-        public static final int lockit_theme_DropDownListView=0x7f080006;
-        public static final int lockit_theme_DropDownNav=0x7f080008;
-        public static final int lockit_theme_PopupMenu=0x7f080005;
-        public static final int lockit_theme_ProgressBar=0x7f080009;
-        public static final int lockit_theme_solid_ActionBar=0x7f080003;
-        public static final int lockit_theme_transparent_ActionBar=0x7f080004;
     }
     public static final class xml {
         public static final int pref_data_sync=0x7f040000;

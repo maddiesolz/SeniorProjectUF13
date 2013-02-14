@@ -88,25 +88,20 @@ public class ImageAdapter extends BaseAdapter {
 	    	
 	    	if(folderPics != null)
 	    	{
-	    		
-			    	String name = "";
-			    	SDCardImages.removeAllElements();
-			    	for(int i = maxPicNumbers*pageNumber; i < maxPicNumbers*pageNumber+endingPicNum; i++)
-			    	{
-			    		File singleFile = folderPics[i];
-			    		name = singleFile.getName();
-			    		 
-			    		 if(name.endsWith(".jpg") || name.endsWith(".png") || name.endsWith(".gif"))
-			    		 {
-			    			 String path = singleFile.getAbsolutePath();
-			    			 SDCardImages.add(path);
-			    		 }
-			    		 
-			    		 
-			    	}
-			    	
-			    	  								
-	    	}
+		    	String name = "";
+		    	SDCardImages.removeAllElements();
+		    	for(int i = maxPicNumbers*pageNumber; i < maxPicNumbers*pageNumber+endingPicNum; i++)
+		    	{
+		    		File singleFile = folderPics[i];
+		    		name = singleFile.getName();
+		    		 
+		    		 if(name.endsWith(".jpg") || name.endsWith(".png") || name.endsWith(".gif"))
+		    		 {
+		    			 String path = singleFile.getAbsolutePath();
+		    			 SDCardImages.add(path);
+		    		 }
+		    	}
+		    }
 	    	else
 	    	{
 	    		empty = true;

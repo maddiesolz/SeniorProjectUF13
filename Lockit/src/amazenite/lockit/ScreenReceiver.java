@@ -3,7 +3,6 @@ package amazenite.lockit;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 
 public class ScreenReceiver extends BroadcastReceiver {
     @Override
@@ -14,7 +13,6 @@ public class ScreenReceiver extends BroadcastReceiver {
 	        lockIntent.setClass(context, LockScreen.class);
 	        lockIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 	        context.startActivity(lockIntent);
-			Log.d("hey", "hey");
     	}
     }
 }

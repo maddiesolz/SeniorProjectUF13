@@ -7,13 +7,12 @@ import java.io.IOException;
 
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.annotation.SuppressLint;
-import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.graphics.Bitmap.CompressFormat;
 import android.graphics.drawable.Drawable;
 import android.view.View; 
 import android.util.Log;
@@ -21,17 +20,14 @@ import android.view.GestureDetector;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
-import android.widget.ImageView;
 import android.widget.Toast;
 import android.support.v4.view.GestureDetectorCompat;
 import android.os.Vibrator;
 
 
-public class SetPoints extends Activity { 
-	private static final String DEBUG_TAG = "Gestures"; 	
+public class SetPoints extends Activity { 	
 	private static float x = -50;
  	private static float y = -50;
- 	private int numGestures = 4;
  	private GraphicView graphView; 
  	private GestureDetectorCompat mDetector; 
  	private float[] coordinates = {-1.0f, -1.0f, -1.0f, -1.0f, -1.0f, -1.0f};
@@ -41,19 +37,11 @@ public class SetPoints extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		ActionBar actionBar = getActionBar();
-		actionBar.hide();
 		graphView = new GraphicView(this);
-		//setContentView(R.layout.activity_set_points);
-		
 		 x = -50;
 		 y = -50;
 		
-		// Show the Up button in the action bar.
-		getActionBar().setDisplayHomeAsUpEnabled(true);
-		
 		//Set As Background Image
-	    
 	    File file = getBaseContext().getFileStreamPath("lockimg");
 	    String internalPath = "data/data/files/lockimg";
 	    if (file.exists()) {
@@ -166,23 +154,17 @@ public class SetPoints extends Activity {
 	/* Gesture Dectector Class To Only listen On The Ones We Want */	
 	public class MyGestureListener extends GestureDetector.SimpleOnGestureListener {
 		  @Override
-		    public boolean onSingleTapConfirmed(MotionEvent event) {			  
-			        Log.d(DEBUG_TAG, "onSingleTapUp: " + event.toString());
+		    public boolean onSingleTapConfirmed(MotionEvent event) {			 
 			        x = event.getRawX();
-			        y = event.getRawY()-75.0f;
+			        y = event.getRawY()-40.0f;
 			        graphView.invalidate();
-			        Log.d(DEBUG_TAG, "X is: " + x);
-				    Log.d(DEBUG_TAG, "Y is: " + y);
 				    
 				    storeCoordinates(x, y);
 				    
 				    Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-				    
-				    	if( v.hasVibrator()) {
-				    		 // Vibrate for 300 milliseconds
-							 v.vibrate(50);
-				    	}
-			    
+			    	if( v.hasVibrator()) {
+						 v.vibrate(50);
+			    	}
 		        return true;
 		    }
 		  
@@ -190,7 +172,16 @@ public class SetPoints extends Activity {
 		  public boolean onDoubleTap(MotionEvent event)
 		  {
 			  clearCoordiantes();
-			  Toast.makeText(SetPoints.this, "Gestures reset, please make 3 gestures again", Toast.LENGTH_SHORT).show();
+			  final Toast toast = Toast.makeText(getApplicationContext(), "Gestures reset, please make 3 gestures again.", Toast.LENGTH_SHORT);
+	    	    toast.show();
+				//Toast.makeText(LockScreen.this, "" + "Incorrect Password! Please try agan.", Toast.LENGTH_SHORT).show();
+				Handler handler = new Handler();
+		        handler.postDelayed(new Runnable() {
+		           @Override
+		           public void run() {
+		               toast.cancel(); 
+		           }
+		        }, 1000);
 			  x = -100;
 			  y = -100;
 			  graphView.invalidate();
