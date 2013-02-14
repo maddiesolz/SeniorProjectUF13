@@ -32,7 +32,8 @@ public class LockScreen extends Activity {
 	private static final String DEBUG_TAG = "Gestures"; 	
 	private static float x = -50;
  	private static float y = -50;
- 	private int numGestures = 4;
+ 	private int numGestures = 0;
+ 	private int counter = 0;
 	private static final String DEBUG_TAG2 = "Coordinates"; 
  	private GraphicView graphView;
  	private GestureDetectorCompat mDetector; 
@@ -113,10 +114,8 @@ public class LockScreen extends Activity {
 		public class MyGestureListener extends GestureDetector.SimpleOnGestureListener {
 			  @Override
 			    public boolean onSingleTapConfirmed(MotionEvent event) {
-				  
-					numGestures--;
-					
-					if(numGestures > 0) {
+				  					
+					if(numGestures < 3 && counter <= 4) {
 				  
 				        Log.d(DEBUG_TAG, "onSingleTapUp: " + event.toString());
 				        x = event.getRawX();
@@ -129,6 +128,28 @@ public class LockScreen extends Activity {
 					    
 					    	if( v.hasVibrator()) {
 								 v.vibrate(50);
+					    	}
+					    	
+					    	if((x <=coordinates[counter]+100.0f  && x >= coordinates[counter]-100.0f) && 
+					    	   (y <= coordinates[counter+1]+100.0f && y >= coordinates[counter+1]-100.0f)){
+					    		numGestures++;
+					    		counter++;
+						    /*	Log.d("x: " +  x ,"set x: " + coordinates[counter]);
+						    	Log.d("y: " +  y , "set y: " + coordinates[counter+1]);
+						    	Log.d("counter ", ""+counter);*/
+						    		if(counter >= 3){
+								    	Toast.makeText(LockScreen.this, "" + "Unlocked!", Toast.LENGTH_SHORT).show();
+						    			finish();
+						    		}
+					    	}
+					    	else {
+						    	Toast.makeText(LockScreen.this, "" + "Incorrect Password! Please try agan.", Toast.LENGTH_SHORT).show();
+						    	/*Log.d("x: " +  x ,"set x: " + coordinates[counter]);
+						    	Log.d("y: " +  y , "set y: " + coordinates[counter+1]);
+						    	Log.d("counter ", ""+counter);*/
+						    	graphView.invalidate();
+						    	numGestures = 0;
+						    	counter = 0;
 					    	}
 					}
 				    
