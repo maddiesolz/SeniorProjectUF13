@@ -36,7 +36,7 @@ public class Lockit extends Activity {
 		startActivity(intent);
 	}
 	
-	/** Lockscreen Debug */
+	/** Lockscreen Test Points */
 	public void debugLockscreen(View view) {
 	    // debug the lockscreen
 		final Intent intent = new Intent(this, LockScreen.class);

@@ -12,6 +12,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.annotation.SuppressLint;
+import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Canvas;
@@ -46,6 +47,8 @@ public class LockScreen extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		//setContentView(R.layout.activity_lock_screen);
+		ActionBar actionBar = getActionBar();
+		actionBar.hide();
 		 x = -50;
 		 y = -50;
 		Log.d("lockscreen", "in lockscreen");
@@ -115,7 +118,7 @@ public class LockScreen extends Activity {
 			  @Override
 			    public boolean onSingleTapConfirmed(MotionEvent event) {
 				  					
-					if(numGestures < 3 && counter <= 4) {
+					if(counter <= 4 ) {
 				  
 				        Log.d(DEBUG_TAG, "onSingleTapUp: " + event.toString());
 				        x = event.getRawX();
@@ -130,23 +133,23 @@ public class LockScreen extends Activity {
 								 v.vibrate(50);
 					    	}
 					    	
-					    	if((x <=coordinates[counter]+100.0f  && x >= coordinates[counter]-100.0f) && 
-					    	   (y <= coordinates[counter+1]+100.0f && y >= coordinates[counter+1]-100.0f)){
-					    		numGestures++;
-					    		counter++;
-						    /*	Log.d("x: " +  x ,"set x: " + coordinates[counter]);
-						    	Log.d("y: " +  y , "set y: " + coordinates[counter+1]);
-						    	Log.d("counter ", ""+counter);*/
-						    		if(counter >= 3){
+					    	if((x <=coordinates[counter]+50.0f  && x >= coordinates[counter]-50.0f) && 
+					    	   (y <= coordinates[counter+1]+50.0f && y >= coordinates[counter+1]-50.0f)){
+					    		//numGestures++;
+					    		counter = counter+2;
+						    	//Log.d("x: " +  x ,"set x: " + coordinates[counter]);
+						    	//Log.d("y: " +  y , "set y: " + coordinates[counter+1]);
+						    	//Log.d("counter ", ""+counter);
+						    		if(counter >= 5){
 								    	Toast.makeText(LockScreen.this, "" + "Unlocked!", Toast.LENGTH_SHORT).show();
 						    			finish();
 						    		}
 					    	}
 					    	else {
 						    	Toast.makeText(LockScreen.this, "" + "Incorrect Password! Please try agan.", Toast.LENGTH_SHORT).show();
-						    	/*Log.d("x: " +  x ,"set x: " + coordinates[counter]);
+						    	Log.d("x: " +  x ,"set x: " + coordinates[counter]);
 						    	Log.d("y: " +  y , "set y: " + coordinates[counter+1]);
-						    	Log.d("counter ", ""+counter);*/
+						    	Log.d("counter ", ""+counter);
 						    	graphView.invalidate();
 						    	numGestures = 0;
 						    	counter = 0;

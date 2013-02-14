@@ -69,7 +69,10 @@ public class ImageAdapter extends BaseAdapter {
     	int maxPicNumbers = 12; 
     	
     	SDCardImages = new Vector<String>();
+    	//getExternalStoragePublicDirectory (DIRECTORY_PICTURES).
     	File picFolder = new File(Environment.getExternalStorageDirectory().getPath() + "/DCIM/100MEDIA/");
+    	//getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+    	//File picFolder = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
     	if (!picFolder.exists())
         {
     		empty = true;

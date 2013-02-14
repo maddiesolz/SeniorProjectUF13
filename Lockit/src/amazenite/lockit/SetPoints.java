@@ -8,6 +8,7 @@ import java.io.IOException;
 import android.os.Build;
 import android.os.Bundle;
 import android.annotation.SuppressLint;
+import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Canvas;
@@ -40,6 +41,8 @@ public class SetPoints extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		ActionBar actionBar = getActionBar();
+		actionBar.hide();
 		graphView = new GraphicView(this);
 		//setContentView(R.layout.activity_set_points);
 		
@@ -102,7 +105,7 @@ public class SetPoints extends Activity {
 		}
 		return false;//return super.onOptionsItemSelected(item);
 	}
-	
+
 	public void storeCoordinates(float x, float y)
 	{
 		for(int i = 0; i<coordinates.length; i++)
