@@ -206,6 +206,7 @@ public class SetPoints extends Activity {
 	        	dotColor.setStyle(Paint.Style.FILL);        	
 
 	        	canvas.drawCircle(x, y, 20, dotColor);
+	        	//canvas.drawLine(startX, startY, stopX, stopY, paint)
 	        	for(int i = 0; i<coordinates.length; i++)
 	    		{
 	    			if(coordinates[i] != -1)

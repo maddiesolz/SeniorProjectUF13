@@ -66,7 +66,7 @@ public class ImageAdapter extends BaseAdapter {
         
     public void loadImages(int pageNumber)
     {
-    	int maxPicNumbers = 12; 
+    	int maxPicNumbers = 36; 
     	
     	SDCardImages = new Vector<String>();
     	//getExternalStoragePublicDirectory (DIRECTORY_PICTURES).
@@ -82,7 +82,7 @@ public class ImageAdapter extends BaseAdapter {
 	    	File[] folderPics = picFolder.listFiles();
 	    	totalNumberFiles = folderPics.length - (pageNumber*maxPicNumbers);
 	    	int endingPicNum = maxPicNumbers;
-		    	if(totalNumberFiles < 12){
+		    	if(totalNumberFiles < 36){
 		    		endingPicNum = totalNumberFiles;
 		    	}
 	    	
@@ -131,7 +131,7 @@ public class ImageAdapter extends BaseAdapter {
     
     public boolean getCurrentCount(){
     	//Returns true if don't need to display button
-    	if ((totalNumberFiles - 12) < 12){
+    	if ((totalNumberFiles - 36) < 36){
     		return true;
     	}
     	else

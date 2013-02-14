@@ -163,6 +163,11 @@ public class LockScreen extends Activity {
 			        	canvas.drawCircle(x, y, 20, dotColor);
 			        }	          
 			   }
+			 
+			 @Override
+			 public void onBackPressed() {
+			     // Do Here what ever you want do on back press;
+			 }
 		}
 /*
 	@Override

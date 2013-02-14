@@ -89,56 +89,37 @@ public class Lockit extends Activity {
 	        {
 	        	scale *=2;
 	        }
-     	BitmapFactory.Options o2 = new BitmapFactory.Options();
-     	o2.inSampleSize=scale;
-     	if(images.get(num) == null)
-     	{
-     		Log.d("open images", "image null");
-     	}
-     	Bitmap samplePic = BitmapFactory.decodeResource(getResources(), images.get(num), o2);
- 		if(samplePic != null)
- 		{
- 		 try {
-	        	FileOutputStream fos = openFileOutput("lockimg", Context.MODE_PRIVATE);
-	        	samplePic.compress(CompressFormat.JPEG, 100, fos);
-		        	try {
-		        		fos.close();
-		        		fos = null;
-		        	} 
-		        	catch (IOException e) {
-		        		e.printStackTrace();
-		        	}
-	        	samplePic.recycle();
-	        	} 
-		        catch (FileNotFoundException e1) {
-		        	e1.printStackTrace();
-		        }
- 		}
+	     	BitmapFactory.Options o2 = new BitmapFactory.Options();
+	     	o2.inSampleSize=scale;
+	     	if(images.get(num) == null)
+	     	{
+	     		Log.d("open images", "image null");
+	     	}
+	     	Bitmap samplePic = BitmapFactory.decodeResource(getResources(), images.get(num), o2);
+	 		if(samplePic != null)
+	 		{
+		 		 try {
+			        	FileOutputStream fos = openFileOutput("lockimg", Context.MODE_PRIVATE);
+			        	samplePic.compress(CompressFormat.JPEG, 100, fos);
+				        	try {
+				        		fos.close();
+				        		fos = null;
+				        	} 
+				        	catch (IOException e) {
+				        		e.printStackTrace();
+				        	}
+				        	samplePic.recycle();
+			        	} 
+				        catch (FileNotFoundException e1) {
+				        	e1.printStackTrace();
+				  }
+	 		}
 	}
 	    
 	public void enablePicPw(View view)
 	{
-		/*Window window = getWindow();
-		WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-		window.addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED);
-		*/
-		/*
-		BroadcastReceiver displayPicture = new BroadcastReceiver() {		    
-		    @Override
-			public void onReceive(Context arg0, Intent intent) {
-		    	Intent lockIntent = new Intent();  
-	            intent.setClass(context, LockScreen.class);
-	            startActivity(lockIntent);      
-				Log.d("hey", "hey");
-			}
-		};		
-		registerReceiver(displayPicture, new IntentFilter(Intent.ACTION_USER_PRESENT));
-		*/
-		
 		final Intent intent = new Intent(this, ScreenReceiver.class);
-		PendingIntent sender = PendingIntent.getBroadcast(this, 123, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-		//startActivity(intent);
-		//sendBroadcast(intent); 		
+		PendingIntent sender = PendingIntent.getBroadcast(this, 123, intent, PendingIntent.FLAG_UPDATE_CURRENT);		
 	}
 	
 	public void pictureSettings()

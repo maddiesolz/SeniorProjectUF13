@@ -10,7 +10,7 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/GridView1"
         android:layout_width="fill_parent"
-        android:layout_height="295dp"
+        android:layout_height="441dp"
         android:columnWidth="90dp"
         android:gravity="center"
         android:horizontalSpacing="5dp"
@@ -18,14 +18,14 @@
         android:stretchMode="columnWidth"
         android:verticalSpacing="5dp"
         app:context=".OpenImages" >
-    </GridView> 
+    </GridView>
 
     <ImageButton
         android:id="@+id/moreImagesButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="144dp"
-        android:src="@drawable/ic_setpic"
-        android:gravity="bottom|center"  />
+        android:gravity="bottom|center"
+        android:src="@drawable/ic_setpic" />
 
 </LinearLayout>

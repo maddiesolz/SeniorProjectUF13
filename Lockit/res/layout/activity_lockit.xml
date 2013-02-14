@@ -7,6 +7,12 @@
     tools:context=".Lockit"
     tools:ignore="MergeRootFrame" >
 
+    <ImageView
+        android:id="@+id/titleBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_launcher" />
+
     <LinearLayout
         android:id="@+id/Tabs"
         android:layout_width="wrap_content"
@@ -52,8 +58,6 @@
             android:layout_marginRight="36dp"
             android:layout_marginTop="24dp"
             android:src="@drawable/ic_launcher" />
-        
-        
     </LinearLayout>
 
     <ImageButton
@@ -65,9 +69,9 @@
 
     <ImageButton
         android:id="@+id/enablePicturePassword"
-        android:onClick="enablePicPw"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:onClick="enablePicPw"
         android:src="@drawable/enable" />
 
     <Button
