@@ -21,5 +21,6 @@
     <string name="title_activity_image_option_screen">Image-Lock Options</string>
     <string name="title_activity_set_points">SetPoints</string>
     <string name="title_activity_lock_screen">LockScreen</string>
+    <string name="title_activity_test_gallery">TestGallery</string>
 
 </resources>

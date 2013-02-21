@@ -7,20 +7,19 @@
     <uses-sdk
         android:minSdkVersion="11"
         android:targetSdkVersion="17" />
-    
-     <uses-permission android:name="android.permission.VIBRATE"/>
- 	 <category android:name="android.intent.category.LAUNCHER" />
+
+    <uses-permission android:name="android.permission.VIBRATE" />
+
+    <category android:name="android.intent.category.LAUNCHER" />
 
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@android:style/Theme.Holo.NoActionBar">
-    
-        
+        android:theme="@android:style/Theme.Holo.NoActionBar" >
         <activity
             android:name="amazenite.lockit.Lockit"
-            android:label="@string/app_name" 
+            android:label="@string/app_name"
             android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -31,7 +30,7 @@
         <activity
             android:name="amazenite.lockit.Getpicture"
             android:label="@string/title_activity_getpicture"
-            android:parentActivityName="amazenite.lockit" 
+            android:parentActivityName="amazenite.lockit"
             android:screenOrientation="portrait" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -39,18 +38,18 @@
         </activity>
         <activity
             android:name="amazenite.lockit.SettingsActivity"
-            android:label="@string/title_activity_settings" 
+            android:label="@string/title_activity_settings"
             android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name="amazenite.lockit.Set_Pic"
-            android:label="@string/title_activity_set__pic" 
-            android:screenOrientation="portrait">
+            android:label="@string/title_activity_set__pic"
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name="amazenite.lockit.SetPic"
             android:label="@string/title_activity_set_pic"
-            android:parentActivityName="amazenite.Lockit" 
+            android:parentActivityName="amazenite.Lockit"
             android:screenOrientation="portrait" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -59,7 +58,7 @@
         <activity
             android:name="amazenite.lockit.OpenImages"
             android:label="@string/title_activity_open_images"
-            android:parentActivityName="amazenite.Lockit" 
+            android:parentActivityName="amazenite.Lockit"
             android:screenOrientation="portrait" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -68,7 +67,7 @@
         <activity
             android:name="amazenite.lockit.SetPoints"
             android:label="@string/title_activity_set_points"
-            android:parentActivityName="amazenite.lockit" 
+            android:parentActivityName="amazenite.lockit"
             android:screenOrientation="portrait" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -76,23 +75,33 @@
         </activity>
         <activity
             android:name="amazenite.lockit.LockScreen"
-            android:label="@string/title_activity_lock_screen"
-            android:parentActivityName="amazenite.lockit" 
-            android:launchMode="singleTask"
-            android:screenOrientation="portrait" 
+            android:fadeDuration="0"
             android:fadeOffset="0"
-			android:fadeDuration="0">
+            android:label="@string/title_activity_lock_screen"
+            android:launchMode="singleTask"
+            android:parentActivityName="amazenite.lockit"
+            android:screenOrientation="portrait" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="amazenite.lockit" />
         </activity>
+
         <receiver
-		        android:permission="android.permission.RECEIVE_BOOT_COMPLETED"
-		        android:name=".ScreenReceiver" >
-		        <intent-filter >
-            		<action android:name="android.intent.action.USER_PRESENT" />
-		        </intent-filter>
-		    </receiver>
+            android:name="amazenite.lockit.ScreenReceiver"
+            android:permission="android.permission.RECEIVE_BOOT_COMPLETED" >
+            <intent-filter>
+                <action android:name="android.intent.action.USER_PRESENT" />
+            </intent-filter>
+        </receiver>
+
+        <activity
+            android:name="amazenite.lockit.TestGallery"
+            android:label="@string/title_activity_test_gallery"
+            android:parentActivityName="amazenite.lockit" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="amazenite.lockit" />
+        </activity>
     </application>
 
 </manifest>

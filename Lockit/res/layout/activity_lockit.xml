@@ -76,10 +76,18 @@
 
     <Button
         android:id="@+id/debugLockscreen"
-        android:layout_width="70dp"
-        android:layout_height="70dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginRight="36dp"
         android:layout_marginTop="24dp"
-        android:onClick="debugLockscreen" />
+        android:onClick="debugLockscreen"
+        android:text="Test Points" />
+
+    <Button
+        android:id="@+id/button1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="galTest"
+        android:text="Gallery Test" />
 
 </LinearLayout>
