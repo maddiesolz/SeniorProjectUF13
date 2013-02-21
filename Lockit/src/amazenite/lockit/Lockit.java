@@ -30,13 +30,6 @@ public class Lockit extends Activity {
 		startActivity(intent);
 	}
 	
-	/** TEST THE GALLERY */
-	public void galTest(View view) {
-	    // Do something in response to button
-		final Intent intent = new Intent(this, TestGallery.class);
-		startActivity(intent);
-	}
-	
 	/** Lockscreen Test Points */
 	public void debugLockscreen(View view) {
 	    // debug the lockscreen
