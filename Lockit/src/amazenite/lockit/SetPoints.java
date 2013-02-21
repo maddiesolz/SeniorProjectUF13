@@ -33,8 +33,9 @@ public class SetPoints extends Activity {
  	private GestureDetectorCompat mDetector;
  	private OnTouchListener mGestureListener;
  	private String[] coordinates = {"", "", ""};
- 	private float[] moveCoordinates = {-1.0f, -1.0f, -1.0f, -1.0f};
+ 	private float[] moveCoordinates = {-50, -50, -50, -50};
  	private boolean isScrolling = false;
+ 	private String type = "";
 
 	@SuppressLint("NewApi")
 	@SuppressWarnings("deprecation")
@@ -102,11 +103,12 @@ public class SetPoints extends Activity {
 	public class MyGestureListener extends GestureDetector.SimpleOnGestureListener {
 		  @Override
 		    public boolean onSingleTapConfirmed(MotionEvent event) {			 
-		        x = event.getRawX();
-		        y = event.getRawY()-40.0f;
+		        x = event.getRawX()-40;
+		        y = event.getRawY();
 		        graphView.invalidate();
 			    
-			    storeCoordinates("Adot");
+		        type = "Adot";
+			    storeCoordinates();			    
 			    
 			    Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 		    	if( v.hasVibrator()) {
@@ -141,9 +143,10 @@ public class SetPoints extends Activity {
 			  isScrolling = true;
 			  x = e1.getRawX();
 			  y = e1.getRawY()-40.0f;
-			  
 			  x2 = e2.getRawX();
 			  y2 = e2.getRawY()-40.0f;
+			  
+			  graphView.invalidate();
 			  
 			  storeMoveCoordinates();
 			  //checkgesture & trim array needs to be moved
@@ -159,13 +162,13 @@ public class SetPoints extends Activity {
 	//Store coordinates of gesture path
 	public void storeMoveCoordinates()
 	{
-		 if(moveCoordinates[0] == -1)
+		 if(moveCoordinates[0] == -50)
 		  {
 			  moveCoordinates[0] = x;
 			  moveCoordinates[1] = y;
 		  }
 		  
-		  if(moveCoordinates[moveCoordinates.length-1] != -1)
+		  if(moveCoordinates[moveCoordinates.length-1] != -50)
 		  {
 			  float temp[] = new float[moveCoordinates.length*2];
 			  for(int k = 0; k<moveCoordinates.length; k++)
@@ -174,14 +177,14 @@ public class SetPoints extends Activity {
 			  }
 			  for(int j = moveCoordinates.length; j<temp.length; j++)
 			  {
-				  temp[j] = -1.0f;
+				  temp[j] = -50;
 			  }
 			  moveCoordinates = temp;
 		  }			
 		  
 		  for(int i = 0; i<moveCoordinates.length; i++)
 		  {
-			  if(moveCoordinates[i] == -1)
+			  if(moveCoordinates[i] == -50)
 			  {
 				  moveCoordinates[i] = x2;
 				  moveCoordinates[i+1] = y2;
@@ -190,6 +193,25 @@ public class SetPoints extends Activity {
 		  }
 	}
 	
+	public void trimArray()
+	{
+		int i = 0;
+		for(; i<moveCoordinates.length; i++)
+		{
+			if(moveCoordinates[i] == -50)
+			{
+				break;
+			}
+		}
+		
+		float[] temp = new float[i];
+		for(int j = 0; j < i; j++)
+		{
+			temp[j] = moveCoordinates[j];
+		}
+		
+		moveCoordinates = temp;
+	}
 	public void checkGesture()
 	{
 		int halfway = moveCoordinates.length/2;
@@ -206,31 +228,17 @@ public class SetPoints extends Activity {
 		Log.d("hey", "" + slopeEnd);
 		if(slopeHalf-slopeEnd < 1 && slopeHalf-slopeEnd > -1)
 		{
-			storeCoordinates("Line");
+			type = "Line";
+			storeCoordinates();
 		}
-	}
-	
-	public void trimArray()
-	{
-		int i = 0;
-		for(; i<moveCoordinates.length; i++)
+		else
 		{
-			if(moveCoordinates[i] == -1)
-			{
-				break;
-			}
+			//circle
 		}
 		
-		float[] temp = new float[i];
-		for(int j = 0; j < i; j++)
-		{
-			temp[j] = moveCoordinates[j];
-		}
-		
-		moveCoordinates = temp;
 	}
 	
-	public void storeCoordinates(String type)
+	public void storeCoordinates()
 	{
 		for(int i = 0; i<coordinates.length; i++)
 		{
@@ -243,13 +251,12 @@ public class SetPoints extends Activity {
 				else if(type == "Line")
 				{
 					coordinates[i] = "Line:" + Float.toString(moveCoordinates[0]) + "," + Float.toString(moveCoordinates[1]) + "," + Float.toString(moveCoordinates[moveCoordinates.length-2]) + "," + Float.toString(moveCoordinates[moveCoordinates.length-1]);
-					float[] temp =  {-1.0f, -1.0f, -1.0f, -1.0f};
-					moveCoordinates = temp;
-					Log.d("yo", "coordinates saved");
+					clearMoveCoordiantes();
 				}
 				else if(type == "Circ")
 				{
 					//UNFINSHED
+					clearMoveCoordiantes();
 				}
 				
 				break;
@@ -259,8 +266,14 @@ public class SetPoints extends Activity {
 	}
 	
 	public void checkFull()
-	{
-		
+	{	
+		for(int i = 0; i<coordinates.length; i++)
+		{
+			if(coordinates[i] != "")
+			{
+				Log.d("coordinates", coordinates[i]);
+			}
+		}
 		if(coordinates[coordinates.length-1] != "")
 		{
 			//Full, save the array
@@ -290,7 +303,12 @@ public class SetPoints extends Activity {
 			  Toast.makeText(SetPoints.this, "Coordinates Saved", Toast.LENGTH_SHORT).show();
 			  finish();
 		}
-		
+	}
+	
+	public void clearMoveCoordiantes()
+	{
+		float[] temp =  {-50, -50, -50, -50};
+		moveCoordinates = temp;
 	}
 	
 	public void clearCoordiantes()
@@ -299,13 +317,13 @@ public class SetPoints extends Activity {
 		{
 			coordinates[i] = "";
 		}
-		float[] temp =  {-1.0f, -1.0f, -1.0f, -1.0f};
-		moveCoordinates = temp;
+		clearMoveCoordiantes();
 	}
 	 
 	//Creates canvas for dot
 	 public class GraphicView extends View{		  
-		  Paint dotColor = new Paint(Paint.ANTI_ALIAS_FLAG);
+		  	Paint dotColor = new Paint(Paint.ANTI_ALIAS_FLAG);
+		  	Paint lineColor = new Paint(Paint.ANTI_ALIAS_FLAG);
 		  
 	        public GraphicView(Context context){
 	            super(context);
@@ -314,20 +332,25 @@ public class SetPoints extends Activity {
 
 	        @Override
 	        public void onDraw(Canvas canvas){
-	        	dotColor.setColor(0xff33CCCC);
-	        	dotColor.setAlpha(80);
 	        	super.onDraw(canvas);
-	        	dotColor.setStyle(Paint.Style.FILL);        	
-
-	        	canvas.drawCircle(x, y, 20, dotColor);
-	        	//canvas.drawLine(startX, startY, stopX, stopY, paint)
-	        	for(int i = 0; i<coordinates.length; i++)
-	    		{
-	    			if(coordinates[i] != "")
-	    			{
-	    				Log.d("coordinates", coordinates[i]);
-	    			}
-	    		}
+	        	
+	        	if(type == "Adot")
+	        	{
+	        		dotColor.setColor(0xff33CCCC);
+		        	dotColor.setAlpha(80);
+		        	dotColor.setStyle(Paint.Style.FILL);
+		        	//dotColor.setStrokeWidth(10);
+	        		canvas.drawCircle(x, y, 20, dotColor);
+		        	//canvas.drawLine(x, y, x+100, y+100, dotColor);
+	        	}
+	        	else if(type == "Line")
+	        	{
+	        		lineColor.setColor(0xff33CCCC);
+	        		lineColor.setAlpha(80);
+	        		lineColor.setStyle(Paint.Style.FILL);
+	        		lineColor.setStrokeWidth(10);
+	        		canvas.drawLine(moveCoordinates[0], moveCoordinates[1], moveCoordinates[moveCoordinates.length-2], moveCoordinates[moveCoordinates.length-1], lineColor);
+	        	}
 	        }	          
 	   }
 }

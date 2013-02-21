@@ -30,23 +30,17 @@ private String selectedImagePath;			   //For the Gallery
 	        //Empty is if there are no pictures in the SDCard file
 	           //final boolean empty = imageAdapt.empty;
 	        final boolean empty = !(android.os.Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED));
-
-	        	if(!empty){
-	        		
-                    Intent intent = new Intent();
-                    intent.setType("image/*");
-                    intent.setAction(Intent.ACTION_GET_CONTENT);
-                    startActivityForResult(Intent.createChooser(intent,
-                            "Select Picture"), SELECT_PICTURE);
-	        	          }
-	        
-	        	else
-	        	{
-	        		
-	                	saveImage2();
-	        		
-	        	}
-	        
+        	if(!empty)
+        	{
+                Intent intent = new Intent();
+                intent.setType("image/*");
+                intent.setAction(Intent.ACTION_GET_CONTENT);
+                startActivityForResult(Intent.createChooser(intent, "Select Picture"), SELECT_PICTURE);
+            }
+        	else
+        	{
+                saveImage2();
+        	}
 	    }
 	    
 	    public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -61,44 +55,35 @@ private String selectedImagePath;			   //For the Gallery
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
-                  
 	            }
 	        }
-	        
 	        finish();
 	    }
 	    
 	    public String getPath(Uri uri) {
 	        String[] projection = { MediaStore.Images.Media.DATA };
 	        Cursor cursor = managedQuery(uri, projection, null, null, null);
-	        int column_index = cursor
-	                .getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+	        int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
 	        cursor.moveToFirst();
 	        return cursor.getString(column_index);
 	    }
 
 	    public void saveImage2()
 	    {
-	    	Log.d("save images", "im in it");
 	    	BitmapFactory.Options o = new BitmapFactory.Options();
-	    	Log.d("save images", "bit mpa factory open");
 		    o.inJustDecodeBounds = true;
-		    Log.d("save images", "w/e this thing is");
 	        final int size = 70;
 	        int scale = 2;
 	        while(o.outWidth/scale/2 >= size && o.outHeight/scale/2 >= size)
 	        {
 	        	scale *=2;
 	        }
-	        Log.d("save images", "did that");
         	BitmapFactory.Options o2 = new BitmapFactory.Options();
-        	Log.d("save images", "made it");
         	o2.inSampleSize=scale;
         	
-        	Bitmap samplePic = BitmapFactory.decodeResource(getResources(), R.drawable.origami, o2); //THIS LINE OF CODE DOESN'T WORK!
+        	Bitmap samplePic = BitmapFactory.decodeResource(getResources(), R.drawable.rainbow, o2);
     		if(samplePic != null)
     		{
-    		Log.d("open Images", "Got the samplePic");
     		 try {
 	        	FileOutputStream fos = openFileOutput("lockimg", Context.MODE_PRIVATE);
 	        	samplePic.compress(CompressFormat.JPEG, 100, fos);
@@ -121,7 +106,6 @@ private String selectedImagePath;			   //For the Gallery
 	    public void saveImage(String imagePath) throws IOException
 	    {  
 	    	Toast.makeText(OpenImages.this, "IN SAVE IMAGE", Toast.LENGTH_SHORT).show();
-
 	        BitmapFactory.Options o = new BitmapFactory.Options();
 	        o.inJustDecodeBounds = true;
 	        final int size = 70;
