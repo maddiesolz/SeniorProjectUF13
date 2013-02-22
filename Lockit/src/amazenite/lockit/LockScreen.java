@@ -66,7 +66,7 @@ public class LockScreen extends Activity {
 		
 		  for(int i = 0; i<coordinates.length; i++)
 	        {
-		Log.d("coordinates are: ", Float.toString(coordinates[i]));
+		//Log.d("coordinates are: ", Float.toString(coordinates[i]));
 	        }
 	}
 	
@@ -79,7 +79,7 @@ public class LockScreen extends Activity {
 
 	        for(int i = 0; i<coordinates.length; i++)
 	        {
-	        	coordinates[i] = Float.parseFloat(numbers[i].trim());
+	        	//coordinates[i] = Float.parseFloat(numbers[i].trim());
 	        }
 		}
         catch (FileNotFoundException e1) {

@@ -18,7 +18,6 @@ import android.view.View;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
-import android.view.View.OnTouchListener;
 import android.widget.Toast;
 import android.support.v4.view.GestureDetectorCompat;
 import android.os.Vibrator;
@@ -31,7 +30,6 @@ public class SetPoints extends Activity {
  	private static float y2 = -50;
  	private GraphicView graphView; 
  	private GestureDetectorCompat mDetector;
- 	private OnTouchListener mGestureListener;
  	private String[] coordinates = {"", "", ""};
  	private float[] moveCoordinates = {-50, -50, -50, -50};
  	private boolean isScrolling = false;
@@ -70,31 +68,23 @@ public class SetPoints extends Activity {
         	 }
          }    
         
-        //Set Gesture Detector && Gesture Listener
+        //Set Gesture Detector 
 	    mDetector = new GestureDetectorCompat(this, new MyGestureListener());
-	    mGestureListener = new View.OnTouchListener() {
-	        public boolean onTouch(View v, MotionEvent event) {
-	            if (mDetector.onTouchEvent(event)) {
-	            	Log.d("hey", "gestures");
-	                return true;
-	            }
-
-	            if(event.getAction() == MotionEvent.ACTION_UP) {
-	                if(isScrolling ) {
-	                    isScrolling  = false;
-	                    //handleScrollFinished();
-	                    Log.d("hey", "finished scroll");
-	                };
-	            }
-	            return false;
-	        }
-	    };
-	    graphView.setOnTouchListener(mGestureListener);	    
 	}
 	
     @Override 
     public boolean onTouchEvent(MotionEvent event){ 
-        this.mDetector.onTouchEvent(event);        
+        this.mDetector.onTouchEvent(event);
+        if(event.getAction() == MotionEvent.ACTION_UP) {
+            if(isScrolling ) {
+                isScrolling  = false;
+                
+                trimArray();
+  			  	checkGesture();
+            };
+        }
+     
+        
         return super.onTouchEvent(event);
     }
 	
@@ -103,11 +93,10 @@ public class SetPoints extends Activity {
 	public class MyGestureListener extends GestureDetector.SimpleOnGestureListener {
 		  @Override
 		    public boolean onSingleTapConfirmed(MotionEvent event) {			 
-		        x = event.getRawX()-40;
-		        y = event.getRawY();
-		        graphView.invalidate();
-			    
+		        x = event.getRawX();
+		        y = event.getRawY()-40.0f;
 		        type = "Adot";
+		        graphView.invalidate();
 			    storeCoordinates();			    
 			    
 			    Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
@@ -142,17 +131,11 @@ public class SetPoints extends Activity {
 		  {
 			  isScrolling = true;
 			  x = e1.getRawX();
-			  y = e1.getRawY()-40.0f;
+			  y = e1.getRawY()-30.0f;
 			  x2 = e2.getRawX();
-			  y2 = e2.getRawY()-40.0f;
-			  
-			  graphView.invalidate();
+			  y2 = e2.getRawY()-30.0f;
 			  
 			  storeMoveCoordinates();
-			  //checkgesture & trim array needs to be moved
-			  trimArray();
-			  checkGesture();
-			  
 			  return true;
 		  }
 		  
@@ -214,26 +197,42 @@ public class SetPoints extends Activity {
 	}
 	public void checkGesture()
 	{
+		boolean vertical = false;
+		float slopeHalf = -1;
+		float slopeEnd = -1;
 		int halfway = moveCoordinates.length/2;
 		//y coordinate
 		if(halfway % 2 != 0)
 		{
-			halfway++;
+			halfway--;
 		}
-		float slopeHalf = (moveCoordinates[halfway+1] - moveCoordinates[1])/(moveCoordinates[halfway] - moveCoordinates[0]);
-		Log.d("Hey", "" + moveCoordinates[halfway+1] + "-" + moveCoordinates[1] + "/" + moveCoordinates[halfway] + "-" + moveCoordinates[0]);
-		float slopeEnd = (moveCoordinates[moveCoordinates.length-1] - moveCoordinates[1])/(moveCoordinates[moveCoordinates.length-2] - moveCoordinates[0]);
-		Log.d("Hey", "" + moveCoordinates[moveCoordinates.length-1] + "-" + moveCoordinates[1] + "/" + moveCoordinates[moveCoordinates.length-2] + "-" + moveCoordinates[0]);
-		Log.d("Hey", "" + slopeHalf);
-		Log.d("hey", "" + slopeEnd);
-		if(slopeHalf-slopeEnd < 1 && slopeHalf-slopeEnd > -1)
+		if((moveCoordinates[halfway] - moveCoordinates[0] < 30 && moveCoordinates[halfway] - moveCoordinates[0] > -30) && moveCoordinates[moveCoordinates.length-2] - moveCoordinates[0] < 30 && moveCoordinates[moveCoordinates.length-2] - moveCoordinates[0] > -30)
 		{
-			type = "Line";
-			storeCoordinates();
+			vertical = true;
 		}
 		else
 		{
-			//circle
+			slopeHalf = (moveCoordinates[halfway+1] - moveCoordinates[1])/(moveCoordinates[halfway] - moveCoordinates[0]);
+			slopeEnd = (moveCoordinates[moveCoordinates.length-1] - moveCoordinates[1])/(moveCoordinates[moveCoordinates.length-2] - moveCoordinates[0]);
+		}
+		
+		Log.d("Halfway Slope", "" + moveCoordinates[halfway+1] + "-" + moveCoordinates[1] + "/" + moveCoordinates[halfway] + "-" + moveCoordinates[0]);
+		Log.d("End Slope", "" + moveCoordinates[moveCoordinates.length-1] + "-" + moveCoordinates[1] + "/" + moveCoordinates[moveCoordinates.length-2] + "-" + moveCoordinates[0]);
+		
+		Log.d("Hey slope half", "" + slopeHalf);
+		Log.d("hey  slode end", "" + slopeEnd);
+		
+		if(slopeHalf-slopeEnd < 2 && slopeHalf-slopeEnd > -2 || vertical)
+		{
+			type = "Line";
+			storeCoordinates();
+			graphView.invalidate();
+		}
+		else
+		{
+			type = "";
+			graphView.invalidate();
+			clearMoveCoordiantes();
 		}
 		
 	}
@@ -251,7 +250,6 @@ public class SetPoints extends Activity {
 				else if(type == "Line")
 				{
 					coordinates[i] = "Line:" + Float.toString(moveCoordinates[0]) + "," + Float.toString(moveCoordinates[1]) + "," + Float.toString(moveCoordinates[moveCoordinates.length-2]) + "," + Float.toString(moveCoordinates[moveCoordinates.length-1]);
-					clearMoveCoordiantes();
 				}
 				else if(type == "Circ")
 				{
@@ -333,25 +331,24 @@ public class SetPoints extends Activity {
 	        @Override
 	        public void onDraw(Canvas canvas){
 	        	super.onDraw(canvas);
-	        	
 	        	if(type == "Adot")
 	        	{
 	        		dotColor.setColor(0xff33CCCC);
 		        	dotColor.setAlpha(80);
 		        	dotColor.setStyle(Paint.Style.FILL);
-		        	//dotColor.setStrokeWidth(10);
 	        		canvas.drawCircle(x, y, 20, dotColor);
-		        	//canvas.drawLine(x, y, x+100, y+100, dotColor);
 	        	}
 	        	else if(type == "Line")
 	        	{
 	        		lineColor.setColor(0xff33CCCC);
 	        		lineColor.setAlpha(80);
 	        		lineColor.setStyle(Paint.Style.FILL);
-	        		lineColor.setStrokeWidth(10);
+	        		lineColor.setStrokeWidth(20);
 	        		canvas.drawLine(moveCoordinates[0], moveCoordinates[1], moveCoordinates[moveCoordinates.length-2], moveCoordinates[moveCoordinates.length-1], lineColor);
+	        		clearMoveCoordiantes();
 	        	}
-	        }	          
+	        	type = "";
+	        }
 	   }
 }
 
