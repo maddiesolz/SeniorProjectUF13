@@ -22,7 +22,6 @@ import android.graphics.BitmapFactory;
 import android.graphics.Bitmap.CompressFormat;
 import android.util.Log;
 import android.view.MenuItem;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 public class OpenImages extends Activity {
@@ -38,61 +37,53 @@ private String selectedImagePath;			   //For the Gallery
 	        super.onCreate(savedInstanceState);
 	        
 	        //Empty is if there are no pictures in the SDCard file
-	           //final boolean empty = imageAdapt.empty;
+	        //final boolean empty = imageAdapt.empty;
 	        final boolean empty = !(android.os.Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED));
 
-	        	if(!empty){
-	        	    Intent intent = new Intent();
-                    intent.setType("image/*");
-                    intent.setAction(Intent.ACTION_GET_CONTENT);
-                    startActivityForResult(Intent.createChooser(intent,
-                            "Select Picture"), SELECT_PICTURE);
-
-	        	}
-	        	else
-	        	{
-	                	saveImage2();	
-	        	}
-	        
+        	if(!empty){
+        	    Intent intent = new Intent();
+                intent.setType("image/*");
+                intent.setAction(Intent.ACTION_GET_CONTENT);
+                startActivityForResult(Intent.createChooser(intent,"Select Picture"), SELECT_PICTURE);
+        	}
+        	else
+        	{
+	    	    Toast.makeText(this, "Cannot find gallery", Toast.LENGTH_SHORT).show();
+        	}	        
 	    }
 	    
 	    public void onActivityResult(int requestCode, int resultCode, Intent imageReturnedIntent) {
 	    	
 	    	Intent intent = new Intent("com.android.camera.action.CROP");   //for image crop
 	    	
-	    	if (resultCode != RESULT_OK) return;
-	    	
-	            if (requestCode == SELECT_PICTURE) {
-	                selectedImageUri = imageReturnedIntent.getData();
-	                selectedImagePath = getPath(selectedImageUri);
-	     
-	            	try {
-						saveImage(selectedImagePath);
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
-	            	
-	                
-	                doCrop();
-	                //Is it the correct image?
-                  
-	            }
-	            else if(resultCode == REQUEST_CROP_ICON){
-	            	Bundle extras = imageReturnedIntent.getExtras();
-	                try{
-	                    if (extras != null) {
-	                         Bitmap myImage = extras.getParcelable("data");
-	                    }
-	                }
-	                catch(Exception e)
-	                {
-	                    e.printStackTrace();
-	                }
-	            	
-	            	finish();
-	            }
-	      
-	      //  finish();
+	    	if (resultCode != RESULT_OK) return;	    	
+            if (requestCode == SELECT_PICTURE) {
+                selectedImageUri = imageReturnedIntent.getData();
+                selectedImagePath = getPath(selectedImageUri);     
+            	try {
+					saveImage(selectedImagePath);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+            	
+                doCrop();              
+            }
+            else if(resultCode == REQUEST_CROP_ICON){
+            	Log.d("HEY", "request crop icon");
+            	Bundle extras = imageReturnedIntent.getExtras();
+                try{
+                    if (extras != null) {
+                    	Log.d("hey", "image cropped");
+                         Bitmap myImage = extras.getParcelable("data");
+                         saveImage(myImage);
+                         finish();
+                    }
+                }
+                catch(Exception e)
+                {
+                    e.printStackTrace();
+                }
+            }
 	    }
 	    
 	    
@@ -112,7 +103,6 @@ private String selectedImagePath;			   //For the Gallery
 
 	    	// If there're cropper applications found, use the first
 	    	} else {
-
 	    	    // Specify image path and cropping parameters
 	    	    intent.setData(selectedImageUri);
 	    	    intent.putExtra("outputX", 0);
@@ -123,8 +113,8 @@ private String selectedImagePath;			   //For the Gallery
 	    	    ResolveInfo res = list.get(0);
 	    	    i.setComponent( new ComponentName(res.activityInfo.packageName, res.activityInfo.name));
 	    	    startActivityForResult(i, REQUEST_CROP_ICON);
-	    }
 	    	}
+	    }
 	    
 	    private Uri getTempUri() {
 	        return Uri.fromFile(getTempFile());
@@ -133,7 +123,6 @@ private String selectedImagePath;			   //For the Gallery
 	    private File getTempFile() {
 
 	        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-
 	            File file = new File(Environment.getExternalStorageDirectory(),TEMP_PHOTO_FILE);
 	            try {
 	                file.createNewFile();
@@ -141,7 +130,6 @@ private String selectedImagePath;			   //For the Gallery
 
 	            return file;
 	        } else {
-
 	            return null;
 	        }
 	    }
@@ -149,57 +137,13 @@ private String selectedImagePath;			   //For the Gallery
 	    public String getPath(Uri uri) {
 	        String[] projection = { MediaStore.Images.Media.DATA };
 	        Cursor cursor = managedQuery(uri, projection, null, null, null);
-	        int column_index = cursor
-	                .getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+	        int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
 	        cursor.moveToFirst();
 	        return cursor.getString(column_index);
-	    }
-
-	    public void saveImage2()
-	    {
-	    	Log.d("save images", "im in it");
-	    	BitmapFactory.Options o = new BitmapFactory.Options();
-	    	Log.d("save images", "bit mpa factory open");
-		    o.inJustDecodeBounds = true;
-		    Log.d("save images", "w/e this thing is");
-	        final int size = 70;
-	        int scale = 2;
-	        while(o.outWidth/scale/2 >= size && o.outHeight/scale/2 >= size)
-	        {
-	        	scale *=2;
-	        }
-	        Log.d("save images", "did that");
-        	BitmapFactory.Options o2 = new BitmapFactory.Options();
-        	Log.d("save images", "made it");
-        	o2.inSampleSize=scale;
-        	
-        	Bitmap samplePic = BitmapFactory.decodeResource(getResources(), R.drawable.origami, o2); //THIS LINE OF CODE DOESN'T WORK!
-    		if(samplePic != null)
-    		{
-    		Log.d("open Images", "Got the samplePic");
-    		 try {
-	        	FileOutputStream fos = openFileOutput("lockimg", Context.MODE_PRIVATE);
-	        	samplePic.compress(CompressFormat.JPEG, 100, fos);
-	        	Log.d("open images", "compressed it");
-		        	try {
-		        		fos.close();
-		        		fos = null;
-		        	} 
-		        	catch (IOException e) {
-		        		e.printStackTrace();
-		        	}
-	        	samplePic.recycle();
-	        	} 
-		        catch (FileNotFoundException e1) {
-		        	e1.printStackTrace();
-		        }
-    		}
 	    }
 	    
 	    public void saveImage(String imagePath) throws IOException
 	    {  
-	    	Toast.makeText(OpenImages.this, "IN SAVE IMAGE", Toast.LENGTH_SHORT).show();
-
 	        BitmapFactory.Options o = new BitmapFactory.Options();
 	        o.inJustDecodeBounds = true;
 	        final int size = 70;
@@ -214,7 +158,6 @@ private String selectedImagePath;			   //For the Gallery
 	        try {
 	        	FileOutputStream fos = openFileOutput("lockimg", Context.MODE_PRIVATE);
 	        	chosenImage.compress(CompressFormat.JPEG, 100, fos);
-
 		        	try {
 		        		fos.close();
 		        		fos = null;
@@ -227,7 +170,38 @@ private String selectedImagePath;			   //For the Gallery
 	        catch (FileNotFoundException e1) {
 	        	e1.printStackTrace();
 	        	}
-	        
+	    }
+	    
+	    public void saveImage(Bitmap image) throws IOException
+	    {  
+	    	/*
+	        BitmapFactory.Options o = new BitmapFactory.Options();
+	        o.inJustDecodeBounds = true;
+	        final int size = 70;
+	        int scale = 2;
+	        while(o.outWidth/scale/2 >= size && o.outHeight/scale/2 >= size)
+	        {
+	        	scale *= 2;
+	        }
+        	BitmapFactory.Options o2 = new BitmapFactory.Options();
+        	o2.inSampleSize=scale;
+        	Bitmap chosenImage = BitmapFactory.decodeFile(imagePath, o2);
+        	*/
+	        try {
+	        	FileOutputStream fos = openFileOutput("lockimg", Context.MODE_PRIVATE);
+	        	image.compress(CompressFormat.JPEG, 100, fos);
+		        	try {
+		        		fos.close();
+		        		fos = null;
+		        	} 
+		        	catch (IOException e) {
+		        		e.printStackTrace();
+		        	}
+		        	image.recycle();
+	        	} 
+	        catch (FileNotFoundException e1) {
+	        	e1.printStackTrace();
+	        	}
 	    }
 	    
 	    public boolean onOptionsItemSelected(MenuItem item) {

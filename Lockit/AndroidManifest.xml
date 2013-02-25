@@ -23,37 +23,13 @@
             android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-        <activity
-            android:name="amazenite.lockit.Getpicture"
-            android:label="@string/title_activity_getpicture"
-            android:parentActivityName="amazenite.lockit"
-            android:screenOrientation="portrait" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="amazenite.lockit" />
         </activity>
         <activity
             android:name="amazenite.lockit.SettingsActivity"
             android:label="@string/title_activity_settings"
             android:screenOrientation="portrait" >
-        </activity>
-        <activity
-            android:name="amazenite.lockit.Set_Pic"
-            android:label="@string/title_activity_set__pic"
-            android:screenOrientation="portrait" >
-        </activity>
-        <activity
-            android:name="amazenite.lockit.SetPic"
-            android:label="@string/title_activity_set_pic"
-            android:parentActivityName="amazenite.Lockit"
-            android:screenOrientation="portrait" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="amazenite.Lockit" />
         </activity>
         <activity
             android:name="amazenite.lockit.OpenImages"
@@ -93,15 +69,6 @@
                 <action android:name="android.intent.action.USER_PRESENT" />
             </intent-filter>
         </receiver>
-
-        <activity
-            android:name="amazenite.lockit.TestGallery"
-            android:label="@string/title_activity_test_gallery"
-            android:parentActivityName="amazenite.lockit" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="amazenite.lockit" />
-        </activity>
     </application>
 
 </manifest>

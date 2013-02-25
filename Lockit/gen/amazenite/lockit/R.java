@@ -33,8 +33,6 @@ public final class R {
     public static final class id {
         public static final int ChoosePicture=0x7f0a0007;
         public static final int ChoosePicturePreview=0x7f0a0006;
-        public static final int GridView1=0x7f0a000d;
-        public static final int LinearLayout1=0x7f0a000c;
         public static final int PictureSettings=0x7f0a0004;
         public static final int Tabs=0x7f0a0003;
         public static final int VoiceSettings=0x7f0a0005;
@@ -42,25 +40,22 @@ public final class R {
         public static final int debugLockscreen=0x7f0a000b;
         public static final int enablePicturePassword=0x7f0a000a;
         public static final int imageView1=0x7f0a0000;
-        public static final int menu_settings=0x7f0a0010;
-        public static final int moreImagesButton=0x7f0a000e;
+        public static final int menu_settings=0x7f0a000d;
         public static final int preview=0x7f0a0008;
         public static final int setPoints=0x7f0a0009;
-        public static final int setPointsPic=0x7f0a000f;
+        public static final int setPointsPic=0x7f0a000c;
         public static final int titleBar=0x7f0a0002;
     }
     public static final class layout {
         public static final int activity_lock_screen=0x7f030000;
         public static final int activity_lockit=0x7f030001;
-        public static final int activity_open_images=0x7f030002;
-        public static final int activity_set_points=0x7f030003;
+        public static final int activity_set_points=0x7f030002;
     }
     public static final class menu {
         public static final int activity_lock_screen=0x7f090000;
         public static final int activity_lockit=0x7f090001;
         public static final int activity_open_images=0x7f090002;
         public static final int activity_set_points=0x7f090003;
-        public static final int activity_test_gallery=0x7f090004;
     }
     public static final class string {
         /**  App Label On Top 
