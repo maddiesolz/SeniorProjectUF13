@@ -271,7 +271,7 @@ public class LockScreen extends Activity {
 	
 	public void checkFinished(int counter)
 	{
-		if(counter >= 2)
+		if(counter >= 3)
 		  {
     			if(correctGestures)
     			{
@@ -289,17 +289,14 @@ public class LockScreen extends Activity {
     			else
     			{
     				this.counter = 0;
-    				x = -50;
-    				y = -50;
-    			    type = "";
-    				graphView.invalidate();
-
+    				type = "";
 		    		final Toast toast = Toast.makeText(getApplicationContext(), "Incorrect Password! Please try again.", Toast.LENGTH_SHORT);
 		    	    toast.show();
     				Handler handler = new Handler();
     		        handler.postDelayed(new Runnable() {
     		           @Override
     		           public void run() {
+    		        	   graphView.invalidate();
     		               toast.cancel(); 
     		           }
     		        }, 1000);
@@ -319,6 +316,10 @@ public class LockScreen extends Activity {
 
 	        @Override
 	        public void onDraw(Canvas canvas) {
+	        	if(type == "")
+	        	{
+	        		canvas.drawCircle(-50, -50, 20, dotColor);
+	        	}
 	        	if(type == "Adot")
 	        	{
 	        		dotColor.setColor(0xff33CCCC);
