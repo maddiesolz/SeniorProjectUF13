@@ -88,7 +88,8 @@ public class SetPoints extends Activity {
 	
 	/* Gesture Detector Class To Only listen On The Ones We Want */	
 	public class MyGestureListener extends GestureDetector.SimpleOnGestureListener {
-		  @Override
+		  @SuppressLint("NewApi")
+		@Override
 		    public boolean onSingleTapConfirmed(MotionEvent event) {			 
 		        x = event.getRawX();
 		        y = event.getRawY()-40.0f;

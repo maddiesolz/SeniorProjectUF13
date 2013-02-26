@@ -9,7 +9,6 @@
         android:targetSdkVersion="17" />
 
     <uses-permission android:name="android.permission.VIBRATE" />
-
     <category android:name="android.intent.category.LAUNCHER" />
 
     <application
@@ -54,7 +53,6 @@
             android:fadeDuration="0"
             android:fadeOffset="0"
             android:label="@string/title_activity_lock_screen"
-            android:launchMode="singleTask"
             android:parentActivityName="amazenite.lockit"
             android:screenOrientation="portrait" >
             <meta-data

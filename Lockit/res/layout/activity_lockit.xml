@@ -83,6 +83,4 @@
         android:onClick="debugLockscreen"
         android:text="Test Points" />
 
-
-
 </LinearLayout>
