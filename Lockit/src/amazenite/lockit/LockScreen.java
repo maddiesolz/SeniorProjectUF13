@@ -24,12 +24,16 @@ import android.widget.Toast;
 public class LockScreen extends Activity {	
 	private static float x = -50;
  	private static float y = -50;
- 	private int counter = 0;
+ 	private static float x2 = -50;
+ 	private static float y2 = -50;
+ 	private int counter;
  	private GraphicView graphView;
  	private GestureDetectorCompat mDetector; 
-	private float[] coordinates = {-1.0f, -1.0f, -1.0f, -1.0f, -1.0f, -1.0f};
 	private boolean correctGestures = true;
-	
+	private String type = "";
+	private String[] numbers = {"","",""};
+ 	private float[] moveCoordinates = {-50, -50, -50, -50};
+ 	private boolean isScrolling = false;
 	
 	@Override
 	@SuppressLint("NewApi")
@@ -38,8 +42,10 @@ public class LockScreen extends Activity {
 		super.onCreate(savedInstanceState);
 		 x = -50;
 		 y = -50;
+		 x2 = -50;
+		 y2 = -50;
 		 graphView = new GraphicView(this);
-				
+		 counter = 0;
 		
 		//Set As Background Image
 	    File file = getBaseContext().getFileStreamPath("lockimg");
@@ -63,11 +69,6 @@ public class LockScreen extends Activity {
 	    mDetector = new GestureDetectorCompat(this, new MyGestureListener());
 
 		getCoordinates();
-		
-		  for(int i = 0; i<coordinates.length; i++)
-	        {
-		//Log.d("coordinates are: ", Float.toString(coordinates[i]));
-	        }
 	}
 	
 	public void getCoordinates(){
@@ -75,123 +76,268 @@ public class LockScreen extends Activity {
 			File file = getBaseContext().getFileStreamPath("coordinates");
 			Scanner sc = new Scanner(new File(file.getAbsolutePath()));
 			String line = sc.nextLine();
-			String[] numbers = line.split(" ");
-
-	        for(int i = 0; i<coordinates.length; i++)
-	        {
-	        	//coordinates[i] = Float.parseFloat(numbers[i].trim());
-	        }
+			numbers = line.split(" ");
 		}
         catch (FileNotFoundException e1) {
         	e1.printStackTrace();
         	}
-		}
+	}
 	
 	 @Override 
 	    public boolean onTouchEvent(MotionEvent event){ 
-	        this.mDetector.onTouchEvent(event);        
+	        this.mDetector.onTouchEvent(event);
+	        if(event.getAction() == MotionEvent.ACTION_UP) {
+	            if(isScrolling ) {
+	                isScrolling  = false;	                
+	                trimArray();
+	  			  	checkGesture();
+	            };
+	        }
 	        return super.onTouchEvent(event);
 	    }
 
 	 /* Gesture Dectector Class To Only listen On The Ones We Want */	
-		public class MyGestureListener extends GestureDetector.SimpleOnGestureListener {
-			  @Override
-			    public boolean onSingleTapUp(MotionEvent event) {
-					if(counter <= 4 ) {
-				        x = event.getRawX();
-				        y = event.getRawY()-40.0f;
-				        graphView.invalidate();
-					    					    
-					    Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-					    if( v.hasVibrator()) {
-							 v.vibrate(35);
-				    	}
-				    	
-				    	if((x > (coordinates[counter]+30.0f )) || (x <  (coordinates[counter]-30.0f)) || 
-				    	   (y > (coordinates[counter+1]+30.0f)) || (y < (coordinates[counter+1]-30.0f))){
+	public class MyGestureListener extends GestureDetector.SimpleOnGestureListener {
+		  @Override
+		    public boolean onSingleTapUp(MotionEvent event) {
+				if(counter <= 2 ) {
+
+			        Log.d("coordiante numba", "" + counter);
+			        x = event.getRawX();
+			        y = event.getRawY()-40.0f;
+			        type = "Adot";
+			        graphView.invalidate();
+				    					    
+				    Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+				    if( v.hasVibrator()) {
+						 v.vibrate(35);
+			    	}
+				    
+				    String coordinates[] = numbers[counter].split(",");				    
+				    //Not a dot
+				    if(!coordinates[0].equals(type))
+			    	{
+			    		correctGestures = false;
+			    	}
+				    else
+				    {
+				    	if((x > (Float.parseFloat(coordinates[1])+30) || (x <  (Float.parseFloat(coordinates[1])-30.0f))) || (y > (Float.parseFloat(coordinates[2])+30.0f)) || (y < (Float.parseFloat(coordinates[2])-30.0f))){
 				    		correctGestures = false;
 				    	}
-				    	counter = counter+2;
-				    	if(counter >= 5){
-			    			if(correctGestures){
-			    				final Toast toast = Toast.makeText(getApplicationContext(), "Unlocked!", Toast.LENGTH_SHORT);
-					    	    toast.show();
-			    				Handler handler = new Handler();
-			    		        handler.postDelayed(new Runnable() {
-			    		           @Override
-			    		           public void run() {
-			    		               toast.cancel(); 
-			    		           }
-			    		        }, 1000);
-				    			finish();
-			    			}
-			    			else
-			    			{
-			    				counter = 0;
-					    		correctGestures = true;
-					    		final Toast toast = Toast.makeText(getApplicationContext(), "Incorrect Password! Please try again.", Toast.LENGTH_SHORT);
-					    	    toast.show();
-			    				Handler handler = new Handler();
-			    		        handler.postDelayed(new Runnable() {
-			    		           @Override
-			    		           public void run() {
-			    		               toast.cancel(); 
-			    		           }
-			    		        }, 1000);
-			    			}
-			    		}
-					}
-			        return true;
-			    }
-			}
-		
-			//Draws the points on screen
-			 public class GraphicView extends View{		  
-				  Paint dotColor = new Paint(Paint.ANTI_ALIAS_FLAG);
-				  
-			        public GraphicView(Context context){
-			            super(context);
-			            setFocusable(true);
-			        }
+				    }
+
+			    	counter++;
+			    	checkFinished(counter);
+				}
+			    return true;
+		    }
+		  
+		  @Override
+		  public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY)
+		  {
+			  isScrolling = true;
+			  if(counter <= 2 ) {
+				  x = e1.getRawX();
+				  y = e1.getRawY()-40.0f;
+				  x2 = e2.getRawX();
+				  y2 = e2.getRawY()-40.0f;
+			      type = "Line";
+				    					    
+			      storeMoveCoordinates();
+			      
+				  Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+				  if( v.hasVibrator()) {
+					  	v.vibrate(35);
+				  }
+			  }
+			  return true;
+		  }
+	}
 	
-			        @Override
-			        public void onDraw(Canvas canvas) {
-			        	dotColor.setColor(0xff33CCCC);
-			        	dotColor.setAlpha(80);
-			        	super.onDraw(canvas);
-			        	dotColor.setStyle(Paint.Style.FILL);
-			        	canvas.drawCircle(x, y, 20, dotColor);
-			        }	          
-			   }
-			 
-			/* @Override
-			 public void onBackPressed() {
-			     // Do Here what ever you want do on back press;
-			 }*/
+	public void storeMoveCoordinates()
+	{
+		 if(moveCoordinates[0] == -50)
+		  {
+			  moveCoordinates[0] = x;
+			  moveCoordinates[1] = y;
+		  }
+		  //Array full
+		  if(moveCoordinates[moveCoordinates.length-1] != -50)
+		  {
+			  float temp[] = new float[moveCoordinates.length*2];
+			  for(int k = 0; k<moveCoordinates.length; k++)
+			  {
+				  temp[k] = moveCoordinates[k];
+			  }
+			  for(int j = moveCoordinates.length; j<temp.length; j++)
+			  {
+				  temp[j] = -50;
+			  }
+			  moveCoordinates = temp;
+		  }			
+		  
+		  for(int i = 0; i<moveCoordinates.length; i++)
+		  {
+			  if(moveCoordinates[i] == -50)
+			  {
+				  moveCoordinates[i] = x2;
+				  moveCoordinates[i+1] = y2;
+				  break;
+			  }
+		  }
+	}
+	
+	public void trimArray()
+	{
+		int i = 0;
+		for(; i<moveCoordinates.length; i++)
+		{
+			if(moveCoordinates[i] == -50)
+			{
+				break;
+			}
 		}
-/*
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.activity_lock_screen, menu);
-		return true;
+		
+		float[] temp = new float[i];
+		for(int j = 0; j < i; j++)
+		{
+			temp[j] = moveCoordinates[j];
+		}
+		
+		moveCoordinates = temp;
+	}
+	public void checkGesture()
+	{
+		boolean vertical = false;
+		float slopeHalf = -1;
+		float slopeEnd = -1;
+		int halfway = moveCoordinates.length/2;
+		//y coordinate
+		if(halfway % 2 != 0)
+		{
+			halfway--;
+		}
+		if((moveCoordinates[halfway] - moveCoordinates[0] < 30 && moveCoordinates[halfway] - moveCoordinates[0] > -30) && moveCoordinates[moveCoordinates.length-2] - moveCoordinates[0] < 30 && moveCoordinates[moveCoordinates.length-2] - moveCoordinates[0] > -30)
+		{
+			vertical = true;
+		}
+		else
+		{
+			slopeHalf = (moveCoordinates[halfway+1] - moveCoordinates[1])/(moveCoordinates[halfway] - moveCoordinates[0]);
+			slopeEnd = (moveCoordinates[moveCoordinates.length-1] - moveCoordinates[1])/(moveCoordinates[moveCoordinates.length-2] - moveCoordinates[0]);
+		}
+		
+		if(slopeHalf-slopeEnd < 2 && slopeHalf-slopeEnd > -2 || vertical)
+		{
+			 type = "Line";			 
+			 String coordinates[] = numbers[counter].split(",");
+			    
+			  //Not a line
+			  if(!coordinates[0].equals(type))
+			  {
+				  correctGestures = false;
+			  }
+			  else
+			  {
+					if(x > (Float.parseFloat(coordinates[1])+30) || (x <  (Float.parseFloat(coordinates[1])-30.0f)) || (y > (Float.parseFloat(coordinates[2])+30.0f)) || (y < (Float.parseFloat(coordinates[2])-30.0f)) ||
+						(x2 > (Float.parseFloat(coordinates[3])+30) || (x2 <  (Float.parseFloat(coordinates[3])-30.0f))) || (y2 > (Float.parseFloat(coordinates[4])+30.0f)) || (y2 < (Float.parseFloat(coordinates[4])-30.0f)))
+					{
+				    	correctGestures = false;
+					}
+					float slope = (y2-y)/(x2-x);
+					if(slope - slopeEnd > .5 || slope - slopeEnd < -.5)
+					{
+						correctGestures = false;
+					}
+			  }
+
+			  counter++;
+			  graphView.invalidate();
+			  checkFinished(counter);
+		}
+		else
+		{
+			type = "";
+			graphView.invalidate();
+			clearMoveCoordinates();
+		}		
+	}
+	
+	public void clearMoveCoordinates()
+	{
+		float[] temp =  {-50, -50, -50, -50};
+		moveCoordinates = temp;
+	}
+	
+	public void checkFinished(int counter)
+	{
+		if(counter >= 2)
+		  {
+    			if(correctGestures)
+    			{
+    				final Toast toast = Toast.makeText(getApplicationContext(), "Unlocked!", Toast.LENGTH_SHORT);
+		    	    toast.show();
+    				Handler handler = new Handler();
+    		        handler.postDelayed(new Runnable() {
+    		           @Override
+    		           public void run() {
+    		               toast.cancel(); 
+    		           }
+    		        }, 1000);
+	    			finish();
+    			}
+    			else
+    			{
+    				this.counter = 0;
+    				x = -50;
+    				y = -50;
+    			    type = "";
+    				graphView.invalidate();
+
+		    		final Toast toast = Toast.makeText(getApplicationContext(), "Incorrect Password! Please try again.", Toast.LENGTH_SHORT);
+		    	    toast.show();
+    				Handler handler = new Handler();
+    		        handler.postDelayed(new Runnable() {
+    		           @Override
+    		           public void run() {
+    		               toast.cancel(); 
+    		           }
+    		        }, 1000);
+    			}
+		  }
 	}
 
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		case android.R.id.home:
-			// This ID represents the Home or Up button. In the case of this
-			// activity, the Up button is shown. Use NavUtils to allow users
-			// to navigate up one level in the application structure. For
-			// more details, see the Navigation pattern on Android Design:
-			//
-			// http://developer.android.com/design/patterns/navigation.html#up-vs-back
-			//
-			NavUtils.navigateUpFromSameTask(this);
-			return true;
-		}
-		return super.onOptionsItemSelected(item);
-	}
-*/
+	//Draws the points on screen
+	 public class GraphicView extends View{		  
+		  Paint dotColor = new Paint(Paint.ANTI_ALIAS_FLAG);
+		  Paint lineColor = new Paint(Paint.ANTI_ALIAS_FLAG);
+		  
+	        public GraphicView(Context context){
+	            super(context);
+	            setFocusable(true);
+	        }
+
+	        @Override
+	        public void onDraw(Canvas canvas) {
+	        	if(type == "Adot")
+	        	{
+	        		dotColor.setColor(0xff33CCCC);
+		        	dotColor.setAlpha(80);
+		        	dotColor.setStyle(Paint.Style.FILL);
+	        		canvas.drawCircle(x, y, 20, dotColor);
+	        	}
+	        	else if(type == "Line")
+	        	{
+	        		lineColor.setColor(0xff33CCCC);
+	        		lineColor.setAlpha(80);
+	        		lineColor.setStyle(Paint.Style.FILL);
+	        		lineColor.setStrokeWidth(20);
+	        		lineColor.setStrokeCap(Paint.Cap.ROUND);
+	        		canvas.drawLine(moveCoordinates[0], moveCoordinates[1], moveCoordinates[moveCoordinates.length-2], moveCoordinates[moveCoordinates.length-1], lineColor);
+	        		clearMoveCoordinates();
+	        	}
+	        	type = "";
+	        }	          
+	   }
+}
 

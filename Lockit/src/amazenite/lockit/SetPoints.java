@@ -83,13 +83,10 @@ public class SetPoints extends Activity {
   			  	checkGesture();
             };
         }
-     
-        
         return super.onTouchEvent(event);
     }
 	
 	/* Gesture Detector Class To Only listen On The Ones We Want */	
-    
 	public class MyGestureListener extends GestureDetector.SimpleOnGestureListener {
 		  @Override
 		    public boolean onSingleTapConfirmed(MotionEvent event) {			 
@@ -109,7 +106,7 @@ public class SetPoints extends Activity {
 		  @Override
 		  public boolean onDoubleTap(MotionEvent event)
 		  {
-			  clearCoordiantes();
+			  clearCoordinates();
 			  final Toast toast = Toast.makeText(getApplicationContext(), "Gestures reset, please make 3 gestures again.", Toast.LENGTH_SHORT);
 	    	    toast.show();
 				Handler handler = new Handler();
@@ -137,9 +134,7 @@ public class SetPoints extends Activity {
 			  
 			  storeMoveCoordinates();
 			  return true;
-		  }
-		  
-		  
+		  }		  
 	 }
 	
 	//Store coordinates of gesture path
@@ -216,12 +211,6 @@ public class SetPoints extends Activity {
 			slopeEnd = (moveCoordinates[moveCoordinates.length-1] - moveCoordinates[1])/(moveCoordinates[moveCoordinates.length-2] - moveCoordinates[0]);
 		}
 		
-		Log.d("Halfway Slope", "" + moveCoordinates[halfway+1] + "-" + moveCoordinates[1] + "/" + moveCoordinates[halfway] + "-" + moveCoordinates[0]);
-		Log.d("End Slope", "" + moveCoordinates[moveCoordinates.length-1] + "-" + moveCoordinates[1] + "/" + moveCoordinates[moveCoordinates.length-2] + "-" + moveCoordinates[0]);
-		
-		Log.d("Hey slope half", "" + slopeHalf);
-		Log.d("hey  slode end", "" + slopeEnd);
-		
 		if(slopeHalf-slopeEnd < 2 && slopeHalf-slopeEnd > -2 || vertical)
 		{
 			type = "Line";
@@ -232,7 +221,7 @@ public class SetPoints extends Activity {
 		{
 			type = "";
 			graphView.invalidate();
-			clearMoveCoordiantes();
+			clearMoveCoordinates();
 		}
 		
 	}
@@ -245,16 +234,16 @@ public class SetPoints extends Activity {
 			{
 				if(type == "Adot")
 				{
-					coordinates[i] = "Adot:" + Float.toString(x) + "," + Float.toString(y);
+					coordinates[i] = "Adot," + Float.toString(x) + "," + Float.toString(y);
 				}
 				else if(type == "Line")
 				{
-					coordinates[i] = "Line:" + Float.toString(moveCoordinates[0]) + "," + Float.toString(moveCoordinates[1]) + "," + Float.toString(moveCoordinates[moveCoordinates.length-2]) + "," + Float.toString(moveCoordinates[moveCoordinates.length-1]);
+					coordinates[i] = "Line," + Float.toString(moveCoordinates[0]) + "," + Float.toString(moveCoordinates[1]) + "," + Float.toString(moveCoordinates[moveCoordinates.length-2]) + "," + Float.toString(moveCoordinates[moveCoordinates.length-1]);
 				}
 				else if(type == "Circ")
 				{
 					//UNFINSHED
-					clearMoveCoordiantes();
+					clearMoveCoordinates();
 				}
 				
 				break;
@@ -303,19 +292,19 @@ public class SetPoints extends Activity {
 		}
 	}
 	
-	public void clearMoveCoordiantes()
+	public void clearMoveCoordinates()
 	{
 		float[] temp =  {-50, -50, -50, -50};
 		moveCoordinates = temp;
 	}
 	
-	public void clearCoordiantes()
+	public void clearCoordinates()
 	{
 		for(int i = 0; i<coordinates.length; i++)
 		{
 			coordinates[i] = "";
 		}
-		clearMoveCoordiantes();
+		clearMoveCoordinates();
 	}
 	 
 	//Creates canvas for dot
@@ -344,8 +333,9 @@ public class SetPoints extends Activity {
 	        		lineColor.setAlpha(80);
 	        		lineColor.setStyle(Paint.Style.FILL);
 	        		lineColor.setStrokeWidth(20);
+	        		lineColor.setStrokeCap(Paint.Cap.ROUND);
 	        		canvas.drawLine(moveCoordinates[0], moveCoordinates[1], moveCoordinates[moveCoordinates.length-2], moveCoordinates[moveCoordinates.length-1], lineColor);
-	        		clearMoveCoordiantes();
+	        		clearMoveCoordinates();
 	        	}
 	        	type = "";
 	        }
