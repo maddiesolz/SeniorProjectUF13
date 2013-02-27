@@ -6,6 +6,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 import java.util.Vector;
 
 import android.app.Activity;
@@ -184,6 +185,7 @@ public class Lockit extends Activity {
 		setContentView(R.layout.activity_lockit);
 		addItemsToSpinner();
 		addListenerOnSpinnerItemSelection();
+		setSpinner();
 		getPreview();
 	}
 	
@@ -196,7 +198,7 @@ public class Lockit extends Activity {
 		list.add("4");
 		list.add("5");
 		ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this,
-			android.R.layout.simple_spinner_item, list);
+		android.R.layout.simple_spinner_item, list);
 		dataAdapter.setDropDownViewResource
 
 		(android.R.layout.simple_spinner_dropdown_item);
@@ -205,8 +207,26 @@ public class Lockit extends Activity {
 	
 	  public void addListenerOnSpinnerItemSelection() {
 		  NumberofGestures = (Spinner) findViewById(R.id.spinner);
-		  NumberofGestures.setSelection(1);
 		  NumberofGestures.setOnItemSelectedListener(new CustomOnItemSelectedListener());
+	  }
+	  
+	  public void setSpinner()
+	  {
+			try {
+				File file = getBaseContext().getFileStreamPath("numGestures");
+				Scanner sc = new Scanner(new File(file.getAbsolutePath()));
+				String line = sc.nextLine();
+				int num = Integer.parseInt(line);
+				if(num != 0)
+				{
+					NumberofGestures.setSelection(num-2);
+				}
+			}
+	        catch (FileNotFoundException e1) {
+	        	e1.printStackTrace();
+	  		  	NumberofGestures.setSelection(1);
+	        }
+			
 	  }
 
 

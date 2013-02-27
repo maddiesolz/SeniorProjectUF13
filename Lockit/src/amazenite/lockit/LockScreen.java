@@ -319,14 +319,14 @@ public class LockScreen extends Activity {
     			}
     			else
     			{
-    				this.counter = 0;
-    				type = "";
+    				this.counter = 0;    				
 		    		final Toast toast = Toast.makeText(getApplicationContext(), "Incorrect Password! Please try again.", Toast.LENGTH_SHORT);
 		    	    toast.show();
     				Handler handler = new Handler();
     		        handler.postDelayed(new Runnable() {
     		           @Override
     		           public void run() {
+    		        	   type = "";
     		        	   graphView.invalidate();
     		               toast.cancel(); 
     		           }
