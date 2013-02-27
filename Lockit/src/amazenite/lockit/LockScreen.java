@@ -31,7 +31,7 @@ public class LockScreen extends Activity {
  	private GestureDetectorCompat mDetector; 
 	private boolean correctGestures = true;
 	private String type = "";
-	private String[] numbers = {"","",""};
+	private String[] numbers;
  	private float[] moveCoordinates = {-50, -50, -50, -50};
  	private boolean isScrolling = false;
 	
@@ -67,16 +67,45 @@ public class LockScreen extends Activity {
         	 }
          }    
 	    mDetector = new GestureDetectorCompat(this, new MyGestureListener());
-
+	    loadNumberGestures();
 		getCoordinates();
+	}
+	
+	public void loadNumberGestures()
+	{
+		try {
+			File file = getBaseContext().getFileStreamPath("numGestures");
+			Scanner sc = new Scanner(new File(file.getAbsolutePath()));
+			String line = sc.nextLine();
+			int num = Integer.parseInt(line);
+			Log.d("hsdof", " " + num);
+			if(num != 0)
+			{
+				numbers = new String[num];
+				for(int i = 0; i < num; i++)
+				{
+					numbers[i] = "";
+				}
+			}
+		}
+        catch (FileNotFoundException e1) {
+        	e1.printStackTrace();
+        	numbers = new String[3];
+        	}
 	}
 	
 	public void getCoordinates(){
 		try {
 			File file = getBaseContext().getFileStreamPath("coordinates");
 			Scanner sc = new Scanner(new File(file.getAbsolutePath()));
-			String line = sc.nextLine();
-			numbers = line.split(" ");
+			String line = sc.nextLine();			
+			String[] coordinatesFile = line.split(" ");
+			if(coordinatesFile.length != numbers.length)
+			{
+				final Toast toast = Toast.makeText(getApplicationContext(), "Please set the correct number of gestures", Toast.LENGTH_SHORT);
+				toast.show();
+				finish();
+			}
 		}
         catch (FileNotFoundException e1) {
         	e1.printStackTrace();
@@ -100,9 +129,10 @@ public class LockScreen extends Activity {
 	public class MyGestureListener extends GestureDetector.SimpleOnGestureListener {
 		  @Override
 		    public boolean onSingleTapUp(MotionEvent event) {
-				if(counter <= 2 ) {
+				if(counter <= numbers.length-1) {
 
 			        Log.d("coordiante numba", "" + counter);
+			        Log.d("number length", " "+ numbers.length);
 			        x = event.getRawX();
 			        y = event.getRawY()-40.0f;
 			        type = "Adot";
@@ -136,7 +166,7 @@ public class LockScreen extends Activity {
 		  public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY)
 		  {
 			  isScrolling = true;
-			  if(counter <= 2 ) {
+			  if(counter <= numbers.length-1 ) {
 				  x = e1.getRawX();
 				  y = e1.getRawY()-40.0f;
 				  x2 = e2.getRawX();
@@ -206,6 +236,7 @@ public class LockScreen extends Activity {
 		
 		moveCoordinates = temp;
 	}
+	
 	public void checkGesture()
 	{
 		boolean vertical = false;
@@ -271,7 +302,7 @@ public class LockScreen extends Activity {
 	
 	public void checkFinished(int counter)
 	{
-		if(counter >= 3)
+		if(counter >= numbers.length)
 		  {
     			if(correctGestures)
     			{

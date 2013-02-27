@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Vector;
 
 import android.app.Activity;
@@ -18,10 +20,13 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 public class Lockit extends Activity {	
+	Spinner NumberofGestures;
 	
 	/** Called when the user clicks the get image button */
 	public void viewPictures(View view) {
@@ -131,8 +136,33 @@ public class Lockit extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_lockit);
+		addItemsToSpinner();
+		addListenerOnSpinnerItemSelection();
 		getPreview();
 	}
+	
+	public void addItemsToSpinner()
+	{
+		NumberofGestures = (Spinner) findViewById(R.id.spinner);
+		List<String> list = new ArrayList<String>();
+		list.add("2");
+		list.add("3");
+		list.add("4");
+		list.add("5");
+		ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this,
+			android.R.layout.simple_spinner_item, list);
+		dataAdapter.setDropDownViewResource
+
+		(android.R.layout.simple_spinner_dropdown_item);
+		NumberofGestures.setAdapter(dataAdapter);
+	}
+	
+	  public void addListenerOnSpinnerItemSelection() {
+		  NumberofGestures = (Spinner) findViewById(R.id.spinner);
+		  NumberofGestures.setSelection(1);
+		  NumberofGestures.setOnItemSelectedListener(new CustomOnItemSelectedListener());
+	  }
+
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {

@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Scanner;
 
 import android.os.Build;
 import android.os.Bundle;
@@ -30,7 +31,7 @@ public class SetPoints extends Activity {
  	private static float y2 = -50;
  	private GraphicView graphView; 
  	private GestureDetectorCompat mDetector;
- 	private String[] coordinates = {"", "", ""};
+ 	private String[] coordinates;
  	private float[] moveCoordinates = {-50, -50, -50, -50};
  	private boolean isScrolling = false;
  	private String type = "";
@@ -41,6 +42,8 @@ public class SetPoints extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		graphView = new GraphicView(this);
+		
+		loadNumberGestures();
 		
 		//Set coordinates to be outside of the viewing frame
 		x = -50;
@@ -70,6 +73,28 @@ public class SetPoints extends Activity {
         
         //Set Gesture Detector 
 	    mDetector = new GestureDetectorCompat(this, new MyGestureListener());
+	}
+	
+	public void loadNumberGestures()
+	{
+		try {
+			File file = getBaseContext().getFileStreamPath("numGestures");
+			Scanner sc = new Scanner(new File(file.getAbsolutePath()));
+			String line = sc.nextLine();
+			int num = Integer.parseInt(line);
+			if(num != 0)
+			{
+				coordinates = new String[num];
+				for(int i = 0; i < num; i++)
+				{
+					coordinates[i] = "";
+				}
+			}
+		}
+        catch (FileNotFoundException e1) {
+        	e1.printStackTrace();
+        	coordinates = new String[3];
+        	}
 	}
 	
     @Override 
