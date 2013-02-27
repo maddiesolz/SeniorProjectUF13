@@ -136,32 +136,10 @@ public class OpenImages extends Activity {
 			    photo = extras.getParcelable("data");
 			    try 
 			    {
-					saveImage(photo);
-					try {
-						String space = " ";
-			        	FileOutputStream fos = openFileOutput("coordinates", Context.MODE_PRIVATE);
-				        for(int i = 0; i<3; i++)
-				        {
-				        	try {
-								fos.write((space).getBytes());
-							} catch (IOException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							}
-				        }
-			        	try {
-				        		fos.close();
-				        		fos = null;
-				        	} 
-				        	catch (IOException e) {
-				        		e.printStackTrace();
-				        	}
-			        	} 
-			        catch (FileNotFoundException e1) {
-			        	e1.printStackTrace();
-			        	}
-					  finish();
-				} catch (IOException e) {
+					saveImage(photo);		
+					getBaseContext().getFileStreamPath("coordinates").delete();				
+					finish();
+			    }catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}

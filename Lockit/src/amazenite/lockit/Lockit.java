@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Vector;
 
 import android.app.Activity;
+import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
@@ -25,8 +26,12 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+
 public class Lockit extends Activity {	
 	Spinner NumberofGestures;
+	
+	boolean enabled	= false;
+	
 	
 	/** Called when the user clicks the get image button */
 	public void viewPictures(View view) {
@@ -80,6 +85,7 @@ public class Lockit extends Activity {
 	
 	public void setPoints(View view)
 	{
+
 		Intent intent = new Intent(this, SetPoints.class);
 		startActivity(intent);
 	}
@@ -123,9 +129,49 @@ public class Lockit extends Activity {
 	    
 	public void enablePicPw(View view)
 	{
-		final Intent intent = new Intent(this, ScreenReceiver.class);
-		PendingIntent sender = PendingIntent.getBroadcast(this, 123, intent, PendingIntent.FLAG_UPDATE_CURRENT);		
+	    AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+
+		
+	    Intent intent = new Intent(this, ScreenReceiver.class);
+	    
+		enabled = !enabled;
+		String status = "" + enabled;
+		
+		intent.putExtra("status", status);	
+	    
+	    
+		PendingIntent sender = PendingIntent.getBroadcast(this, 123, intent, PendingIntent.FLAG_UPDATE_CURRENT);	
+
+		
+		try {
+        	FileOutputStream fos = openFileOutput("enablePicPw", Context.MODE_PRIVATE);
+
+	        	try {
+					fos.write(status.getBytes());
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+        	try {
+	        		fos.close();
+	        		fos = null;
+	        	} 
+	        	catch (IOException e) {
+	        		e.printStackTrace();
+	        	}
+        	} 
+        catch (FileNotFoundException e1) {
+        	e1.printStackTrace();
+        	}
+		
+		Log.d("Is It Enabled?: ",status);
+		
+	   alarmManager.set(AlarmManager.RTC_WAKEUP,100000000, sender);
+
+		
 	}
+
 	
 	public void pictureSettings()
 	{
