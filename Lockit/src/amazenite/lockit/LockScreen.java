@@ -14,6 +14,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
@@ -37,7 +38,7 @@ public class LockScreen extends Activity {
 	
 	@Override
 	@SuppressLint("NewApi")
-	@SuppressWarnings("deprecation")
+	//@SuppressWarnings("deprecation")
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		 x = -50;
@@ -99,12 +100,19 @@ public class LockScreen extends Activity {
 			File file = getBaseContext().getFileStreamPath("coordinates");
 			Scanner sc = new Scanner(new File(file.getAbsolutePath()));
 			String line = sc.nextLine();			
-			String[] coordinatesFile = line.split(" ");
+			String[] coordinatesFile = line.split("\\s+");
 			if(coordinatesFile.length != numbers.length)
 			{
 				final Toast toast = Toast.makeText(getApplicationContext(), "Please set the correct number of gestures", Toast.LENGTH_SHORT);
 				toast.show();
 				finish();
+			}
+			else
+			{
+				for(int i = 0; i < coordinatesFile.length; i ++)
+				{
+					numbers[i] = coordinatesFile[i];
+				}
 			}
 		}
         catch (FileNotFoundException e1) {
@@ -142,8 +150,8 @@ public class LockScreen extends Activity {
 				    if( v.hasVibrator()) {
 						 v.vibrate(35);
 			    	}
-				    
-				    String coordinates[] = numbers[counter].split(",");				    
+				    String coordinates[] = numbers[counter].split(",");	
+				    Log.d("why", ""+ coordinates.length);
 				    //Not a dot
 				    if(!coordinates[0].equals(type))
 			    	{
@@ -262,22 +270,34 @@ public class LockScreen extends Activity {
 		{
 			 type = "Line";			 
 			 String coordinates[] = numbers[counter].split(",");
-			    
+			    Log.d("asdlkf", "" + coordinates[0]);
 			  //Not a line
 			  if(!coordinates[0].equals(type))
 			  {
 				  correctGestures = false;
+		    		Log.d("HEY ARE IN","YES2222");
+
 			  }
 			  else
 			  {
 					if(x > (Float.parseFloat(coordinates[1])+30) || (x <  (Float.parseFloat(coordinates[1])-30.0f)) || (y > (Float.parseFloat(coordinates[2])+30.0f)) || (y < (Float.parseFloat(coordinates[2])-30.0f)) ||
 						(x2 > (Float.parseFloat(coordinates[3])+30) || (x2 <  (Float.parseFloat(coordinates[3])-30.0f))) || (y2 > (Float.parseFloat(coordinates[4])+30.0f)) || (y2 < (Float.parseFloat(coordinates[4])-30.0f)))
 					{
+						Log.d("RECORDED X ", ""+x);
+						Log.d("RECORDED Y ", ""+y);
+						Log.d("PICKED X", ""+Float.parseFloat(coordinates[1]));
+						Log.d("PICKED Y", ""+Float.parseFloat(coordinates[2]));
+						Log.d("RECORDED X ", ""+x2);
+						Log.d("RECORDED Y ", ""+y2);
+						Log.d("PICKED X", ""+Float.parseFloat(coordinates[3]));
+						Log.d("PICKED Y", ""+Float.parseFloat(coordinates[4]));
 				    	correctGestures = false;
 					}
 					float slope = (y2-y)/(x2-x);
 					if(slope - slopeEnd > .5 || slope - slopeEnd < -.5)
 					{
+			    		Log.d("HEY ARE IN","YES333333");
+
 						correctGestures = false;
 					}
 			  }
@@ -319,7 +339,8 @@ public class LockScreen extends Activity {
     			}
     			else
     			{
-    				this.counter = 0;    				
+    				this.counter = 0;  
+    				correctGestures=true;
 		    		final Toast toast = Toast.makeText(getApplicationContext(), "Incorrect Password! Please try again.", Toast.LENGTH_SHORT);
 		    	    toast.show();
     				Handler handler = new Handler();
