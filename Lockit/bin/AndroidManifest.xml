@@ -9,6 +9,7 @@
         android:targetSdkVersion="17" />
 
     <uses-permission android:name="android.permission.VIBRATE" />
+
     <category android:name="android.intent.category.LAUNCHER" />
 
     <application
@@ -22,6 +23,7 @@
             android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -67,6 +69,23 @@
                 <action android:name="android.intent.action.USER_PRESENT" />
             </intent-filter>
         </receiver>
+
+        <activity
+            android:name="amazenite.lockit.MainActivity"
+            android:label="@string/title_activity_main" >
+        </activity>
+        <activity
+            android:name="amazenite.lockit.ColorPickerActivity"
+            android:label="@string/title_activity_color_picker" >
+        </activity>
+        <activity
+            android:name="amazenite.lockit.ColorPickerDialog"
+            android:label="@string/title_activity_color_picker_dialog" >
+        </activity>
+        <activity
+            android:name="amazenite.lockit.ColorSelection"
+            android:label="@string/title_activity_color_selection" >
+        </activity>
     </application>
 
 </manifest>

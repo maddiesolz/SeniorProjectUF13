@@ -48,14 +48,17 @@ public class Lockit extends Activity {
 		final Intent intent = new Intent(this, LockScreen.class);
 		startActivity(intent);
 	}
-	/** Lockscreen Test Points */
+	/** Lockscreen Gesture Visibility */
 	public void toggleVisible(View view) {
 	    // toggle gesture visibility
-		
 		visible = !visible;
 		saveStatus(""+visible,"togVisible");	
 		Log.d("IS IT VISIBLE?",""+visible);
-
+	}
+	/** Lockscreen Gesture Color Picker */
+	public void setColors(View view){
+		final Intent intent = new Intent(this, ColorSelection.class);
+		startActivity(intent);
 	}
 	
 	public void saveStatus(String Stats,String fileName){

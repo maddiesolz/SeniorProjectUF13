@@ -88,10 +88,12 @@
             android:layout_width="123dp"
             android:layout_height="wrap_content"
             android:text="Number of Gestures:" />
+
         <Spinner
             android:id="@+id/spinner"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="38dp" />
+
     </LinearLayout>
 
     <Button
@@ -100,5 +102,12 @@
         android:layout_height="wrap_content"
         android:onClick="toggleVisible"
         android:text="@+string/setVisible"/>
+
+    <Button
+        android:id="@+id/button2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="setColors"
+        android:text="Choose Color" />
 
 </LinearLayout>
