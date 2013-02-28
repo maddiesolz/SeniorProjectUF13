@@ -6,7 +6,6 @@
     android:orientation="vertical"
     tools:context=".Lockit"
     tools:ignore="MergeRootFrame" >
-
     <ImageView
         android:id="@+id/titleBar"
         android:layout_width="match_parent"
@@ -20,16 +19,15 @@
 
         <ImageButton
             android:id="@+id/PictureSettings"
-            android:layout_width="wrap_content"
+            android:layout_width="99dp"
             android:layout_height="wrap_content"
             android:layout_marginRight="24dp"
             android:layout_marginTop="0dp"
             android:onClick="pictureSettings"
             android:src="@drawable/picturemenu" />
-
         <ImageButton
             android:id="@+id/VoiceSettings"
-            android:layout_width="wrap_content"
+            android:layout_width="98dp"
             android:layout_height="wrap_content"
             android:layout_marginRight="24dp"
             android:layout_marginTop="0dp"
@@ -50,7 +48,6 @@
             android:layout_marginTop="24dp"
             android:onClick="viewPictures"
             android:src="@drawable/imageselect" />
-
         <ImageView
             android:id="@+id/preview"
             android:layout_width="70dp"
@@ -66,14 +63,12 @@
         android:layout_height="wrap_content"
         android:onClick="setPoints"
         android:src="@drawable/pointset" />
-
     <ImageButton
         android:id="@+id/enablePicturePassword"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:onClick="enablePicPw"
         android:src="@drawable/enable" />
-
     <Button
         android:id="@+id/debugLockscreen"
         android:layout_width="wrap_content"
@@ -82,7 +77,7 @@
         android:layout_marginTop="24dp"
         android:onClick="debugLockscreen"
         android:text="Test Points" />
-
+    
     <LinearLayout
         android:id="@+id/SpinnerSelect"
         android:layout_width="match_parent"
@@ -92,12 +87,18 @@
             android:id="@+id/textView1"
             android:layout_width="123dp"
             android:layout_height="wrap_content"
-            android:text="TextView" />
-
+            android:text="Number of Gestures:" />
         <Spinner
             android:id="@+id/spinner"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
     </LinearLayout>
+
+    <Button
+        android:id="@+id/button1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="toggleVisible"
+        android:text="@+string/setVisible"/>
 
 </LinearLayout>

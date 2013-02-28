@@ -37,19 +37,20 @@ public final class R {
         public static final int SpinnerSelect=0x7f0a000c;
         public static final int Tabs=0x7f0a0003;
         public static final int VoiceSettings=0x7f0a0005;
+        public static final int button1=0x7f0a000f;
         public static final int container=0x7f0a0001;
         public static final int debugLockscreen=0x7f0a000b;
         public static final int enablePicturePassword=0x7f0a000a;
         public static final int imageView1=0x7f0a0000;
-        public static final int iv_icon=0x7f0a0010;
-        public static final int menu_settings=0x7f0a0012;
+        public static final int iv_icon=0x7f0a0011;
+        public static final int menu_settings=0x7f0a0013;
         public static final int preview=0x7f0a0008;
         public static final int setPoints=0x7f0a0009;
-        public static final int setPointsPic=0x7f0a000f;
+        public static final int setPointsPic=0x7f0a0010;
         public static final int spinner=0x7f0a000e;
         public static final int textView1=0x7f0a000d;
         public static final int titleBar=0x7f0a0002;
-        public static final int tv_name=0x7f0a0011;
+        public static final int tv_name=0x7f0a0012;
     }
     public static final class layout {
         public static final int activity_lock_screen=0x7f030000;
@@ -67,31 +68,32 @@ public final class R {
          */
         public static final int app_name=0x7f060000;
         public static final int menu_settings=0x7f060004;
-        public static final int pref_default_display_name=0x7f06000a;
-        public static final int pref_description_social_recommendations=0x7f060008;
+        public static final int pref_default_display_name=0x7f06000b;
+        public static final int pref_description_social_recommendations=0x7f060009;
         /**  Example settings for Data & Sync 
          */
-        public static final int pref_header_data_sync=0x7f06000c;
+        public static final int pref_header_data_sync=0x7f06000d;
         /**  Strings related to Settings 
  Example General settings 
          */
-        public static final int pref_header_general=0x7f060006;
+        public static final int pref_header_general=0x7f060007;
         /**  Example settings for Notifications 
          */
-        public static final int pref_header_notifications=0x7f06000f;
-        public static final int pref_ringtone_silent=0x7f060012;
-        public static final int pref_title_add_friends_to_messages=0x7f06000b;
-        public static final int pref_title_display_name=0x7f060009;
-        public static final int pref_title_new_message_notifications=0x7f060010;
-        public static final int pref_title_ringtone=0x7f060011;
-        public static final int pref_title_social_recommendations=0x7f060007;
-        public static final int pref_title_sync_frequency=0x7f06000d;
-        public static final int pref_title_system_sync_settings=0x7f06000e;
-        public static final int pref_title_vibrate=0x7f060013;
+        public static final int pref_header_notifications=0x7f060010;
+        public static final int pref_ringtone_silent=0x7f060013;
+        public static final int pref_title_add_friends_to_messages=0x7f06000c;
+        public static final int pref_title_display_name=0x7f06000a;
+        public static final int pref_title_new_message_notifications=0x7f060011;
+        public static final int pref_title_ringtone=0x7f060012;
+        public static final int pref_title_social_recommendations=0x7f060008;
+        public static final int pref_title_sync_frequency=0x7f06000e;
+        public static final int pref_title_system_sync_settings=0x7f06000f;
+        public static final int pref_title_vibrate=0x7f060014;
+        public static final int setVisible=0x7f060005;
         public static final int title_activity_lock_screen=0x7f060003;
         public static final int title_activity_open_images=0x7f060001;
         public static final int title_activity_set_points=0x7f060002;
-        public static final int title_activity_settings=0x7f060005;
+        public static final int title_activity_settings=0x7f060006;
     }
     public static final class style {
         /** 

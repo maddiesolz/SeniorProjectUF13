@@ -32,6 +32,7 @@ public class Lockit extends Activity {
 	Spinner NumberofGestures;
 	
 	boolean enabled	= false;
+	boolean visible = true;
 	
 	
 	/** Called when the user clicks the get image button */
@@ -47,7 +48,44 @@ public class Lockit extends Activity {
 		final Intent intent = new Intent(this, LockScreen.class);
 		startActivity(intent);
 	}
+	/** Lockscreen Test Points */
+	public void toggleVisible(View view) {
+	    // toggle gesture visibility
+		
+		visible = !visible;
+		saveStatus(""+visible,"togVisible");	
+		Log.d("IS IT VISIBLE?",""+visible);
+
+	}
 	
+	public void saveStatus(String Stats,String fileName){
+		
+		try {
+        	FileOutputStream fos = openFileOutput(fileName, Context.MODE_PRIVATE);
+
+	        	try {
+					fos.write(Stats.getBytes());
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+        	try {
+	        		fos.close();
+	        		fos = null;
+	        	} 
+	        	catch (IOException e) {
+	        		e.printStackTrace();
+	        	}
+        	} 
+        catch (FileNotFoundException e1) {
+        	e1.printStackTrace();
+        	}
+		
+		
+	}
+	
+
 	@Override
 	public void onResume() {
 		super.onResume();
@@ -142,30 +180,7 @@ public class Lockit extends Activity {
 	    
 	    
 		PendingIntent sender = PendingIntent.getBroadcast(this, 123, intent, PendingIntent.FLAG_UPDATE_CURRENT);	
-
-		
-		try {
-        	FileOutputStream fos = openFileOutput("enablePicPw", Context.MODE_PRIVATE);
-
-	        	try {
-					fos.write(status.getBytes());
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-
-        	try {
-	        		fos.close();
-	        		fos = null;
-	        	} 
-	        	catch (IOException e) {
-	        		e.printStackTrace();
-	        	}
-        	} 
-        catch (FileNotFoundException e1) {
-        	e1.printStackTrace();
-        	}
-		
+		saveStatus(""+enabled,"enablePicPw");	
 		Log.d("Is It Enabled?: ",status);
 		
 	   alarmManager.set(AlarmManager.RTC_WAKEUP,100000000, sender);
@@ -187,6 +202,12 @@ public class Lockit extends Activity {
 		addListenerOnSpinnerItemSelection();
 		setSpinner();
 		getPreview();
+		File file = getBaseContext().getFileStreamPath("togVisible");
+	    if (!(file.exists())) //if it doesn't exist
+	    {
+		saveStatus(""+visible,"togVisible");	
+	    }
+		saveStatus(""+enabled,"enablePicPw");	
 	}
 	
 	public void addItemsToSpinner()

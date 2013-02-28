@@ -35,6 +35,7 @@ public class LockScreen extends Activity {
 	private String[] numbers;
  	private float[] moveCoordinates = {-50, -50, -50, -50};
  	private boolean isScrolling = false;
+ 	private boolean isVisible = true;
 	
 	@Override
 	@SuppressLint("NewApi")
@@ -70,6 +71,36 @@ public class LockScreen extends Activity {
 	    mDetector = new GestureDetectorCompat(this, new MyGestureListener());
 	    loadNumberGestures();
 		getCoordinates();
+		openStatus("visible","togVisible");  //status of visibility
+		
+		
+	}
+	
+	public void openStatus(String Status,String fileName){
+		
+		String line = "";
+		
+		File file = getBaseContext().getFileStreamPath(fileName);
+		Scanner sc;
+		try {
+			sc = new Scanner(new File(file.getAbsolutePath()));
+			line = sc.nextLine();
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		if(Status.equals("visible")){
+			if(line.equals("true"))
+			{
+			isVisible = true;
+		    }
+			else
+			{
+			isVisible = false;
+			}
+		}
+		
 	}
 	
 	public void loadNumberGestures()
@@ -144,8 +175,10 @@ public class LockScreen extends Activity {
 			        x = event.getRawX();
 			        y = event.getRawY()-40.0f;
 			        type = "Adot";
+			        if(isVisible == true)
+			        {
 			        graphView.invalidate();
-				    					    
+			        }			    
 				    Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 				    if( v.hasVibrator()) {
 						 v.vibrate(35);
@@ -303,13 +336,19 @@ public class LockScreen extends Activity {
 			  }
 
 			  counter++;
+			  if(isVisible == true)
+			  {
 			  graphView.invalidate();
+			  }
 			  checkFinished(counter);
 		}
 		else
 		{
 			type = "";
+			if(isVisible == true)
+			{
 			graphView.invalidate();
+			}
 			clearMoveCoordinates();
 		}		
 	}
