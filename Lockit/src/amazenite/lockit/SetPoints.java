@@ -14,6 +14,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.Paint.Style;
 import android.graphics.drawable.Drawable;
 import android.view.View; 
 import android.util.Log;
@@ -35,6 +36,7 @@ public class SetPoints extends Activity {
  	private float[] moveCoordinates = {-50, -50, -50, -50};
  	private boolean isScrolling = false;
  	private String type = "";
+ 	float[] circleCoordinates = new float[3];
 
 	@SuppressLint("NewApi")
 	@SuppressWarnings("deprecation")
@@ -154,9 +156,9 @@ public class SetPoints extends Activity {
 		  {
 			  isScrolling = true;
 			  x = e1.getRawX();
-			  y = e1.getRawY()-30.0f;
+			  y = e1.getRawY()-40.0f;
 			  x2 = e2.getRawX();
-			  y2 = e2.getRawY()-30.0f;
+			  y2 = e2.getRawY()-40.0f;
 			  
 			  storeMoveCoordinates();
 			  return true;
@@ -216,6 +218,7 @@ public class SetPoints extends Activity {
 		
 		moveCoordinates = temp;
 	}
+	
 	public void checkGesture()
 	{
 		boolean vertical = false;
@@ -245,9 +248,9 @@ public class SetPoints extends Activity {
 		}
 		else
 		{
-			type = "";
+			type = "Circ";
+			storeCoordinates();
 			graphView.invalidate();
-			clearMoveCoordinates();
 		}
 		
 	}
@@ -268,14 +271,48 @@ public class SetPoints extends Activity {
 				}
 				else if(type == "Circ")
 				{
-					//UNFINSHED
-					clearMoveCoordinates();
-				}
-				
+					float[] circleCoordinates = circleCalc();
+					coordinates[i] = "Circ," + Float.toString(moveCoordinates[0]) + "," + Float.toString(moveCoordinates[1]) + "," + Float.toString(circleCoordinates[0]) + "," + Float.toString(circleCoordinates[1]) + "," + Float.toString(circleCoordinates[2]);
+				}				
 				break;
 			}
 		}
 		checkFull();
+	}
+	
+	public float[] circleCalc()
+	{
+		float avgX = 0.0f;
+		float avgY = 0.0f;
+		for(int i = 0; i < moveCoordinates.length; i = i+2)
+		{
+			avgX += moveCoordinates[i];
+			avgY += moveCoordinates[i+1];
+		}
+		avgX = avgX/(moveCoordinates.length/2);
+		avgY = avgY/(moveCoordinates.length/2);		
+		
+		float[] distanceArray = new float[moveCoordinates.length/2];
+		for(int i = 0; i < distanceArray.length; i++)
+		{
+			float diffX = avgX - moveCoordinates[2*i];
+			float diffY = avgY - moveCoordinates[2*i + 1];
+			diffX = diffX * diffX;
+			diffY = diffY * diffY;
+			float sum = (float) Math.sqrt(diffX + diffY);
+			distanceArray[i] = sum;
+		}
+		float avgDist = 0.0f;
+		for(int i = 0; i < distanceArray.length; i++)
+		{
+			avgDist += distanceArray[i];
+		}
+		avgDist = avgDist/distanceArray.length;
+		
+		circleCoordinates[0] = avgX;
+		circleCoordinates[1] = avgY;
+		circleCoordinates[2] = avgDist;
+		return circleCoordinates;
 	}
 	
 	public void checkFull()
@@ -337,7 +374,8 @@ public class SetPoints extends Activity {
 	 public class GraphicView extends View{		  
 		  	Paint dotColor = new Paint(Paint.ANTI_ALIAS_FLAG);
 		  	Paint lineColor = new Paint(Paint.ANTI_ALIAS_FLAG);
-		  
+		  	Paint circColor = new Paint(Paint.ANTI_ALIAS_FLAG);
+		  	
 	        public GraphicView(Context context){
 	            super(context);
 	            setFocusable(true);
@@ -358,9 +396,18 @@ public class SetPoints extends Activity {
 	        		lineColor.setColor(0xff33CCCC);
 	        		lineColor.setAlpha(80);
 	        		lineColor.setStyle(Paint.Style.FILL);
-	        		lineColor.setStrokeWidth(20);
+	        		lineColor.setStrokeWidth(40);
 	        		lineColor.setStrokeCap(Paint.Cap.ROUND);
 	        		canvas.drawLine(moveCoordinates[0], moveCoordinates[1], moveCoordinates[moveCoordinates.length-2], moveCoordinates[moveCoordinates.length-1], lineColor);
+	        		clearMoveCoordinates();
+	        	}
+	        	else if(type == "Circ")
+	        	{
+	        		circColor.setColor(0xff33CCCC);
+	        		circColor.setAlpha(80);
+	        		circColor.setStyle(Style.STROKE);
+	        		circColor.setStrokeWidth(30);
+	        		canvas.drawCircle(circleCoordinates[0], circleCoordinates[1], circleCoordinates[2], circColor);
 	        		clearMoveCoordinates();
 	        	}
 	        	type = "";
