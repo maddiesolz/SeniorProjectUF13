@@ -219,7 +219,7 @@ public class SetPoints extends Activity {
 		moveCoordinates = temp;
 	}
 	
-	public void checkGesture()
+	public void checkGesture() 
 	{
 		boolean vertical = false;
 		float slopeHalf = -1;
@@ -239,8 +239,9 @@ public class SetPoints extends Activity {
 			slopeHalf = (moveCoordinates[halfway+1] - moveCoordinates[1])/(moveCoordinates[halfway] - moveCoordinates[0]);
 			slopeEnd = (moveCoordinates[moveCoordinates.length-1] - moveCoordinates[1])/(moveCoordinates[moveCoordinates.length-2] - moveCoordinates[0]);
 		}
-		
-		if(slopeHalf-slopeEnd < 2 && slopeHalf-slopeEnd > -2 || vertical)
+		Log.d("slopehalf", "" + slopeHalf);
+		Log.d("slopehalf", "" + slopeEnd);
+		if(slopeHalf-slopeEnd < .7 && slopeHalf-slopeEnd > -.7 || vertical)
 		{
 			type = "Line";
 			storeCoordinates();

@@ -15,7 +15,6 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Paint.Style;
 import android.graphics.drawable.Drawable;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
@@ -289,7 +288,7 @@ public class LockScreen extends Activity {
 			slopeEnd = (moveCoordinates[moveCoordinates.length-1] - moveCoordinates[1])/(moveCoordinates[moveCoordinates.length-2] - moveCoordinates[0]);
 		}
 		
-		if(slopeHalf-slopeEnd < 2 && slopeHalf-slopeEnd > -2 || vertical)
+		if(slopeHalf-slopeEnd < .7 && slopeHalf-slopeEnd > -.7 || vertical)
 		{
 			 type = "Line";			 
 			 String coordinates[] = numbers[counter].split(",");
@@ -301,15 +300,10 @@ public class LockScreen extends Activity {
 			  }
 			  else
 			  {
-					if(x > (Float.parseFloat(coordinates[1])+30) || (x <  (Float.parseFloat(coordinates[1])-30.0f)) || (y > (Float.parseFloat(coordinates[2])+30.0f)) || (y < (Float.parseFloat(coordinates[2])-30.0f)) ||
-						(x2 > (Float.parseFloat(coordinates[3])+30) || (x2 <  (Float.parseFloat(coordinates[3])-30.0f))) || (y2 > (Float.parseFloat(coordinates[4])+30.0f)) || (y2 < (Float.parseFloat(coordinates[4])-30.0f)))
+					if(x > (Float.parseFloat(coordinates[1])+50) || (x <  (Float.parseFloat(coordinates[1])-50.0f)) || (y > (Float.parseFloat(coordinates[2])+50.0f)) || (y < (Float.parseFloat(coordinates[2])-50.0f)) ||
+						(x2 > (Float.parseFloat(coordinates[3])+50) || (x2 <  (Float.parseFloat(coordinates[3])-50.0f))) || (y2 > (Float.parseFloat(coordinates[4])+50.0f)) || (y2 < (Float.parseFloat(coordinates[4])-50.0f)))
 					{
 				    	correctGestures = false;
-					}
-					float slope = (y2-y)/(x2-x);
-					if(slope - slopeEnd > .5 || slope - slopeEnd < -.5)
-					{
-						correctGestures = false;
 					}
 			  }
 
@@ -335,7 +329,7 @@ public class LockScreen extends Activity {
 				{
 					correctGestures = false;
 				}
-				if(circleCoordinates[0] > (Float.parseFloat(coordinates[3])+30) || (circleCoordinates[0] <  (Float.parseFloat(coordinates[3])-30.0f)) || (circleCoordinates[1] > (Float.parseFloat(coordinates[4])+30.0f)) || (circleCoordinates[1] < (Float.parseFloat(coordinates[4])-30.0f)))
+				if(circleCoordinates[0] > (Float.parseFloat(coordinates[3])+50) || (circleCoordinates[0] <  (Float.parseFloat(coordinates[3])-50.0f)) || (circleCoordinates[1] > (Float.parseFloat(coordinates[4])+30.0f)) || (circleCoordinates[1] < (Float.parseFloat(coordinates[4])-30.0f)))
 				{
 					correctGestures = false;
 				}
