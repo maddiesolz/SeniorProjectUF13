@@ -345,6 +345,7 @@ public class LockScreen extends Activity {
 				}
 				
 			}
+			counter++;
 			if(isVisible == true)
 			{
 				graphView.invalidate();
@@ -397,7 +398,7 @@ public class LockScreen extends Activity {
 	public void checkFinished(int counter)
 	{
 		if(counter >= numbers.length)
-		  { 
+		{ 
     			if(correctGestures)
     			{
     				final Toast toast = Toast.makeText(getApplicationContext(), "Unlocked!", Toast.LENGTH_SHORT);
