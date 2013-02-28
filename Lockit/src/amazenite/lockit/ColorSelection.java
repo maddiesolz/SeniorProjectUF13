@@ -1,9 +1,15 @@
 package amazenite.lockit;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+
 import android.os.Bundle;
 import android.app.Activity;
 import android.view.Menu;
 import android.app.Activity;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -33,36 +39,67 @@ import android.preference.PreferenceManager;
 	public class ColorSelection extends PreferenceActivity implements
 	                Preference.OnPreferenceClickListener {
 
-	        private final static int ACTIVITY_COLOR_PICKER_REQUEST_CODE = 1000;
+        private final static int ACTIVITY_COLOR_PICKER_REQUEST_CODE = 1000;
 
-	        private Preference mDialogPreference;
-	        private Preference mActivityPreference;
-	        private Preference mGetSourceCodePreference;
+        private Preference mDialogPreference;
+        private Preference mActivityPreference;
+        private Preference mGetSourceCodePreference;
+        private int chosenColor = 0xff33CCCC;  //default color
 
+	        
+	        
 	        @SuppressWarnings("deprecation")
 			@Override
-	        public void onCreate(Bundle savedInstanceState) {
+	        public void onCreate(Bundle savedInstanceState)
+	        {
 	                super.onCreate(savedInstanceState);
 
 	                getWindow().setFormat(PixelFormat.RGBA_8888);
 
 	                addPreferencesFromResource(R.xml.color_selection);
+	        		File file = getBaseContext().getFileStreamPath("pickedColor");
+	        	    if (!(file.exists())) //if it doesn't exist
+	        	    {
+	                saveColor(chosenColor);
+	        	    }
+	                final SharedPreferences prefs = PreferenceManager .getDefaultSharedPreferences(ColorSelection.this);
+	                final ColorPickerDialog d = new ColorPickerDialog(this, prefs.getInt("dialog", 0xffffffff));
+	                d.setAlphaSliderVisible(true);
 
-	                setUp();
+                    d.setButton("Ok", new DialogInterface.OnClickListener()
+                    {
+
+	                    @Override
+	                    public void onClick(DialogInterface dialog, int which) 
+	                    {
+	                            SharedPreferences.Editor editor = prefs.edit();
+	                            editor.putInt("dialog", d.getColor());
+	                            chosenColor = d.getColor();
+	                            saveColor(chosenColor);
+	                            editor.commit();	
+	                            finish();
+	                    }
+                    });
+
+                    d.setButton2("Cancel", new DialogInterface.OnClickListener() {
+	
+	                    @Override
+	                    public void onClick(DialogInterface dialog, int which)
+	                    {
+	                    		finish();
+	                    }
+                    });
+
+                    d.show();
 
 	        }
 
 	        @SuppressWarnings("deprecation")
-			private void setUp() {
-
-	                mDialogPreference = findPreference("dialog");
-	                mActivityPreference = findPreference("activity");
-	                mGetSourceCodePreference = findPreference("source_code");
-
+			private void setUp() 
+	        {
 	                mDialogPreference.setOnPreferenceClickListener(this);
 	                mActivityPreference.setOnPreferenceClickListener(this);
 	                mGetSourceCodePreference.setOnPreferenceClickListener(this);
-
 	        }
 
 	        @SuppressWarnings("deprecation")
@@ -135,5 +172,35 @@ import android.preference.PreferenceManager;
 	                }
 
 	        }
+	        
+	        public void saveColor(int color)
+	        {
+	        	
+	        	String pickedColor = ""+color;
+	        	try {
+	            	FileOutputStream fos = openFileOutput("pickedColor", Context.MODE_PRIVATE);
+
+	    	        	try {
+	    					fos.write(pickedColor.getBytes());
+	    				} catch (IOException e) {
+	    					// TODO Auto-generated catch block
+	    					e.printStackTrace();
+	    				}
+
+	            	try {
+	    	        		fos.close();
+	    	        		fos = null;
+	    	        	} 
+	    	        	catch (IOException e) {
+	    	        		e.printStackTrace();
+	    	        	}
+	            	} 
+	            catch (FileNotFoundException e1) {
+	            	e1.printStackTrace();
+	            	}
+	        }
+	        
+	        
+	        
 
 	}
