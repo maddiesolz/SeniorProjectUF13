@@ -13,6 +13,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.Paint.Style;
 import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
 import android.util.Log;
@@ -34,6 +35,7 @@ public class LockScreen extends Activity {
 	private String type = "";
 	private String[] numbers;
  	private float[] moveCoordinates = {-50, -50, -50, -50};
+ 	float[] circleCoordinates = new float[3];
  	private boolean isScrolling = false;
  	private boolean isVisible = true;
 	
@@ -93,11 +95,11 @@ public class LockScreen extends Activity {
 		if(Status.equals("visible")){
 			if(line.equals("true"))
 			{
-			isVisible = true;
+				isVisible = true;
 		    }
 			else
 			{
-			isVisible = false;
+				isVisible = false;
 			}
 		}
 		
@@ -110,7 +112,6 @@ public class LockScreen extends Activity {
 			Scanner sc = new Scanner(new File(file.getAbsolutePath()));
 			String line = sc.nextLine();
 			int num = Integer.parseInt(line);
-			Log.d("hsdof", " " + num);
 			if(num != 0)
 			{
 				numbers = new String[num];
@@ -169,22 +170,18 @@ public class LockScreen extends Activity {
 		  @Override
 		    public boolean onSingleTapUp(MotionEvent event) {
 				if(counter <= numbers.length-1) {
-
-			        Log.d("coordiante numba", "" + counter);
-			        Log.d("number length", " "+ numbers.length);
 			        x = event.getRawX();
 			        y = event.getRawY()-40.0f;
 			        type = "Adot";
 			        if(isVisible == true)
 			        {
-			        graphView.invalidate();
+			        	graphView.invalidate();
 			        }			    
 				    Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 				    if( v.hasVibrator()) {
 						 v.vibrate(35);
 			    	}
 				    String coordinates[] = numbers[counter].split(",");	
-				    Log.d("why", ""+ coordinates.length);
 				    //Not a dot
 				    if(!coordinates[0].equals(type))
 			    	{
@@ -196,7 +193,6 @@ public class LockScreen extends Activity {
 				    		correctGestures = false;
 				    	}
 				    }
-
 			    	counter++;
 			    	checkFinished(counter);
 				}
@@ -212,14 +208,8 @@ public class LockScreen extends Activity {
 				  y = e1.getRawY()-40.0f;
 				  x2 = e2.getRawX();
 				  y2 = e2.getRawY()-40.0f;
-			      type = "Line";
 				    					    
 			      storeMoveCoordinates();
-			      
-				  Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-				  if( v.hasVibrator()) {
-					  	v.vibrate(35);
-				  }
 			  }
 			  return true;
 		  }
@@ -303,34 +293,22 @@ public class LockScreen extends Activity {
 		{
 			 type = "Line";			 
 			 String coordinates[] = numbers[counter].split(",");
-			    Log.d("asdlkf", "" + coordinates[0]);
+			 
 			  //Not a line
 			  if(!coordinates[0].equals(type))
 			  {
 				  correctGestures = false;
-		    		Log.d("HEY ARE IN","YES2222");
-
 			  }
 			  else
 			  {
 					if(x > (Float.parseFloat(coordinates[1])+30) || (x <  (Float.parseFloat(coordinates[1])-30.0f)) || (y > (Float.parseFloat(coordinates[2])+30.0f)) || (y < (Float.parseFloat(coordinates[2])-30.0f)) ||
 						(x2 > (Float.parseFloat(coordinates[3])+30) || (x2 <  (Float.parseFloat(coordinates[3])-30.0f))) || (y2 > (Float.parseFloat(coordinates[4])+30.0f)) || (y2 < (Float.parseFloat(coordinates[4])-30.0f)))
 					{
-						Log.d("RECORDED X ", ""+x);
-						Log.d("RECORDED Y ", ""+y);
-						Log.d("PICKED X", ""+Float.parseFloat(coordinates[1]));
-						Log.d("PICKED Y", ""+Float.parseFloat(coordinates[2]));
-						Log.d("RECORDED X ", ""+x2);
-						Log.d("RECORDED Y ", ""+y2);
-						Log.d("PICKED X", ""+Float.parseFloat(coordinates[3]));
-						Log.d("PICKED Y", ""+Float.parseFloat(coordinates[4]));
 				    	correctGestures = false;
 					}
 					float slope = (y2-y)/(x2-x);
 					if(slope - slopeEnd > .5 || slope - slopeEnd < -.5)
 					{
-			    		Log.d("HEY ARE IN","YES333333");
-
 						correctGestures = false;
 					}
 			  }
@@ -338,19 +316,76 @@ public class LockScreen extends Activity {
 			  counter++;
 			  if(isVisible == true)
 			  {
-			  graphView.invalidate();
+				  graphView.invalidate();
 			  }
 			  checkFinished(counter);
 		}
 		else
 		{
-			type = "";
+			type = "Circ";
+			String coordinates[] = numbers[counter].split(",");
+			circleCoordinates = circleCalc();
+			if(!coordinates[0].equals(type))
+			  {
+				  correctGestures = false;
+			  }
+			else
+			{
+				if(x > (Float.parseFloat(coordinates[1])+30) || (x <  (Float.parseFloat(coordinates[1])-30.0f)) || (y > (Float.parseFloat(coordinates[2])+30.0f)) || (y < (Float.parseFloat(coordinates[2])-30.0f)))
+				{
+					correctGestures = false;
+				}
+				if(circleCoordinates[0] > (Float.parseFloat(coordinates[3])+30) || (circleCoordinates[0] <  (Float.parseFloat(coordinates[3])-30.0f)) || (circleCoordinates[1] > (Float.parseFloat(coordinates[4])+30.0f)) || (circleCoordinates[1] < (Float.parseFloat(coordinates[4])-30.0f)))
+				{
+					correctGestures = false;
+				}
+				if(circleCoordinates[2] > (Float.parseFloat(coordinates[5])+50) || (circleCoordinates[2] <  (Float.parseFloat(coordinates[5])-50.0f)))
+				{
+					correctGestures = false;
+				}
+				
+			}
 			if(isVisible == true)
 			{
-			graphView.invalidate();
+				graphView.invalidate();
 			}
-			clearMoveCoordinates();
+			checkFinished(counter);
 		}		
+	}
+	
+	public float[] circleCalc()
+	{
+		float avgX = 0.0f;
+		float avgY = 0.0f;
+		for(int i = 0; i < moveCoordinates.length; i = i+2)
+		{
+			avgX += moveCoordinates[i];
+			avgY += moveCoordinates[i+1];
+		}
+		avgX = avgX/(moveCoordinates.length/2);
+		avgY = avgY/(moveCoordinates.length/2);		
+		
+		float[] distanceArray = new float[moveCoordinates.length/2];
+		for(int i = 0; i < distanceArray.length; i++)
+		{
+			float diffX = avgX - moveCoordinates[2*i];
+			float diffY = avgY - moveCoordinates[2*i + 1];
+			diffX = diffX * diffX;
+			diffY = diffY * diffY;
+			float sum = (float) Math.sqrt(diffX + diffY);
+			distanceArray[i] = sum;
+		}
+		float avgDist = 0.0f;
+		for(int i = 0; i < distanceArray.length; i++)
+		{
+			avgDist += distanceArray[i];
+		}
+		avgDist = avgDist/distanceArray.length;
+		
+		circleCoordinates[0] = avgX;
+		circleCoordinates[1] = avgY;
+		circleCoordinates[2] = avgDist;
+		return circleCoordinates;
 	}
 	
 	public void clearMoveCoordinates()
@@ -362,7 +397,7 @@ public class LockScreen extends Activity {
 	public void checkFinished(int counter)
 	{
 		if(counter >= numbers.length)
-		  {
+		  { 
     			if(correctGestures)
     			{
     				final Toast toast = Toast.makeText(getApplicationContext(), "Unlocked!", Toast.LENGTH_SHORT);
@@ -399,6 +434,7 @@ public class LockScreen extends Activity {
 	 public class GraphicView extends View{		  
 		  Paint dotColor = new Paint(Paint.ANTI_ALIAS_FLAG);
 		  Paint lineColor = new Paint(Paint.ANTI_ALIAS_FLAG);
+		  Paint circColor = new Paint(Paint.ANTI_ALIAS_FLAG);
 		  
 	        public GraphicView(Context context){
 	            super(context);
@@ -426,6 +462,15 @@ public class LockScreen extends Activity {
 	        		lineColor.setStrokeWidth(20);
 	        		lineColor.setStrokeCap(Paint.Cap.ROUND);
 	        		canvas.drawLine(moveCoordinates[0], moveCoordinates[1], moveCoordinates[moveCoordinates.length-2], moveCoordinates[moveCoordinates.length-1], lineColor);
+	        		clearMoveCoordinates();
+	        	}
+	        	else if(type == "Circ")
+	        	{
+	        		circColor.setColor(0xff33CCCC);
+	        		circColor.setAlpha(80);
+	        		circColor.setStyle(Style.STROKE);
+	        		circColor.setStrokeWidth(30);
+	        		canvas.drawCircle(circleCoordinates[0], circleCoordinates[1], circleCoordinates[2], circColor);
 	        		clearMoveCoordinates();
 	        	}
 	        	type = "";

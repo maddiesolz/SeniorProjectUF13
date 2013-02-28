@@ -156,9 +156,9 @@ public class SetPoints extends Activity {
 		  {
 			  isScrolling = true;
 			  x = e1.getRawX();
-			  y = e1.getRawY()-30.0f;
+			  y = e1.getRawY()-40.0f;
 			  x2 = e2.getRawX();
-			  y2 = e2.getRawY()-30.0f;
+			  y2 = e2.getRawY()-40.0f;
 			  
 			  storeMoveCoordinates();
 			  return true;
@@ -218,6 +218,7 @@ public class SetPoints extends Activity {
 		
 		moveCoordinates = temp;
 	}
+	
 	public void checkGesture()
 	{
 		boolean vertical = false;
