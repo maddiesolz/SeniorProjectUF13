@@ -208,7 +208,7 @@ public class Lockit extends Activity {
 		File file = getBaseContext().getFileStreamPath("togVisible");
 	    if (!(file.exists())) //if it doesn't exist
 	    {
-		saveStatus(""+visible,"togVisible");	
+	    	saveStatus(""+visible,"togVisible");	
 	    }
 		saveStatus(""+enabled,"enablePicPw");	
 	}

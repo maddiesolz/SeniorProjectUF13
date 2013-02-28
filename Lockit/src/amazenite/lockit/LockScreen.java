@@ -23,6 +23,7 @@ import android.support.v4.view.GestureDetectorCompat;
 import android.widget.Toast;
 
 public class LockScreen extends Activity {	
+	
 	private static float x = -50;
  	private static float y = -50;
  	private static float x2 = -50;
@@ -37,6 +38,8 @@ public class LockScreen extends Activity {
  	float[] circleCoordinates = new float[3];
  	private boolean isScrolling = false;
  	private boolean isVisible = true;
+ 	private int chosenColor;
+
 	
 	@Override
 	@SuppressLint("NewApi")
@@ -71,10 +74,26 @@ public class LockScreen extends Activity {
          }    
 	    mDetector = new GestureDetectorCompat(this, new MyGestureListener());
 	    loadNumberGestures();
+		loadColor();
 		getCoordinates();
 		openStatus("visible","togVisible");  //status of visibility
 		
 		
+	}
+	
+	public void loadColor()
+	{
+		try
+		{
+			File file = getBaseContext().getFileStreamPath("pickedColor");
+			Scanner sc = new Scanner(new File(file.getAbsolutePath()));
+			String line = sc.nextLine();	
+			chosenColor = Integer.parseInt(line);
+		}
+        catch (FileNotFoundException e1)
+        {
+        	e1.printStackTrace();
+        }
 	}
 	
 	public void openStatus(String Status,String fileName){
@@ -444,15 +463,13 @@ public class LockScreen extends Activity {
 	        	}
 	        	if(type == "Adot")
 	        	{
-	        		dotColor.setColor(0xff33CCCC);
-		        	dotColor.setAlpha(80);
+	        		dotColor.setColor(chosenColor);
 		        	dotColor.setStyle(Paint.Style.FILL);
 	        		canvas.drawCircle(x, y, 20, dotColor);
 	        	}
 	        	else if(type == "Line")
 	        	{
-	        		lineColor.setColor(0xff33CCCC);
-	        		lineColor.setAlpha(80);
+	        		lineColor.setColor(chosenColor);
 	        		lineColor.setStyle(Paint.Style.FILL);
 	        		lineColor.setStrokeWidth(20);
 	        		lineColor.setStrokeCap(Paint.Cap.ROUND);
@@ -461,8 +478,7 @@ public class LockScreen extends Activity {
 	        	}
 	        	else if(type == "Circ")
 	        	{
-	        		circColor.setColor(0xff33CCCC);
-	        		circColor.setAlpha(80);
+	        		circColor.setColor(chosenColor);
 	        		circColor.setStyle(Style.STROKE);
 	        		circColor.setStrokeWidth(30);
 	        		canvas.drawCircle(circleCoordinates[0], circleCoordinates[1], circleCoordinates[2], circColor);

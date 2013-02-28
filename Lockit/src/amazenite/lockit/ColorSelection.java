@@ -46,14 +46,11 @@ import android.preference.PreferenceManager;
         private Preference mGetSourceCodePreference;
         private int chosenColor = 0xff33CCCC;  //default color
 
-	        
-	        
 	        @SuppressWarnings("deprecation")
 			@Override
 	        public void onCreate(Bundle savedInstanceState)
 	        {
 	                super.onCreate(savedInstanceState);
-
 	                getWindow().setFormat(PixelFormat.RGBA_8888);
 
 	                addPreferencesFromResource(R.xml.color_selection);
@@ -95,14 +92,6 @@ import android.preference.PreferenceManager;
 	        }
 
 	        @SuppressWarnings("deprecation")
-			private void setUp() 
-	        {
-	                mDialogPreference.setOnPreferenceClickListener(this);
-	                mActivityPreference.setOnPreferenceClickListener(this);
-	                mGetSourceCodePreference.setOnPreferenceClickListener(this);
-	        }
-
-	        @SuppressWarnings("deprecation")
 			@Override
 	        public boolean onPreferenceClick(Preference preference) {
 
@@ -139,19 +128,7 @@ import android.preference.PreferenceManager;
 	                        d.show();
 
 	                        return true;
-	                } else if (key.equals("activity")) {
-
-	                        Intent i = new Intent(this, ColorPickerActivity.class);
-	                        i.putExtra(ColorPickerActivity.INTENT_DATA_INITIAL_COLOR, prefs
-	                                        .getInt("activity", 0xff000000));
-	                        startActivityForResult(i, ACTIVITY_COLOR_PICKER_REQUEST_CODE);
-
-	                        return true;
-	                }
-	                else if(key.equals("source_code")){
-	                        Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse("http://code.google.com/p/color-picker-view/"));
-	                        startActivity(i);
-	                }
+	                } 
 
 	                return false;
 	        }
@@ -168,9 +145,7 @@ import android.preference.PreferenceManager;
 	                        editor.putInt("activity", data.getIntExtra(
 	                                        ColorPickerActivity.RESULT_COLOR, 0xff000000));
 	                        editor.commit();
-
 	                }
-
 	        }
 	        
 	        public void saveColor(int color)

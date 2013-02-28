@@ -37,6 +37,7 @@ public class SetPoints extends Activity {
  	private boolean isScrolling = false;
  	private String type = "";
  	float[] circleCoordinates = new float[3];
+ 	private int chosenColor;
 
 	@SuppressLint("NewApi")
 	@SuppressWarnings("deprecation")
@@ -46,6 +47,7 @@ public class SetPoints extends Activity {
 		graphView = new GraphicView(this);
 		
 		loadNumberGestures();
+		loadColor();
 		
 		//Set coordinates to be outside of the viewing frame
 		x = -50;
@@ -72,7 +74,6 @@ public class SetPoints extends Activity {
         		 graphView.setBackgroundDrawable(d);
         	 }
          }    
-        
         //Set Gesture Detector 
 	    mDetector = new GestureDetectorCompat(this, new MyGestureListener());
 	}
@@ -97,6 +98,21 @@ public class SetPoints extends Activity {
         	e1.printStackTrace();
         	coordinates = new String[3];
         	}
+	}
+	
+	public void loadColor()
+	{
+		try
+		{
+			File file = getBaseContext().getFileStreamPath("pickedColor");
+			Scanner sc = new Scanner(new File(file.getAbsolutePath()));
+			String line = sc.nextLine();	
+			chosenColor = Integer.parseInt(line);
+		}
+        catch (FileNotFoundException e1)
+        {
+        	e1.printStackTrace();
+        }
 	}
 	
     @Override 
@@ -387,15 +403,13 @@ public class SetPoints extends Activity {
 	        	super.onDraw(canvas);
 	        	if(type == "Adot")
 	        	{
-	        		dotColor.setColor(0xff33CCCC);
-		        	dotColor.setAlpha(80);
+	        		dotColor.setColor(chosenColor);
 		        	dotColor.setStyle(Paint.Style.FILL);
 	        		canvas.drawCircle(x, y, 20, dotColor);
 	        	}
 	        	else if(type == "Line")
 	        	{
-	        		lineColor.setColor(0xff33CCCC);
-	        		lineColor.setAlpha(80);
+	        		lineColor.setColor(chosenColor);
 	        		lineColor.setStyle(Paint.Style.FILL);
 	        		lineColor.setStrokeWidth(40);
 	        		lineColor.setStrokeCap(Paint.Cap.ROUND);
@@ -404,8 +418,7 @@ public class SetPoints extends Activity {
 	        	}
 	        	else if(type == "Circ")
 	        	{
-	        		circColor.setColor(0xff33CCCC);
-	        		circColor.setAlpha(80);
+	        		circColor.setColor(chosenColor);
 	        		circColor.setStyle(Style.STROKE);
 	        		circColor.setStrokeWidth(30);
 	        		canvas.drawCircle(circleCoordinates[0], circleCoordinates[1], circleCoordinates[2], circColor);
