@@ -420,7 +420,7 @@ public class SetPoints extends Activity {
 				}
 				Log.d("HOW MANY RIGHT?", ""+correctCount);
 
-				if((correctCount >= (2*iterations/3)) || horitzontalCount >= ((iterations)/2)-2) //LINE
+				if((correctCount >= ((6*iterations)/10)) || horitzontalCount >= ((iterations)/2)-2) //LINE
 				{
 					result = true;
 				}
