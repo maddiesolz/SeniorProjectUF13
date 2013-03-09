@@ -78,6 +78,10 @@ public class SetPoints extends Activity {
 	    mDetector = new GestureDetectorCompat(this, new MyGestureListener());
 	}
 	
+	/*
+	 * 							LOAD NUMBER OF GESTURES
+	 */
+	
 	public void loadNumberGestures()
 	{
 		try {
@@ -100,6 +104,10 @@ public class SetPoints extends Activity {
         	}
 	}
 	
+	/*
+	 * 							LOAD CHOSEN COLOR
+	 */
+	
 	public void loadColor()
 	{
 		try
@@ -114,6 +122,10 @@ public class SetPoints extends Activity {
         	e1.printStackTrace();
         }
 	}
+	
+	/*
+	 * 						   OnTouchEvent Characteristics
+	 */
 	
     @Override 
     public boolean onTouchEvent(MotionEvent event){ 
@@ -130,6 +142,10 @@ public class SetPoints extends Activity {
     }
 	
 	/* Gesture Detector Class To Only listen On The Ones We Want */	
+    
+	/*******************************************************************************************
+	 * 									MyGeatureListener Class
+	 *******************************************************************************************/
 	public class MyGestureListener extends GestureDetector.SimpleOnGestureListener {
 		  @SuppressLint("NewApi")
 		@Override
@@ -146,7 +162,9 @@ public class SetPoints extends Activity {
 		    	}
 		        return true;
 		    }
-		  
+/*
+ * 							onDoubleTap - Clear Coordinates
+ */
 		  @Override
 		  public boolean onDoubleTap(MotionEvent event)
 		  {
@@ -166,7 +184,9 @@ public class SetPoints extends Activity {
 			  
 			  return true;
 		  }
-		  
+ /*
+* 							onScroll - Lines and Circles
+*/		  			  
 		  @Override
 		  public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY)
 		  {
@@ -180,7 +200,10 @@ public class SetPoints extends Activity {
 			  return true;
 		  }		  
 	 }
-	
+/*
+ * 							storeMoveCoordinates - onScroll Store Coordinates
+*/
+			
 	//Store coordinates of gesture path
 	public void storeMoveCoordinates()
 	{
@@ -234,44 +257,48 @@ public class SetPoints extends Activity {
 		
 		moveCoordinates = temp;
 	}
-	
+/*
+* 							checkGesture()  ASSIGNS GESTURE
+*/
+			
 	public void checkGesture() 
 	{
-		boolean vertical = false;
-		float slopeHalf = -1;
-		float slopeEnd = -1;
+		boolean line = checkLine();  //Checks if this is a line or not
+		//float slopeHalf = -1;
+		//float slopeEnd = -1;
 		int halfway = moveCoordinates.length/2;
+		Log.d("halfway mark?", "" + halfway);
+		Log.d("HOW BIG IS IT?", ""+moveCoordinates.length);
 		//y coordinate
-		if(halfway % 2 != 0)
+	/*	if(halfway % 2 != 0)
 		{
 			halfway--;
-		}
-		if((moveCoordinates[halfway] - moveCoordinates[0] < 30 && moveCoordinates[halfway] - moveCoordinates[0] > -30) && moveCoordinates[moveCoordinates.length-2] - moveCoordinates[0] < 30 && moveCoordinates[moveCoordinates.length-2] - moveCoordinates[0] > -30)
+		}*/
+	/*	else
 		{
-			vertical = true;
-		}
-		else
-		{
-			slopeHalf = (moveCoordinates[halfway+1] - moveCoordinates[1])/(moveCoordinates[halfway] - moveCoordinates[0]);
-			slopeEnd = (moveCoordinates[moveCoordinates.length-1] - moveCoordinates[1])/(moveCoordinates[moveCoordinates.length-2] - moveCoordinates[0]);
-		}
-		Log.d("slopehalf", "" + slopeHalf);
-		Log.d("slopehalf", "" + slopeEnd);
-		if(slopeHalf-slopeEnd < .7 && slopeHalf-slopeEnd > -.7 || vertical)
+			slopeHalf  = (moveCoordinates[halfway+1] - moveCoordinates[1])/(moveCoordinates[halfway] - moveCoordinates[0]);
+			slopeEnd   = (moveCoordinates[moveCoordinates.length-1] - moveCoordinates[halfway+1])/(moveCoordinates[moveCoordinates.length-2] - moveCoordinates[halfway]);
+		}*/
+
+		Log.d("line?", "" + line);
+
+		//if((slopeHalf-slopeEnd < .7 && slopeHalf-slopeEnd > -.7) || vertical)
+		if(line)
 		{
 			type = "Line";
 			storeCoordinates();
 			graphView.invalidate();
 		}
-		else
+		 else
 		{
 			type = "Circ";
 			storeCoordinates();
 			graphView.invalidate();
-		}
-		
+		}	
 	}
-	
+/*
+* 							storeCoordinates()  Store Coordinates of each type
+*/	
 	public void storeCoordinates()
 	{
 		for(int i = 0; i<coordinates.length; i++)
@@ -296,7 +323,9 @@ public class SetPoints extends Activity {
 		}
 		checkFull();
 	}
-	
+/*
+* 							circleCalc()  Calculates center x, center y, and radius
+*/	
 	public float[] circleCalc()
 	{
 		float avgX = 0.0f;
@@ -331,7 +360,81 @@ public class SetPoints extends Activity {
 		circleCoordinates[2] = avgDist;
 		return circleCoordinates;
 	}
-	
+/*
+* 						checkLine()  Checks if this is a Horizontal, Vertical, or Regular Line
+*/	
+	public boolean checkLine()
+	{
+	//is it vertical or not?
+		int correctCount = 0;
+		int iterations = 0;
+		boolean result = false;
+		
+			for(int i = 0; i < moveCoordinates.length-1; i+=2)
+			{
+				if(i+2 > moveCoordinates.length-1)
+				{
+					break;
+				}
+				int diffX = (int)(moveCoordinates[i]-moveCoordinates[i+2]);
+					if(diffX <= 2 && diffX >= -2)
+					{
+						correctCount++;
+					}
+			iterations++;
+				
+			}
+			if(correctCount >= iterations/2) //vert
+			{
+				result = true;
+				Log.d("IS IT FREAKING VERT?", ""+result);
+
+			}
+			else  //check slope to see if its any other kind of line
+			{
+		    correctCount = 0;
+		    int horitzontalCount = 0;
+		    iterations = 0;
+			float[] slope = new float[moveCoordinates.length];
+				for(int i = 0; i < moveCoordinates.length-1; i++)
+				{
+				  if(i+3 > moveCoordinates.length-1)
+				  {
+					  break;
+				  }
+					 slope[i]  = (moveCoordinates[i+3] - moveCoordinates[i+1])/(moveCoordinates[i+2] - moveCoordinates[i]);
+				}
+				for(int i = 0; i < slope.length-1; i++)
+				{
+					Log.d("SLOPES?", ""+slope[i]);
+
+					iterations++;
+					if((slope[i]-slope[i+1]) < 2f && (slope[i]-slope[i+1]) > -2f)
+					{
+						correctCount++;
+					}
+					else if ((int)slope[i] == 0)  //horizontal line
+					{
+						horitzontalCount++;
+					}
+				}
+				Log.d("HOW MANY RIGHT?", ""+correctCount);
+
+				if((correctCount >= (2*iterations/3)) || horitzontalCount >= ((iterations)/2)-2) //LINE
+				{
+					result = true;
+				}
+				else
+				{
+					result = false;
+				}
+			}
+
+		return result;
+	}
+/*
+* 						checkFull() - Save Array if All coordinates obtained
+*/		
 	public void checkFull()
 	{	
 		for(int i = 0; i<coordinates.length; i++)
@@ -371,13 +474,17 @@ public class SetPoints extends Activity {
 			  finish();
 		}
 	}
-	
+/*
+* 						clearMoveCoordinates()  Clear Coordinates Associated with onScroll
+*/		
 	public void clearMoveCoordinates()
 	{
 		float[] temp =  {-50, -50, -50, -50};
 		moveCoordinates = temp;
 	}
-	
+/*
+* 						clearCoordinates()  Clear dot Coordinates
+*/			
 	public void clearCoordinates()
 	{
 		for(int i = 0; i<coordinates.length; i++)
@@ -387,7 +494,10 @@ public class SetPoints extends Activity {
 		clearMoveCoordinates();
 	}
 	 
-	//Creates canvas for dot
+	//Creates canvas
+	/*******************************************************************************************
+	 * 									GraphicView Class
+	 *******************************************************************************************/
 	 public class GraphicView extends View{		  
 		  	Paint dotColor = new Paint(Paint.ANTI_ALIAS_FLAG);
 		  	Paint lineColor = new Paint(Paint.ANTI_ALIAS_FLAG);

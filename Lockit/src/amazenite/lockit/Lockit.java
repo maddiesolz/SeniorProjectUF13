@@ -33,6 +33,7 @@ public class Lockit extends Activity {
 	
 	boolean enabled	= false;
 	boolean visible = true;
+	int chosenColor = 0xff33CCCC;
 	
 	
 	/** Called when the user clicks the get image button */
@@ -87,6 +88,33 @@ public class Lockit extends Activity {
 		
 		
 	}
+	
+	  public void saveColor(int color)
+      {
+      	
+      	String pickedColor = ""+color;
+      	try {
+          	FileOutputStream fos = openFileOutput("pickedColor", Context.MODE_PRIVATE);
+
+  	        	try {
+  					fos.write(pickedColor.getBytes());
+  				} catch (IOException e) {
+  					// TODO Auto-generated catch block
+  					e.printStackTrace();
+  				}
+
+          	try {
+  	        		fos.close();
+  	        		fos = null;
+  	        	} 
+  	        	catch (IOException e) {
+  	        		e.printStackTrace();
+  	        	}
+          	} 
+          catch (FileNotFoundException e1) {
+          	e1.printStackTrace();
+          	}
+      }
 	
 
 	@Override
@@ -209,6 +237,11 @@ public class Lockit extends Activity {
 	    if (!(file.exists())) //if it doesn't exist
 	    {
 	    	saveStatus(""+visible,"togVisible");	
+	    }
+		File file2 = getBaseContext().getFileStreamPath("pickedColor");
+	    if (!(file2.exists())) //if it doesn't exist
+	    {
+	    	saveColor(chosenColor);	
 	    }
 		saveStatus(""+enabled,"enablePicPw");	
 	}
