@@ -19,20 +19,22 @@
 
         <ImageButton
             android:id="@+id/PictureSettings"
-            android:layout_width="99dp"
-            android:layout_height="wrap_content"
+            android:layout_width="73dp"
+            android:layout_height="47dp"
             android:layout_marginRight="24dp"
-            android:layout_marginTop="0dp"
+            android:layout_marginTop="5dp"
             android:onClick="pictureSettings"
             android:src="@drawable/picturemenu" />
+
         <ImageButton
             android:id="@+id/VoiceSettings"
-            android:layout_width="98dp"
-            android:layout_height="wrap_content"
+            android:layout_width="73dp"
+            android:layout_height="47dp"
             android:layout_marginRight="24dp"
-            android:layout_marginTop="0dp"
+            android:layout_marginTop="5dp"
             android:onClick="voiceSettings"
             android:src="@drawable/voicemenu" />
+
     </LinearLayout>
 
     <LinearLayout
@@ -42,39 +44,45 @@
 
         <ImageButton
             android:id="@+id/ChoosePicture"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_height="47dp"
             android:layout_marginRight="36dp"
             android:layout_marginTop="24dp"
             android:onClick="viewPictures"
             android:src="@drawable/imageselect" />
         <ImageView
             android:id="@+id/preview"
-            android:layout_width="70dp"
+			android:layout_width="70dp"
             android:layout_height="70dp"
             android:layout_marginRight="36dp"
-            android:layout_marginTop="24dp"
+            android:layout_marginTop="15dp"
             android:src="@drawable/ic_launcher" />
     </LinearLayout>
 
     <ImageButton
         android:id="@+id/setPoints"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="47dp"
+        android:layout_marginRight="36dp"
+        android:layout_marginTop="8dp"
         android:onClick="setPoints"
         android:src="@drawable/pointset" />
+
     <ImageButton
         android:id="@+id/enablePicturePassword"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="47dp"
+        android:layout_marginRight="36dp"
+        android:layout_marginTop="15dp"
         android:onClick="enablePicPw"
         android:src="@drawable/enable" />
+
     <Button
         android:id="@+id/debugLockscreen"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginRight="36dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="15dp"
         android:onClick="debugLockscreen"
         android:text="Test Points" />
     
