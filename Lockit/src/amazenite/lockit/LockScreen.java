@@ -288,12 +288,13 @@ public class LockScreen extends Activity {
 	
 	public void checkGesture()
 	{
-		boolean vertical = false;
-		float slopeHalf = -1;
-		float slopeEnd = -1;
-		int halfway = moveCoordinates.length/2;
+		//boolean vertical = false;
+		boolean line = checkLine();
+		//float slopeHalf = -1;
+		//float slopeEnd = -1;
+		//int halfway = moveCoordinates.length/2;
 		//y coordinate
-		if(halfway % 2 != 0)
+	/*	if(halfway % 2 != 0)
 		{
 			halfway--;
 		}
@@ -308,6 +309,8 @@ public class LockScreen extends Activity {
 		}
 		
 		if(slopeHalf-slopeEnd < .7 && slopeHalf-slopeEnd > -.7 || vertical)
+		{*/
+		if(line)
 		{
 			 type = "Line";			 
 			 String coordinates[] = numbers[counter].split(",");
@@ -365,6 +368,76 @@ public class LockScreen extends Activity {
 			}
 			checkFinished(counter);
 		}		
+	}
+	
+	public boolean checkLine()
+	{
+	//is it vertical or not?
+		int correctCount = 0;
+		int iterations = 0;
+		boolean result = false;
+		
+			for(int i = 0; i < moveCoordinates.length-1; i+=2)
+			{
+				if(i+2 > moveCoordinates.length-1)
+				{
+					break;
+				}
+				int diffX = (int)(moveCoordinates[i]-moveCoordinates[i+2]);
+					if(diffX <= 2 && diffX >= -2)
+					{
+						correctCount++;
+					}
+			iterations++;
+				
+			}
+			if(correctCount >= iterations/2) //vert
+			{
+				result = true;
+				Log.d("IS IT FREAKING VERT?", ""+result);
+
+			}
+			else  //check slope to see if its any other kind of line
+			{
+		    correctCount = 0;
+		    int horitzontalCount = 0;
+		    iterations = 0;
+			float[] slope = new float[moveCoordinates.length];
+				for(int i = 0; i < moveCoordinates.length-1; i++)
+				{
+				  if(i+3 > moveCoordinates.length-1)
+				  {
+					  break;
+				  }
+					 slope[i]  = (moveCoordinates[i+3] - moveCoordinates[i+1])/(moveCoordinates[i+2] - moveCoordinates[i]);
+				}
+				for(int i = 0; i < slope.length-1; i++)
+				{
+					Log.d("SLOPES?", ""+slope[i]);
+
+					iterations++;
+					if((slope[i]-slope[i+1]) < 2f && (slope[i]-slope[i+1]) > -2f)
+					{
+						correctCount++;
+					}
+					else if ((int)slope[i] == 0)  //horizontal line
+					{
+						horitzontalCount++;
+					}
+				}
+				Log.d("HOW MANY RIGHT?", ""+correctCount);
+
+				if((correctCount >= ((6*iterations)/10)) || horitzontalCount >= ((iterations)/2)-2) //LINE
+				{
+					result = true;
+				}
+				else
+				{
+					result = false;
+				}
+			}
+
+		return result;
 	}
 	
 	public float[] circleCalc()
