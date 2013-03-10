@@ -94,7 +94,7 @@
         <TextView
             android:id="@+id/textView1"
             android:layout_width="123dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:text="Number of Gestures:" />
 
         <Spinner
@@ -108,6 +108,7 @@
         android:id="@+id/button1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
         android:onClick="toggleVisible"
         android:text="@+string/setVisible"/>
 

@@ -199,7 +199,7 @@ public class Lockit extends Activity {
 	    
 	public void enablePicPw(View view)
 	{
-	    AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+	   /* AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
 
 		
 	    Intent intent = new Intent(this, ScreenReceiver.class);
@@ -214,7 +214,7 @@ public class Lockit extends Activity {
 		saveStatus(""+enabled,"enablePicPw");	
 		Log.d("Is It Enabled?: ",status);
 		
-	   alarmManager.set(AlarmManager.RTC_WAKEUP,100000000, sender);
+	   alarmManager.set(AlarmManager.RTC_WAKEUP,100000000, sender);*/
 
 		
 	}
