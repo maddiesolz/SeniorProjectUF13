@@ -38,6 +38,7 @@ public class SetPoints extends Activity {
  	private String type = "";
  	float[] circleCoordinates = new float[3];
  	private int chosenColor;
+ 	private int numberOfGestures;
 
 	@SuppressLint("NewApi")
 	@SuppressWarnings("deprecation")
@@ -89,6 +90,7 @@ public class SetPoints extends Activity {
 			Scanner sc = new Scanner(new File(file.getAbsolutePath()));
 			String line = sc.nextLine();
 			int num = Integer.parseInt(line);
+			numberOfGestures = num;
 			if(num != 0)
 			{
 				coordinates = new String[num];
@@ -169,7 +171,7 @@ public class SetPoints extends Activity {
 		  public boolean onDoubleTap(MotionEvent event)
 		  {
 			  clearCoordinates();
-			  final Toast toast = Toast.makeText(getApplicationContext(), "Gestures reset, please make 3 gestures again.", Toast.LENGTH_SHORT);
+			  final Toast toast = Toast.makeText(getApplicationContext(), "Gestures reset, please make "+numberOfGestures+" gestures again.", Toast.LENGTH_SHORT);
 	    	    toast.show();
 				Handler handler = new Handler();
 		        handler.postDelayed(new Runnable() {
