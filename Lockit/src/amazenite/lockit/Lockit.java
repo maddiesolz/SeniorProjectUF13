@@ -198,25 +198,15 @@ public class Lockit extends Activity {
 	}
 	    
 	public void enablePicPw(View view)
-	{
-	   /* AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-
-		
+	{	
 	    Intent intent = new Intent(this, ScreenReceiver.class);
 	    
 		enabled = !enabled;
 		String status = "" + enabled;
-		
-		intent.putExtra("status", status);	
-	    
-	    
-		PendingIntent sender = PendingIntent.getBroadcast(this, 123, intent, PendingIntent.FLAG_UPDATE_CURRENT);	
+		Constants.LOCKSCREEN_SETTING = enabled;
+        Log.d("HUH", ""+Constants.LOCKSCREEN_SETTING);
 		saveStatus(""+enabled,"enablePicPw");	
-		Log.d("Is It Enabled?: ",status);
-		
-	   alarmManager.set(AlarmManager.RTC_WAKEUP,100000000, sender);*/
-
-		
+		Log.d("Is It Enabled?: ",status);	
 	}
 
 	
