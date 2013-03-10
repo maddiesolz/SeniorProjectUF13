@@ -203,6 +203,7 @@ public class Lockit extends Activity {
 	    
 		enabled = !enabled;
 		String status = "" + enabled;
+		saveStatus(status,"enablePicPw");
 		Constants.LOCKSCREEN_SETTING = enabled;
         Log.d("HUH", ""+Constants.LOCKSCREEN_SETTING);
 		saveStatus(""+enabled,"enablePicPw");	
@@ -214,6 +215,34 @@ public class Lockit extends Activity {
 	{
 		//
 	}
+	
+	public boolean openStatus(String fileName){
+			
+			String line = "";
+			boolean result = false;
+			
+			File file = getBaseContext().getFileStreamPath(fileName);
+			Scanner sc;
+			try {
+				sc = new Scanner(new File(file.getAbsolutePath()));
+				line = sc.nextLine();
+			} catch (FileNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+				if(line.equals("true"))
+				{
+					result = true;
+			    }
+				else
+				{
+					result = false;
+				}
+				
+				return result;
+			
+		}
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -233,7 +262,14 @@ public class Lockit extends Activity {
 	    {
 	    	saveColor(chosenColor);	
 	    }
+		File file3 = getBaseContext().getFileStreamPath("enablePicPw");
+	    if (!(file3.exists())) //if it doesn't exist
+	    {
+			saveStatus(""+enabled,"enablePicPw");	
+			Constants.LOCKSCREEN_SETTING = openStatus("enablePicPw");  //make sure have correct status
+	    }
 		saveStatus(""+enabled,"enablePicPw");	
+		Constants.LOCKSCREEN_SETTING = openStatus("enablePicPw");  //make sure have correct status
 	}
 	
 	public void addItemsToSpinner()
