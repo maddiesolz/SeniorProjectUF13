@@ -32,11 +32,15 @@ public class SetPoints extends Activity {
  	private static float y2 = -50;
  	private GraphicView graphView; 
  	private GestureDetectorCompat mDetector;
+ 	private boolean isScrolling = false;
  	private String[] coordinates;
  	private float[] moveCoordinates = {-50, -50, -50, -50};
- 	private boolean isScrolling = false;
+ 	private float midpointX = 0.0f;
+ 	private float midpointY = 0.0f;
  	private String type = "";
- 	float[] circleCoordinates = new float[3];
+ 	private float[] radiusArray;
+ 	private float averageRadius = 0.0f;
+ 	private float[] circleCoordinates = new float[3];
  	private int chosenColor;
  	private int numberOfGestures;
 
@@ -79,10 +83,6 @@ public class SetPoints extends Activity {
 	    mDetector = new GestureDetectorCompat(this, new MyGestureListener());
 	}
 	
-	/*
-	 * 							LOAD NUMBER OF GESTURES
-	 */
-	
 	public void loadNumberGestures()
 	{
 		try {
@@ -105,11 +105,7 @@ public class SetPoints extends Activity {
         	coordinates = new String[3];
         	}
 	}
-	
-	/*
-	 * 							LOAD CHOSEN COLOR
-	 */
-	
+
 	public void loadColor()
 	{
 		try
@@ -125,11 +121,7 @@ public class SetPoints extends Activity {
         }
 	}
 	
-	/*
-	 * 						   OnTouchEvent Characteristics
-	 */
-	
-    @Override 
+	 @Override 
     public boolean onTouchEvent(MotionEvent event){ 
         this.mDetector.onTouchEvent(event);
         if(event.getAction() == MotionEvent.ACTION_UP) {
@@ -142,8 +134,6 @@ public class SetPoints extends Activity {
         }
         return super.onTouchEvent(event);
     }
-	
-	/* Gesture Detector Class To Only listen On The Ones We Want */	
     
 	/*******************************************************************************************
 	 * 									MyGeatureListener Class
@@ -186,9 +176,7 @@ public class SetPoints extends Activity {
 			  
 			  return true;
 		  }
- /*
-* 							onScroll - Lines and Circles
-*/		  			  
+	  			  
 		  @Override
 		  public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY)
 		  {
@@ -202,9 +190,6 @@ public class SetPoints extends Activity {
 			  return true;
 		  }		  
 	 }
-/*
- * 							storeMoveCoordinates - onScroll Store Coordinates
-*/
 			
 	//Store coordinates of gesture path
 	public void storeMoveCoordinates()
@@ -259,18 +244,15 @@ public class SetPoints extends Activity {
 		
 		moveCoordinates = temp;
 	}
-/*
-* 							checkGesture()  ASSIGNS GESTURE
-*/
-			
+		
 	public void checkGesture() 
 	{
+		fillRadiusArray();
 		boolean line = checkLine();  //Checks if this is a line or not
 		//float slopeHalf = -1;
 		//float slopeEnd = -1;
 		int halfway = moveCoordinates.length/2;
-		Log.d("halfway mark?", "" + halfway);
-		Log.d("HOW BIG IS IT?", ""+moveCoordinates.length);
+		
 		//y coordinate
 	/*	if(halfway % 2 != 0)
 		{
@@ -281,9 +263,6 @@ public class SetPoints extends Activity {
 			slopeHalf  = (moveCoordinates[halfway+1] - moveCoordinates[1])/(moveCoordinates[halfway] - moveCoordinates[0]);
 			slopeEnd   = (moveCoordinates[moveCoordinates.length-1] - moveCoordinates[halfway+1])/(moveCoordinates[moveCoordinates.length-2] - moveCoordinates[halfway]);
 		}*/
-
-		Log.d("line?", "" + line);
-
 		//if((slopeHalf-slopeEnd < .7 && slopeHalf-slopeEnd > -.7) || vertical)
 		if(line)
 		{
@@ -298,9 +277,7 @@ public class SetPoints extends Activity {
 			graphView.invalidate();
 		}	
 	}
-/*
-* 							storeCoordinates()  Store Coordinates of each type
-*/	
+
 	public void storeCoordinates()
 	{
 		for(int i = 0; i<coordinates.length; i++)
@@ -317,18 +294,15 @@ public class SetPoints extends Activity {
 				}
 				else if(type == "Circ")
 				{
-					float[] circleCoordinates = circleCalc();
-					coordinates[i] = "Circ," + Float.toString(moveCoordinates[0]) + "," + Float.toString(moveCoordinates[1]) + "," + Float.toString(circleCoordinates[0]) + "," + Float.toString(circleCoordinates[1]) + "," + Float.toString(circleCoordinates[2]);
+					coordinates[i] = "Circ," + Float.toString(moveCoordinates[0]) + "," + Float.toString(moveCoordinates[1]) + "," + Float.toString(midpointX) + "," + Float.toString(midpointY) + "," + Float.toString(averageRadius);
 				}				
 				break;
 			}
 		}
 		checkFull();
 	}
-/*
-* 							circleCalc()  Calculates center x, center y, and radius
-*/	
-	public float[] circleCalc()
+
+/*	public float[] circleCalc()
 	{
 		float avgX = 0.0f;
 		float avgY = 0.0f;
@@ -337,8 +311,8 @@ public class SetPoints extends Activity {
 			avgX += moveCoordinates[i];
 			avgY += moveCoordinates[i+1];
 		}
-		avgX = avgX/(moveCoordinates.length/2);
-		avgY = avgY/(moveCoordinates.length/2);		
+		midpointX = avgX/(moveCoordinates.length/2);
+		midpointY = avgY/(moveCoordinates.length/2);		
 		
 		float[] distanceArray = new float[moveCoordinates.length/2];
 		for(int i = 0; i < distanceArray.length; i++)
@@ -361,10 +335,60 @@ public class SetPoints extends Activity {
 		circleCoordinates[1] = avgY;
 		circleCoordinates[2] = avgDist;
 		return circleCoordinates;
+	}*/
+	
+	public void fillRadiusArray()
+	{
+		float avgX = 0.0f;
+		float avgY = 0.0f;
+		for(int i = 0; i < moveCoordinates.length; i = i+2)
+		{
+			avgX += moveCoordinates[i];
+			avgY += moveCoordinates[i+1];
+		}
+		midpointX = avgX/(moveCoordinates.length/2);
+		midpointY = avgY/(moveCoordinates.length/2);
+		
+		float[] radiusArray = new float[moveCoordinates.length/2];
+		for(int i = 0; i < radiusArray.length; i++)
+		{
+			float diffX = avgX - moveCoordinates[2*i];
+			float diffY = avgY - moveCoordinates[2*i + 1];
+			diffX = diffX * diffX;
+			diffY = diffY * diffY;
+			float sum = (float) Math.sqrt(diffX + diffY);
+			radiusArray[i] = sum;
+		}
+		
+		for(int i = 0; i < radiusArray.length; i++)
+		{
+			averageRadius += radiusArray[i];
+		}
+		averageRadius = averageRadius/radiusArray.length;
 	}
-/*
-* 						checkLine()  Checks if this is a Horizontal, Vertical, or Regular Line
-*/	
+	
+	public boolean checkLine()
+	{
+		for(int i = 0; i < moveCoordinates.length; i+=2)
+		{
+			Log.d("move coordinates", "x " + moveCoordinates[i] + " y " + moveCoordinates[i+1]);
+		}
+		int halfway = moveCoordinates.length/2;
+		if(halfway % 2 != 0)
+		{
+			halfway--;
+		}
+		Log.d("move coordinates x", ""+moveCoordinates[halfway]);
+		Log.d("move coordinates y", ""+moveCoordinates[halfway+1]);
+		Log.d("midpointx" , ""+ midpointX);
+		Log.d("midpointy" , ""+ midpointY);
+		if(moveCoordinates[halfway] - midpointX < 65 && moveCoordinates[halfway] - midpointX > -65 && moveCoordinates[halfway+1] - midpointY < 65 && moveCoordinates[halfway+1] - midpointY > -65)
+			return true;
+		else
+			return false;
+	}
+	
+	/*
 	public boolean checkLine()
 	{
 	//is it vertical or not?
@@ -434,9 +458,8 @@ public class SetPoints extends Activity {
 
 		return result;
 	}
-/*
-* 						checkFull() - Save Array if All coordinates obtained
-*/		
+	*/
+	
 	public void checkFull()
 	{	
 		for(int i = 0; i<coordinates.length; i++)
@@ -476,17 +499,13 @@ public class SetPoints extends Activity {
 			  finish();
 		}
 	}
-/*
-* 						clearMoveCoordinates()  Clear Coordinates Associated with onScroll
-*/		
+	
 	public void clearMoveCoordinates()
 	{
 		float[] temp =  {-50, -50, -50, -50};
 		moveCoordinates = temp;
 	}
-/*
-* 						clearCoordinates()  Clear dot Coordinates
-*/			
+		
 	public void clearCoordinates()
 	{
 		for(int i = 0; i<coordinates.length; i++)
