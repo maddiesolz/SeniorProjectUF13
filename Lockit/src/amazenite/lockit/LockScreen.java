@@ -35,6 +35,10 @@ public class LockScreen extends Activity {
 	private String type = "";
 	private String[] numbers;
  	private float[] moveCoordinates = {-50, -50, -50, -50};
+ 	private float midpointX = 0.0f;
+ 	private float midpointY = 0.0f;
+ 	private float averageRadius = 0.0f;
+ 	private float[] radiusArray;
  	float[] circleCoordinates = new float[3];
  	private boolean isScrolling = false;
  	private boolean isVisible = true;
@@ -286,30 +290,41 @@ public class LockScreen extends Activity {
 		moveCoordinates = temp;
 	}
 	
+	public void fillRadiusArray()
+	{
+		float avgX = 0.0f;
+		float avgY = 0.0f;
+		for(int i = 0; i < moveCoordinates.length; i = i+2)
+		{
+			avgX += moveCoordinates[i];
+			avgY += moveCoordinates[i+1];
+		}
+		midpointX = avgX/(moveCoordinates.length/2);
+		midpointY = avgY/(moveCoordinates.length/2);
+		
+		float[] distanceArray = new float[moveCoordinates.length/2];
+		for(int i = 0; i < distanceArray.length; i++)
+		{
+			float diffX = midpointX - moveCoordinates[2*i];
+			float diffY = midpointY - moveCoordinates[2*i + 1];
+			diffX = diffX * diffX;
+			diffY = diffY * diffY;
+			float sum = (float) Math.sqrt(diffX + diffY);
+			distanceArray[i] = sum;
+		}
+		float avgDist = 0.0f;
+		for(int i = 0; i < distanceArray.length; i++)
+		{
+			avgDist += distanceArray[i];
+		}
+		averageRadius = avgDist/distanceArray.length;
+	}
+	
 	public void checkGesture()
 	{
-		//boolean vertical = false;
-		boolean line = checkLine();
-		//float slopeHalf = -1;
-		//float slopeEnd = -1;
-		//int halfway = moveCoordinates.length/2;
-		//y coordinate
-	/*	if(halfway % 2 != 0)
-		{
-			halfway--;
-		}
-		if((moveCoordinates[halfway] - moveCoordinates[0] < 30 && moveCoordinates[halfway] - moveCoordinates[0] > -30) && moveCoordinates[moveCoordinates.length-2] - moveCoordinates[0] < 30 && moveCoordinates[moveCoordinates.length-2] - moveCoordinates[0] > -30)
-		{
-			vertical = true;
-		}
-		else
-		{
-			slopeHalf = (moveCoordinates[halfway+1] - moveCoordinates[1])/(moveCoordinates[halfway] - moveCoordinates[0]);
-			slopeEnd = (moveCoordinates[moveCoordinates.length-1] - moveCoordinates[1])/(moveCoordinates[moveCoordinates.length-2] - moveCoordinates[0]);
-		}
+		fillRadiusArray();
+		boolean line = checkLine();  //Checks if this is a line or not
 		
-		if(slopeHalf-slopeEnd < .7 && slopeHalf-slopeEnd > -.7 || vertical)
-		{*/
 		if(line)
 		{
 			 type = "Line";			 
@@ -340,22 +355,17 @@ public class LockScreen extends Activity {
 		{
 			type = "Circ";
 			String coordinates[] = numbers[counter].split(",");
-			circleCoordinates = circleCalc();
 			if(!coordinates[0].equals(type))
 			  {
 				  correctGestures = false;
 			  }
 			else
 			{
-				if(x > (Float.parseFloat(coordinates[1])+30) || (x <  (Float.parseFloat(coordinates[1])-30.0f)) || (y > (Float.parseFloat(coordinates[2])+30.0f)) || (y < (Float.parseFloat(coordinates[2])-30.0f)))
+				if(midpointX > (Float.parseFloat(coordinates[3])+50) || (midpointX <  (Float.parseFloat(coordinates[3])-50.0f)) || (midpointY > (Float.parseFloat(coordinates[4])+30.0f)) || (midpointY < (Float.parseFloat(coordinates[4])-30.0f)))
 				{
 					correctGestures = false;
 				}
-				if(circleCoordinates[0] > (Float.parseFloat(coordinates[3])+50) || (circleCoordinates[0] <  (Float.parseFloat(coordinates[3])-50.0f)) || (circleCoordinates[1] > (Float.parseFloat(coordinates[4])+30.0f)) || (circleCoordinates[1] < (Float.parseFloat(coordinates[4])-30.0f)))
-				{
-					correctGestures = false;
-				}
-				if(circleCoordinates[2] > (Float.parseFloat(coordinates[5])+50) || (circleCoordinates[2] <  (Float.parseFloat(coordinates[5])-50.0f)))
+				if(averageRadius > (Float.parseFloat(coordinates[5])+50) || (averageRadius <  (Float.parseFloat(coordinates[5])-50.0f)))
 				{
 					correctGestures = false;
 				}
@@ -372,107 +382,66 @@ public class LockScreen extends Activity {
 	
 	public boolean checkLine()
 	{
-	//is it vertical or not?
-		int correctCount = 0;
-		int iterations = 0;
-		boolean result = false;
-		
-			for(int i = 0; i < moveCoordinates.length-1; i+=2)
+		int halfway = moveCoordinates.length/2;
+		if(halfway % 2 != 0)
+		{
+			halfway--;
+		}
+		float diffX = moveCoordinates[halfway] - moveCoordinates[0];
+		int countX = 0;
+		for(int i = 0; i < moveCoordinates.length-2; i+=2)
+		{
+			if(diffX > 0)
 			{
-				if(i+2 > moveCoordinates.length-1)
+				if(moveCoordinates[i] < moveCoordinates[i+2])
 				{
-					break;
+					countX++;
 				}
-				int diffX = (int)(moveCoordinates[i]-moveCoordinates[i+2]);
-					if(diffX <= 2 && diffX >= -2)
-					{
-						correctCount++;
-					}
-			iterations++;
-				
 			}
-			if(correctCount >= iterations/2) //vert
+			else
 			{
-				result = true;
-				Log.d("IS IT FREAKING VERT?", ""+result);
-
+				if(moveCoordinates[i] > moveCoordinates[i+2])
+				{
+					countX++;
+				}
 			}
-			else  //check slope to see if its any other kind of line
+		}
+		if(countX >= (moveCoordinates.length/2)-3)
+		{
+			
+			return true;
+		}
+		else
+		{
+
+			float diffY = moveCoordinates[halfway+1] - moveCoordinates[1];
+			int countY = 0;
+			for(int i = 1; i < moveCoordinates.length-1; i+=2)
 			{
-		    correctCount = 0;
-		    int horitzontalCount = 0;
-		    iterations = 0;
-			float[] slope = new float[moveCoordinates.length];
-				for(int i = 0; i < moveCoordinates.length-1; i++)
+				if(diffY > 0)
 				{
-				  if(i+3 > moveCoordinates.length-1)
-				  {
-					  break;
-				  }
-					 slope[i]  = (moveCoordinates[i+3] - moveCoordinates[i+1])/(moveCoordinates[i+2] - moveCoordinates[i]);
-				}
-				for(int i = 0; i < slope.length-1; i++)
-				{
-					Log.d("SLOPES?", ""+slope[i]);
-
-					iterations++;
-					if((slope[i]-slope[i+1]) < 2f && (slope[i]-slope[i+1]) > -2f)
+					if(moveCoordinates[i] < moveCoordinates[i+2])
 					{
-						correctCount++;
+						countY++;
 					}
-					else if ((int)slope[i] == 0)  //horizontal line
-					{
-						horitzontalCount++;
-					}
-				}
-				Log.d("HOW MANY RIGHT?", ""+correctCount);
-
-				if((correctCount >= ((6*iterations)/10)) || horitzontalCount >= ((iterations)/2)-2) //LINE
-				{
-					result = true;
 				}
 				else
 				{
-					result = false;
+					if(moveCoordinates[i] > moveCoordinates[i+2])
+					{
+						countY++;
+					}
 				}
 			}
-
-		return result;
-	}
-	
-	public float[] circleCalc()
-	{
-		float avgX = 0.0f;
-		float avgY = 0.0f;
-		for(int i = 0; i < moveCoordinates.length; i = i+2)
-		{
-			avgX += moveCoordinates[i];
-			avgY += moveCoordinates[i+1];
+			if(countY >= (moveCoordinates.length/2)-3)
+			{	
+				return true;
+			}
+			else
+			{
+				return false;
+			}
 		}
-		avgX = avgX/(moveCoordinates.length/2);
-		avgY = avgY/(moveCoordinates.length/2);		
-		
-		float[] distanceArray = new float[moveCoordinates.length/2];
-		for(int i = 0; i < distanceArray.length; i++)
-		{
-			float diffX = avgX - moveCoordinates[2*i];
-			float diffY = avgY - moveCoordinates[2*i + 1];
-			diffX = diffX * diffX;
-			diffY = diffY * diffY;
-			float sum = (float) Math.sqrt(diffX + diffY);
-			distanceArray[i] = sum;
-		}
-		float avgDist = 0.0f;
-		for(int i = 0; i < distanceArray.length; i++)
-		{
-			avgDist += distanceArray[i];
-		}
-		avgDist = avgDist/distanceArray.length;
-		
-		circleCoordinates[0] = avgX;
-		circleCoordinates[1] = avgY;
-		circleCoordinates[2] = avgDist;
-		return circleCoordinates;
 	}
 	
 	public void clearMoveCoordinates()
@@ -554,7 +523,7 @@ public class LockScreen extends Activity {
 	        		circColor.setColor(chosenColor);
 	        		circColor.setStyle(Style.STROKE);
 	        		circColor.setStrokeWidth(30);
-	        		canvas.drawCircle(circleCoordinates[0], circleCoordinates[1], circleCoordinates[2], circColor);
+	        		canvas.drawCircle(midpointX, midpointY, averageRadius, circColor);
 	        		clearMoveCoordinates();
 	        	}
 	        	type = "";

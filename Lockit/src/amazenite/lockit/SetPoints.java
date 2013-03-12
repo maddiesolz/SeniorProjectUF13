@@ -249,21 +249,7 @@ public class SetPoints extends Activity {
 	{
 		fillRadiusArray();
 		boolean line = checkLine();  //Checks if this is a line or not
-		//float slopeHalf = -1;
-		//float slopeEnd = -1;
-		int halfway = moveCoordinates.length/2;
 		
-		//y coordinate
-	/*	if(halfway % 2 != 0)
-		{
-			halfway--;
-		}*/
-	/*	else
-		{
-			slopeHalf  = (moveCoordinates[halfway+1] - moveCoordinates[1])/(moveCoordinates[halfway] - moveCoordinates[0]);
-			slopeEnd   = (moveCoordinates[moveCoordinates.length-1] - moveCoordinates[halfway+1])/(moveCoordinates[moveCoordinates.length-2] - moveCoordinates[halfway]);
-		}*/
-		//if((slopeHalf-slopeEnd < .7 && slopeHalf-slopeEnd > -.7) || vertical)
 		if(line)
 		{
 			type = "Line";
@@ -302,41 +288,6 @@ public class SetPoints extends Activity {
 		checkFull();
 	}
 
-/*	public float[] circleCalc()
-	{
-		float avgX = 0.0f;
-		float avgY = 0.0f;
-		for(int i = 0; i < moveCoordinates.length; i = i+2)
-		{
-			avgX += moveCoordinates[i];
-			avgY += moveCoordinates[i+1];
-		}
-		midpointX = avgX/(moveCoordinates.length/2);
-		midpointY = avgY/(moveCoordinates.length/2);		
-		
-		float[] distanceArray = new float[moveCoordinates.length/2];
-		for(int i = 0; i < distanceArray.length; i++)
-		{
-			float diffX = avgX - moveCoordinates[2*i];
-			float diffY = avgY - moveCoordinates[2*i + 1];
-			diffX = diffX * diffX;
-			diffY = diffY * diffY;
-			float sum = (float) Math.sqrt(diffX + diffY);
-			distanceArray[i] = sum;
-		}
-		float avgDist = 0.0f;
-		for(int i = 0; i < distanceArray.length; i++)
-		{
-			avgDist += distanceArray[i];
-		}
-		avgDist = avgDist/distanceArray.length;
-		
-		circleCoordinates[0] = avgX;
-		circleCoordinates[1] = avgY;
-		circleCoordinates[2] = avgDist;
-		return circleCoordinates;
-	}*/
-	
 	public void fillRadiusArray()
 	{
 		float avgX = 0.0f;
@@ -349,116 +300,87 @@ public class SetPoints extends Activity {
 		midpointX = avgX/(moveCoordinates.length/2);
 		midpointY = avgY/(moveCoordinates.length/2);
 		
-		float[] radiusArray = new float[moveCoordinates.length/2];
-		for(int i = 0; i < radiusArray.length; i++)
+		float[] distanceArray = new float[moveCoordinates.length/2];
+		for(int i = 0; i < distanceArray.length; i++)
 		{
-			float diffX = avgX - moveCoordinates[2*i];
-			float diffY = avgY - moveCoordinates[2*i + 1];
+			float diffX = midpointX - moveCoordinates[2*i];
+			float diffY = midpointY - moveCoordinates[2*i + 1];
 			diffX = diffX * diffX;
 			diffY = diffY * diffY;
 			float sum = (float) Math.sqrt(diffX + diffY);
-			radiusArray[i] = sum;
+			distanceArray[i] = sum;
 		}
-		
-		for(int i = 0; i < radiusArray.length; i++)
+		float avgDist = 0.0f;
+		for(int i = 0; i < distanceArray.length; i++)
 		{
-			averageRadius += radiusArray[i];
+			avgDist += distanceArray[i];
 		}
-		averageRadius = averageRadius/radiusArray.length;
+		averageRadius = avgDist/distanceArray.length;
 	}
 	
 	public boolean checkLine()
 	{
-		for(int i = 0; i < moveCoordinates.length; i+=2)
-		{
-			Log.d("move coordinates", "x " + moveCoordinates[i] + " y " + moveCoordinates[i+1]);
-		}
 		int halfway = moveCoordinates.length/2;
 		if(halfway % 2 != 0)
 		{
 			halfway--;
 		}
-		Log.d("move coordinates x", ""+moveCoordinates[halfway]);
-		Log.d("move coordinates y", ""+moveCoordinates[halfway+1]);
-		Log.d("midpointx" , ""+ midpointX);
-		Log.d("midpointy" , ""+ midpointY);
-		if(moveCoordinates[halfway] - midpointX < 65 && moveCoordinates[halfway] - midpointX > -65 && moveCoordinates[halfway+1] - midpointY < 65 && moveCoordinates[halfway+1] - midpointY > -65)
+		float diffX = moveCoordinates[halfway] - moveCoordinates[0];
+		int countX = 0;
+		for(int i = 0; i < moveCoordinates.length-2; i+=2)
+		{
+			if(diffX > 0)
+			{
+				if(moveCoordinates[i] < moveCoordinates[i+2])
+				{
+					countX++;
+				}
+			}
+			else
+			{
+				if(moveCoordinates[i] > moveCoordinates[i+2])
+				{
+					countX++;
+				}
+			}
+		}
+		if(countX >= (moveCoordinates.length/2)-3)
+		{
+			
 			return true;
+		}
 		else
-			return false;
-	}
-	
-	/*
-	public boolean checkLine()
-	{
-	//is it vertical or not?
-		int correctCount = 0;
-		int iterations = 0;
-		boolean result = false;
-		
-			for(int i = 0; i < moveCoordinates.length-1; i+=2)
-			{
-				if(i+2 > moveCoordinates.length-1)
-				{
-					break;
-				}
-				int diffX = (int)(moveCoordinates[i]-moveCoordinates[i+2]);
-					if(diffX <= 2 && diffX >= -2)
-					{
-						correctCount++;
-					}
-			iterations++;
-				
-			}
-			if(correctCount >= iterations/2) //vert
-			{
-				result = true;
-				Log.d("IS IT FREAKING VERT?", ""+result);
+		{
 
-			}
-			else  //check slope to see if its any other kind of line
+			float diffY = moveCoordinates[halfway+1] - moveCoordinates[1];
+			int countY = 0;
+			for(int i = 1; i < moveCoordinates.length-1; i+=2)
 			{
-		    correctCount = 0;
-		    int horitzontalCount = 0;
-		    iterations = 0;
-			float[] slope = new float[moveCoordinates.length];
-				for(int i = 0; i < moveCoordinates.length-1; i++)
+				if(diffY > 0)
 				{
-				  if(i+3 > moveCoordinates.length-1)
-				  {
-					  break;
-				  }
-					 slope[i]  = (moveCoordinates[i+3] - moveCoordinates[i+1])/(moveCoordinates[i+2] - moveCoordinates[i]);
-				}
-				for(int i = 0; i < slope.length-1; i++)
-				{
-					Log.d("SLOPES?", ""+slope[i]);
-
-					iterations++;
-					if((slope[i]-slope[i+1]) < 2f && (slope[i]-slope[i+1]) > -2f)
+					if(moveCoordinates[i] < moveCoordinates[i+2])
 					{
-						correctCount++;
+						countY++;
 					}
-					else if ((int)slope[i] == 0)  //horizontal line
-					{
-						horitzontalCount++;
-					}
-				}
-				Log.d("HOW MANY RIGHT?", ""+correctCount);
-
-				if((correctCount >= ((6*iterations)/10)) || horitzontalCount >= ((iterations)/2)-2) //LINE
-				{
-					result = true;
 				}
 				else
 				{
-					result = false;
+					if(moveCoordinates[i] > moveCoordinates[i+2])
+					{
+						countY++;
+					}
 				}
 			}
-
-		return result;
+			if(countY >= (moveCoordinates.length/2)-3)
+			{	
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
 	}
-	*/
 	
 	public void checkFull()
 	{	
@@ -552,7 +474,8 @@ public class SetPoints extends Activity {
 	        		circColor.setColor(chosenColor);
 	        		circColor.setStyle(Style.STROKE);
 	        		circColor.setStrokeWidth(30);
-	        		canvas.drawCircle(circleCoordinates[0], circleCoordinates[1], circleCoordinates[2], circColor);
+	        		Log.d("circle", ""+ averageRadius);
+	        		canvas.drawCircle(midpointX, midpointY, averageRadius, circColor);
 	        		clearMoveCoordinates();
 	        	}
 	        	type = "";
