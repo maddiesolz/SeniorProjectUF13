@@ -38,7 +38,6 @@ public class LockScreen extends Activity {
  	private float midpointX = 0.0f;
  	private float midpointY = 0.0f;
  	private float averageRadius = 0.0f;
- 	private float[] radiusArray;
  	float[] circleCoordinates = new float[3];
  	private boolean isScrolling = false;
  	private boolean isVisible = true;
@@ -77,76 +76,22 @@ public class LockScreen extends Activity {
         	 }
          }    
 	    mDetector = new GestureDetectorCompat(this, new MyGestureListener());
+	    
 	    loadNumberGestures();
-		loadColor();
 		getCoordinates();
-		openStatus("visible","togVisible");  //status of visibility
-		
-		
-	}
-	
-	public void loadColor()
-	{
-		try
-		{
-			File file = getBaseContext().getFileStreamPath("pickedColor");
-			Scanner sc = new Scanner(new File(file.getAbsolutePath()));
-			String line = sc.nextLine();	
-			chosenColor = Integer.parseInt(line);
-		}
-        catch (FileNotFoundException e1)
-        {
-        	e1.printStackTrace();
-        }
-	}
-	
-	public void openStatus(String Status,String fileName){
-		
-		String line = "";
-		
-		File file = getBaseContext().getFileStreamPath(fileName);
-		Scanner sc;
-		try {
-			sc = new Scanner(new File(file.getAbsolutePath()));
-			line = sc.nextLine();
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		if(Status.equals("visible")){
-			if(line.equals("true"))
-			{
-				isVisible = true;
-		    }
-			else
-			{
-				isVisible = false;
-			}
-		}
-		
+		isVisible = Constants.gestureVisibility;
+		chosenColor = Constants.gestureColor;
+		//openStatus("visible","togVisible");  //status of visibility
 	}
 	
 	public void loadNumberGestures()
 	{
-		try {
-			File file = getBaseContext().getFileStreamPath("numGestures");
-			Scanner sc = new Scanner(new File(file.getAbsolutePath()));
-			String line = sc.nextLine();
-			int num = Integer.parseInt(line);
-			if(num != 0)
-			{
-				numbers = new String[num];
-				for(int i = 0; i < num; i++)
-				{
-					numbers[i] = "";
-				}
-			}
+		int num = Constants.gestureCount;
+		numbers = new String[num];
+		for(int i = 0; i < num; i++)
+		{
+			numbers[i] = "";
 		}
-        catch (FileNotFoundException e1) {
-        	e1.printStackTrace();
-        	numbers = new String[3];
-        	}
 	}
 	
 	public void getCoordinates(){

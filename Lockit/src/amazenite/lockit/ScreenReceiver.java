@@ -5,8 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
-
-
 public class ScreenReceiver extends BroadcastReceiver {
 	
     @Override
@@ -16,15 +14,14 @@ public class ScreenReceiver extends BroadcastReceiver {
         lockIntent.setClass(context, LockScreen.class);
         lockIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         
-               Log.d("LockSwitch", "fire!");
-                    Boolean lockOn = Constants.LOCKSCREEN_SETTING;
-                    if(lockOn){
-    			        context.startActivity(lockIntent);
-                    }
-                    else 
-                    {
-                    	//don't start the service!
-                    }  
+        Boolean lockOn = Constants.LOCKSCREEN_SETTING;
+        if(lockOn){
+	        context.startActivity(lockIntent);
+        }
+        else 
+        {
+        	//don't start the service!
+        }  
     }
 }
 

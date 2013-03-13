@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.Scanner;
 
 import android.os.Build;
 import android.os.Bundle;
@@ -38,9 +37,7 @@ public class SetPoints extends Activity {
  	private float midpointX = 0.0f;
  	private float midpointY = 0.0f;
  	private String type = "";
- 	private float[] radiusArray;
  	private float averageRadius = 0.0f;
- 	private float[] circleCoordinates = new float[3];
  	private int chosenColor;
  	private int numberOfGestures;
 
@@ -51,8 +48,8 @@ public class SetPoints extends Activity {
 		super.onCreate(savedInstanceState);
 		graphView = new GraphicView(this);
 		
+		chosenColor = Constants.gestureColor;
 		loadNumberGestures();
-		loadColor();
 		
 		//Set coordinates to be outside of the viewing frame
 		x = -50;
@@ -85,40 +82,13 @@ public class SetPoints extends Activity {
 	
 	public void loadNumberGestures()
 	{
-		try {
-			File file = getBaseContext().getFileStreamPath("numGestures");
-			Scanner sc = new Scanner(new File(file.getAbsolutePath()));
-			String line = sc.nextLine();
-			int num = Integer.parseInt(line);
-			numberOfGestures = num;
-			if(num != 0)
-			{
-				coordinates = new String[num];
-				for(int i = 0; i < num; i++)
-				{
-					coordinates[i] = "";
-				}
-			}
-		}
-        catch (FileNotFoundException e1) {
-        	e1.printStackTrace();
-        	coordinates = new String[3];
-        	}
-	}
-
-	public void loadColor()
-	{
-		try
+		numberOfGestures = Constants.gestureCount;
+		coordinates = new String[numberOfGestures];
+		for(int i = 0; i < numberOfGestures; i++)
 		{
-			File file = getBaseContext().getFileStreamPath("pickedColor");
-			Scanner sc = new Scanner(new File(file.getAbsolutePath()));
-			String line = sc.nextLine();	
-			chosenColor = Integer.parseInt(line);
+			coordinates[i] = "";
 		}
-        catch (FileNotFoundException e1)
-        {
-        	e1.printStackTrace();
-        }
+			
 	}
 	
 	 @Override 
@@ -127,7 +97,6 @@ public class SetPoints extends Activity {
         if(event.getAction() == MotionEvent.ACTION_UP) {
             if(isScrolling ) {
                 isScrolling  = false;
-                
                 trimArray();
   			  	checkGesture();
             };

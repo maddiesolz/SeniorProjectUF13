@@ -33,7 +33,6 @@ public class Lockit extends Activity {
 	boolean visible = true;
 	int chosenColor = 0xff33CCCC;
 	
-	
 	/** Called when the user clicks the get image button */
 	public void viewPictures(View view) {
 	    // Do something in response to button
@@ -51,8 +50,7 @@ public class Lockit extends Activity {
 	public void toggleVisible(View view) {
 	    // toggle gesture visibility
 		visible = !visible;
-		saveStatus(""+visible,"togVisible");	
-		Log.d("IS IT VISIBLE?",""+visible);
+		Constants.gestureVisibility = visible;
 	}
 	/** Lockscreen Gesture Color Picker */
 	public void setColors(View view){
@@ -60,67 +58,11 @@ public class Lockit extends Activity {
 		startActivity(intent);
 	}
 	
-	public void saveStatus(String Stats,String fileName){
-		
-		try {
-        	FileOutputStream fos = openFileOutput(fileName, Context.MODE_PRIVATE);
-
-	        	try {
-					fos.write(Stats.getBytes());
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-
-        	try {
-	        		fos.close();
-	        		fos = null;
-	        	} 
-	        	catch (IOException e) {
-	        		e.printStackTrace();
-	        	}
-        	} 
-        catch (FileNotFoundException e1) {
-        	e1.printStackTrace();
-        	}
-		
-		
-	}
-	
-	  public void saveColor(int color)
-      {
-      	
-      	String pickedColor = ""+color;
-      	try {
-          	FileOutputStream fos = openFileOutput("pickedColor", Context.MODE_PRIVATE);
-
-  	        	try {
-  					fos.write(pickedColor.getBytes());
-  				} catch (IOException e) {
-  					// TODO Auto-generated catch block
-  					e.printStackTrace();
-  				}
-
-          	try {
-  	        		fos.close();
-  	        		fos = null;
-  	        	} 
-  	        	catch (IOException e) {
-  	        		e.printStackTrace();
-  	        	}
-          	} 
-          catch (FileNotFoundException e1) {
-          	e1.printStackTrace();
-          	}
-      }
-	
-
 	@Override
 	public void onResume() {
 		super.onResume();
 		getPreview();
 	}
-	
 	
 	public void getPreview(){
 		//pictureSettings();
@@ -153,7 +95,6 @@ public class Lockit extends Activity {
 	
 	public void setPoints(View view)
 	{
-
 		Intent intent = new Intent(this, SetPoints.class);
 		startActivity(intent);
 	}
@@ -198,14 +139,9 @@ public class Lockit extends Activity {
 	public void enablePicPw(View view)
 	{	
 	    Intent intent = new Intent(this, ScreenReceiver.class);
-	    
 		enabled = !enabled;
 		String status = "" + enabled;
-		saveStatus(status,"enablePicPw");
 		Constants.LOCKSCREEN_SETTING = enabled;
-        Log.d("HUH", ""+Constants.LOCKSCREEN_SETTING);
-		saveStatus(""+enabled,"enablePicPw");	
-		Log.d("Is It Enabled?: ",status);	
 	}
 
 	
@@ -214,60 +150,17 @@ public class Lockit extends Activity {
 		//
 	}
 	
-	public boolean openStatus(String fileName){
-			
-			String line = "";
-			boolean result = false;
-			
-			File file = getBaseContext().getFileStreamPath(fileName);
-			Scanner sc;
-			try {
-				sc = new Scanner(new File(file.getAbsolutePath()));
-				line = sc.nextLine();
-			} catch (FileNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			
-				if(line.equals("true"))
-				{
-					result = true;
-			    }
-				else
-				{
-					result = false;
-				}
-				
-				return result;
-			
-		}
-	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_lockit);
 		addItemsToSpinner();
 		addListenerOnSpinnerItemSelection();
-		setSpinner();
 		getPreview();
-		File file = getBaseContext().getFileStreamPath("togVisible");
-	    if (!(file.exists())) //if it doesn't exist
-	    {
-	    	saveStatus(""+visible,"togVisible");	
-	    }
-		File file2 = getBaseContext().getFileStreamPath("pickedColor");
-	    if (!(file2.exists())) //if it doesn't exist
-	    {
-	    	saveColor(chosenColor);	
-	    }
-		File file3 = getBaseContext().getFileStreamPath("enablePicPw");
-	    if (!(file3.exists())) //if it doesn't exist
-	    {
-			saveStatus(""+enabled,"enablePicPw");	
-			Constants.LOCKSCREEN_SETTING = openStatus("enablePicPw");  //make sure have correct status
-	    }
-		saveStatus(""+enabled,"enablePicPw");	
-		Constants.LOCKSCREEN_SETTING = openStatus("enablePicPw");  //make sure have correct status
+		visible = Constants.gestureVisibility;
+		enabled = Constants.LOCKSCREEN_SETTING;
+		chosenColor = Constants.gestureColor;
+		NumberofGestures.setSelection(Constants.gestureCount-2);
 	}
 	
 	public void addItemsToSpinner()
@@ -291,26 +184,6 @@ public class Lockit extends Activity {
 		  NumberofGestures.setOnItemSelectedListener(new CustomOnItemSelectedListener());
 	  }
 	  
-	  public void setSpinner()
-	  {
-			try {
-				File file = getBaseContext().getFileStreamPath("numGestures");
-				Scanner sc = new Scanner(new File(file.getAbsolutePath()));
-				String line = sc.nextLine();
-				int num = Integer.parseInt(line);
-				if(num != 0)
-				{
-					NumberofGestures.setSelection(num-2);
-				}
-			}
-	        catch (FileNotFoundException e1) {
-	        	e1.printStackTrace();
-	  		  	NumberofGestures.setSelection(1);
-	        }
-			
-	  }
-
-
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.

@@ -1,21 +1,13 @@
 package amazenite.lockit;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 
 import android.os.Bundle;
 import android.app.Activity;
-import android.view.Menu;
-import android.app.Activity;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.PixelFormat;
-import android.net.Uri;
-import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
@@ -150,32 +142,6 @@ import android.preference.PreferenceManager;
 	        
 	        public void saveColor(int color)
 	        {
-	        	
-	        	String pickedColor = ""+color;
-	        	try {
-	            	FileOutputStream fos = openFileOutput("pickedColor", Context.MODE_PRIVATE);
-
-	    	        	try {
-	    					fos.write(pickedColor.getBytes());
-	    				} catch (IOException e) {
-	    					// TODO Auto-generated catch block
-	    					e.printStackTrace();
-	    				}
-
-	            	try {
-	    	        		fos.close();
-	    	        		fos = null;
-	    	        	} 
-	    	        	catch (IOException e) {
-	    	        		e.printStackTrace();
-	    	        	}
-	            	} 
-	            catch (FileNotFoundException e1) {
-	            	e1.printStackTrace();
-	            	}
+	        	Constants.gestureColor = color;
 	        }
-	        
-	        
-	        
-
 	}

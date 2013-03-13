@@ -33,8 +33,6 @@ public class OpenImages extends Activity {
 	
 	 /** Called when the activity is first created. */
 	 private Uri mImageCaptureUri;
-	 private ImageView mImageView;
-
 	 private static final int PICK_FROM_CAMERA = 1;
 	 private static final int CROP_FROM_CAMERA = 2;
 	 private static final int PICK_FROM_FILE = 3;
@@ -47,12 +45,6 @@ public class OpenImages extends Activity {
 			startActivity(intent);
 		}
 		
-		/** Lockscreen Test Points */
-		public void debugLockscreen(View view) {
-		    // debug the lockscreen
-			final Intent intent = new Intent(this, LockScreen.class);
-			startActivity(intent);
-		}
 
 	 @Override
 	 protected void onCreate(Bundle savedInstanceState) {
@@ -60,7 +52,7 @@ public class OpenImages extends Activity {
 		setContentView(R.layout.activity_lockit);
 		
 		//crop image
-	    final String [] items   = new String [] {"Take Picture from Camera", "Select Picture from Gallery"};    
+	    final String [] items   = new String [] {"Take Picture with Camera", "Select Picture from Gallery"};    
 	    ArrayAdapter<String> adapter = new ArrayAdapter<String> (this, android.R.layout.select_dialog_item,items);
 	    AlertDialog.Builder builder  = new AlertDialog.Builder(this);
 	    
@@ -266,14 +258,7 @@ public class OpenImages extends Activity {
     
     @Override
 	 public void onBackPressed() {
-    	Log.d("back pressed", "finishe");
 	     finish();
 	     
 	 }
 }
-
-
-
-	 
-
-
