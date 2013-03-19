@@ -67,11 +67,11 @@
         </activity>
 
         <receiver
-	       android:permission="android.permission.RECEIVE_BOOT_COMPLETED"
-           android:name=".ScreenReceiver" >
-        <intent-filter >
-             <action android:name="android.intent.action.USER_PRESENT" />
-        </intent-filter>
+            android:name="amazenite.lockit.ScreenReceiver"
+            android:permission="android.permission.RECEIVE_BOOT_COMPLETED" >
+            <intent-filter>
+                <action android:name="android.intent.action.USER_PRESENT" />
+            </intent-filter>
         </receiver>
 
         <activity
@@ -89,6 +89,14 @@
         <activity
             android:name="amazenite.lockit.ColorSelection"
             android:label="@string/title_activity_color_selection" >
+        </activity>
+        <activity
+            android:name="amazenite.lockit.VoiceSettings"
+            android:label="@string/title_activity_voice_settings" >
+        </activity>
+        <activity
+            android:name="amazenite.lockit.RecordVoice"
+            android:label="@string/title_activity_record_voice" >
         </activity>
     </application>
 

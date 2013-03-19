@@ -13,5 +13,7 @@
     <string name="title_activity_color_picker">ColorPickerActivity</string>
     <string name="title_activity_color_picker_dialog">ColorPickerDialog</string>
     <string name="title_activity_color_selection">ColorSelection</string>
+    <string name="title_activity_voice_settings">VoiceSettings</string>
+    <string name="title_activity_record_voice">RecordVoice</string>
 
 </resources>
