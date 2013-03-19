@@ -190,7 +190,7 @@ public class Lockit extends Activity {
 		return true;
 	}
 	
-	public void voiceSettings()
+	public void voiceSettings(View view)
 	{
 		final Intent intent = new Intent(this, VoiceSettings.class);
 		startActivity(intent);
