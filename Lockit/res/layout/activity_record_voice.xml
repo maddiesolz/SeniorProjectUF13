@@ -7,9 +7,24 @@
     tools:context=".RecordVoice" >
 
     <ImageButton
+        android:id="@+id/startRecord"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="startRecord"
+        android:src="@android:drawable/btn_star" />
+
+    <ImageButton
+        android:id="@+id/stopRecord"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="stopRecord"
+        android:src="@drawable/ic_launcher" />
+
+    <ImageButton
         android:id="@+id/imageButton1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@android:drawable/btn_star" />
+        android:onClick="startPlaying"
+        android:src="@drawable/ic_setpic" />
 
 </LinearLayout>
