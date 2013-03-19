@@ -14,27 +14,24 @@
 
     <LinearLayout
         android:id="@+id/Tabs"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content" >
 
-        <ImageButton
-            android:id="@+id/PictureSettings"
-            android:layout_width="73dp"
-            android:layout_height="47dp"
-            android:layout_marginRight="24dp"
-            android:layout_marginTop="5dp"
-            android:onClick="pictureSettings"
+        <ImageView
+            android:id="@+id/imageView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.54"
             android:src="@drawable/picturemenu" />
 
         <ImageButton
             android:id="@+id/VoiceSettings"
-            android:layout_width="73dp"
+            android:layout_width="wrap_content"
             android:layout_height="47dp"
             android:layout_marginRight="24dp"
             android:layout_marginTop="5dp"
             android:onClick="voiceSettings"
             android:src="@drawable/voicemenu" />
-
     </LinearLayout>
 
     <LinearLayout

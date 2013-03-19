@@ -6,7 +6,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 import java.util.Vector;
 
 import android.app.Activity;
@@ -28,7 +27,6 @@ import android.widget.Toast;
 
 public class Lockit extends Activity {	
 	Spinner NumberofGestures;
-	
 	boolean enabled	= false;
 	boolean visible = true;
 	int chosenColor = 0xff33CCCC;
@@ -46,12 +44,14 @@ public class Lockit extends Activity {
 		final Intent intent = new Intent(this, LockScreen.class);
 		startActivity(intent);
 	}
+	
 	/** Lockscreen Gesture Visibility */
 	public void toggleVisible(View view) {
 	    // toggle gesture visibility
 		visible = !visible;
 		Constants.gestureVisibility = visible;
 	}
+	
 	/** Lockscreen Gesture Color Picker */
 	public void setColors(View view){
 		final Intent intent = new Intent(this, ColorSelection.class);
@@ -91,7 +91,6 @@ public class Lockit extends Activity {
 		    }
 	    }
     }
-
 	
 	public void setPoints(View view)
 	{
@@ -149,12 +148,6 @@ public class Lockit extends Activity {
 		}
 		
 	}
-
-	
-	public void pictureSettings()
-	{
-		//
-	}
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -195,5 +188,11 @@ public class Lockit extends Activity {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.activity_lockit, menu);
 		return true;
+	}
+	
+	public void voiceSettings()
+	{
+		final Intent intent = new Intent(this, VoiceSettings.class);
+		startActivity(intent);
 	}
 }
