@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
 import android.view.Menu;
+import android.view.View;
 
 public class VoiceSettings extends Activity {
 
@@ -20,7 +21,7 @@ public class VoiceSettings extends Activity {
 		return true;
 	}
 	
-	public void recordVoice()
+	public void recordVoice(View view)
 	{
 		Intent intent = new Intent(this, RecordVoice.class);
 		startActivity(intent);
