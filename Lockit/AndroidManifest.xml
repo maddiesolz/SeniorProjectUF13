@@ -67,12 +67,15 @@
         </activity>
 
         <receiver
-	       android:permission="android.permission.RECEIVE_BOOT_COMPLETED"
            android:name=".ScreenReceiver" >
         <intent-filter >
-             <action android:name="android.intent.action.USER_PRESENT" />
         </intent-filter>
         </receiver>
+        
+         <service
+        android:name=".myService"
+        android:label="my Service" >
+   		 </service>
 
         <activity
             android:name="amazenite.lockit.MainActivity"

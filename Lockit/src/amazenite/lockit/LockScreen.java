@@ -55,6 +55,9 @@ public class LockScreen extends Activity {
 		 y2 = -50;
 		 graphView = new GraphicView(this);
 		 counter = 0;
+		 
+		 getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
+
 		
 		//Set As Background Image
 	    File file = getBaseContext().getFileStreamPath("lockimg");

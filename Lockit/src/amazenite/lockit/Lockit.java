@@ -142,6 +142,12 @@ public class Lockit extends Activity {
 		enabled = !enabled;
 		String status = "" + enabled;
 		Constants.LOCKSCREEN_SETTING = enabled;
+		
+		if(enabled)
+		{
+		startService(new Intent(this, myService.class));
+		}
+		
 	}
 
 	
