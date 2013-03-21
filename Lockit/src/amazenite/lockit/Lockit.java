@@ -61,7 +61,13 @@ public class Lockit extends Activity {
 	@Override
 	public void onResume() {
 		super.onResume();
+		addItemsToSpinner();
+		addListenerOnSpinnerItemSelection();
 		getPreview();
+		visible = Constants.gestureVisibility;
+		enabled = Constants.LOCKSCREEN_SETTING;
+		chosenColor = Constants.gestureColor;
+		NumberofGestures.setSelection(Constants.gestureCount-2);
 	}
 	
 	public void getPreview(){
@@ -136,15 +142,13 @@ public class Lockit extends Activity {
 	}
 	    
 	public void enablePicPw(View view)
-	{	
-	    Intent intent = new Intent(this, ScreenReceiver.class);
+	{
 		enabled = !enabled;
-		String status = "" + enabled;
 		Constants.LOCKSCREEN_SETTING = enabled;
 		
 		if(enabled)
 		{
-		startService(new Intent(this, myService.class));
+			startService(new Intent(this, myService.class));
 		}
 		
 	}

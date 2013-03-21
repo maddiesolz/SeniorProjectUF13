@@ -21,8 +21,22 @@ public class VoiceSettings extends Activity {
 		return true;
 	}
 	
+	public void pictureSettings(View view)
+	{
+		final Intent intent = new Intent(this, Lockit.class);
+		startActivity(intent);
+	}
+	
 	public void recordVoice(View view)
 	{
+		Constants.voiceOriginalRecord = true;
+		Intent intent = new Intent(this, RecordVoice.class);
+		startActivity(intent);
+	}
+	
+	public void testVoice(View view)
+	{
+		Constants.voiceOriginalRecord = false;
 		Intent intent = new Intent(this, RecordVoice.class);
 		startActivity(intent);
 	}

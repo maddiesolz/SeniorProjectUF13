@@ -23,6 +23,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="0.27"
+            android:onClick="pictureSettings"
             android:src="@drawable/picturemenu" />
 
         <ImageView
@@ -39,5 +40,12 @@
         android:layout_height="wrap_content"
         android:onClick="recordVoice"
         android:src="@drawable/recordvoice" />
+
+    <ImageButton
+        android:id="@+id/imageButton1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="testVoice"
+        android:src="@drawable/testvoice" />
 
 </LinearLayout>

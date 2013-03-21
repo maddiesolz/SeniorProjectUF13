@@ -11,6 +11,8 @@ import android.graphics.PixelFormat;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
+import android.util.Log;
+import android.widget.Toast;
 
 	/*
 	 * Copyright (C) 2010 Daniel Nilsson
@@ -46,14 +48,18 @@ import android.preference.PreferenceManager;
 	                getWindow().setFormat(PixelFormat.RGBA_8888);
 
 	                addPreferencesFromResource(R.xml.color_selection);
-	        		File file = getBaseContext().getFileStreamPath("pickedColor");
-	        	    if (!(file.exists())) //if it doesn't exist
-	        	    {
-	                saveColor(chosenColor);
-	        	    }
 	                final SharedPreferences prefs = PreferenceManager .getDefaultSharedPreferences(ColorSelection.this);
 	                final ColorPickerDialog d = new ColorPickerDialog(this, prefs.getInt("dialog", 0xffffffff));
 	                d.setAlphaSliderVisible(true);
+	                d.setOnCancelListener(new DialogInterface.OnCancelListener()
+	        	    {
+	        	        @Override
+	        			public
+	        	        void onCancel(DialogInterface dialog)
+	        	        {
+	        	             ColorSelection.this.finish();
+	        	        }
+	        	    });
 
                     d.setButton("Ok", new DialogInterface.OnClickListener()
                     {
@@ -142,6 +148,13 @@ import android.preference.PreferenceManager;
 	        
 	        public void saveColor(int color)
 	        {
+	        	Log.d("save color", "" + color);
 	        	Constants.gestureColor = color;
 	        }
+	        
+	        @Override
+	   	 public void onBackPressed() {
+	       	Toast.makeText(ColorSelection.this, "" + "back pressed", Toast.LENGTH_SHORT).show();
+	   	    ColorSelection.super.onBackPressed();
+	   	 }
 	}

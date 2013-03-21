@@ -19,6 +19,8 @@ import android.view.View;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Toast;
 import android.support.v4.view.GestureDetectorCompat;
 import android.os.Vibrator;
@@ -50,6 +52,11 @@ public class SetPoints extends Activity {
 		
 		chosenColor = Constants.gestureColor;
 		loadNumberGestures();
+		
+
+		 requestWindowFeature(Window.FEATURE_NO_TITLE);
+		 getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+		                      WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		
 		//Set coordinates to be outside of the viewing frame
 		x = -50;
@@ -111,8 +118,8 @@ public class SetPoints extends Activity {
 		  @SuppressLint("NewApi")
 		@Override
 		    public boolean onSingleTapConfirmed(MotionEvent event) {			 
-		        x = event.getRawX();
-		        y = event.getRawY()-40.0f;
+		        x = event.getX();
+		        y = event.getY();
 		        type = "Adot";
 		        graphView.invalidate();
 			    storeCoordinates();			    
@@ -124,7 +131,7 @@ public class SetPoints extends Activity {
 		        return true;
 		    }
 /*
- * 							onDoubleTap - Clear Coordinates
+ * 		onDoubleTap - Clear Coordinates
  */
 		  @Override
 		  public boolean onDoubleTap(MotionEvent event)
@@ -150,10 +157,10 @@ public class SetPoints extends Activity {
 		  public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY)
 		  {
 			  isScrolling = true;
-			  x = e1.getRawX();
-			  y = e1.getRawY()-40.0f;
-			  x2 = e2.getRawX();
-			  y2 = e2.getRawY()-40.0f;
+			  x = e1.getX();
+			  y = e1.getY();
+			  x2 = e2.getX();
+			  y2 = e2.getY();
 			  
 			  storeMoveCoordinates();
 			  return true;
@@ -433,7 +440,7 @@ public class SetPoints extends Activity {
 	        	{
 	        		lineColor.setColor(chosenColor);
 	        		lineColor.setStyle(Paint.Style.FILL);
-	        		lineColor.setStrokeWidth(40);
+	        		lineColor.setStrokeWidth(30);
 	        		lineColor.setStrokeCap(Paint.Cap.ROUND);
 	        		canvas.drawLine(moveCoordinates[0], moveCoordinates[1], moveCoordinates[moveCoordinates.length-2], moveCoordinates[moveCoordinates.length-1], lineColor);
 	        		clearMoveCoordinates();
@@ -443,7 +450,6 @@ public class SetPoints extends Activity {
 	        		circColor.setColor(chosenColor);
 	        		circColor.setStyle(Style.STROKE);
 	        		circColor.setStrokeWidth(30);
-	        		Log.d("circle", ""+ averageRadius);
 	        		canvas.drawCircle(midpointX, midpointY, averageRadius, circColor);
 	        		clearMoveCoordinates();
 	        	}

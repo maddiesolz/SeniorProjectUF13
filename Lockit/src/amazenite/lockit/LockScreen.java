@@ -19,6 +19,8 @@ import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.support.v4.view.GestureDetectorCompat;
 import android.widget.Toast;
 
@@ -55,10 +57,11 @@ public class LockScreen extends Activity {
 		 y2 = -50;
 		 graphView = new GraphicView(this);
 		 counter = 0;
-		 
-		 getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
-
 		
+		 requestWindowFeature(Window.FEATURE_NO_TITLE);
+		 getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+		                      WindowManager.LayoutParams.FLAG_FULLSCREEN);
+		 
 		//Set As Background Image
 	    File file = getBaseContext().getFileStreamPath("lockimg");
 	    String internalPath = "data/data/files/lockimg";
@@ -140,8 +143,8 @@ public class LockScreen extends Activity {
 		  @Override
 		    public boolean onSingleTapUp(MotionEvent event) {
 				if(counter <= numbers.length-1) {
-			        x = event.getRawX();
-			        y = event.getRawY()-40.0f;
+			        x = event.getX();
+			        y = event.getY();
 			        type = "Adot";
 			        if(isVisible == true)
 			        {
@@ -159,7 +162,7 @@ public class LockScreen extends Activity {
 			    	}
 				    else
 				    {
-				    	if((x > (Float.parseFloat(coordinates[1])+30) || (x <  (Float.parseFloat(coordinates[1])-30.0f))) || (y > (Float.parseFloat(coordinates[2])+30.0f)) || (y < (Float.parseFloat(coordinates[2])-30.0f))){
+				    	if((x > (Float.parseFloat(coordinates[1])+35) || (x <  (Float.parseFloat(coordinates[1])-35))) || (y > (Float.parseFloat(coordinates[2])+35)) || (y < (Float.parseFloat(coordinates[2])-35))){
 				    		correctGestures = false;
 				    	}
 				    }
@@ -174,10 +177,10 @@ public class LockScreen extends Activity {
 		  {
 			  isScrolling = true;
 			  if(counter <= numbers.length-1 ) {
-				  x = e1.getRawX();
-				  y = e1.getRawY()-40.0f;
-				  x2 = e2.getRawX();
-				  y2 = e2.getRawY()-40.0f;
+				  x = e1.getX();
+				  y = e1.getY();
+				  x2 = e2.getX();
+				  y2 = e2.getY();
 				    					    
 			      storeMoveCoordinates();
 			  }
@@ -309,11 +312,11 @@ public class LockScreen extends Activity {
 			  }
 			else
 			{
-				if(midpointX > (Float.parseFloat(coordinates[3])+50) || (midpointX <  (Float.parseFloat(coordinates[3])-50.0f)) || (midpointY > (Float.parseFloat(coordinates[4])+30.0f)) || (midpointY < (Float.parseFloat(coordinates[4])-30.0f)))
+				if(midpointX > (Float.parseFloat(coordinates[3])+50) || (midpointX <  (Float.parseFloat(coordinates[3])-50)) || (midpointY > (Float.parseFloat(coordinates[4])+50)) || (midpointY < (Float.parseFloat(coordinates[4])-50)))
 				{
 					correctGestures = false;
 				}
-				if(averageRadius > (Float.parseFloat(coordinates[5])+50) || (averageRadius <  (Float.parseFloat(coordinates[5])-50.0f)))
+				if(averageRadius > (Float.parseFloat(coordinates[5])+50) || (averageRadius <  (Float.parseFloat(coordinates[5])-50)))
 				{
 					correctGestures = false;
 				}
@@ -461,7 +464,7 @@ public class LockScreen extends Activity {
 	        	{
 	        		lineColor.setColor(chosenColor);
 	        		lineColor.setStyle(Paint.Style.FILL);
-	        		lineColor.setStrokeWidth(20);
+	        		lineColor.setStrokeWidth(30);
 	        		lineColor.setStrokeCap(Paint.Cap.ROUND);
 	        		canvas.drawLine(moveCoordinates[0], moveCoordinates[1], moveCoordinates[moveCoordinates.length-2], moveCoordinates[moveCoordinates.length-1], lineColor);
 	        		clearMoveCoordinates();

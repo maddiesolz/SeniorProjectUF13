@@ -6,6 +6,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Vector;
 
 import android.net.Uri;
 import android.os.Bundle;
@@ -22,12 +23,14 @@ import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Bitmap.CompressFormat;
+import android.graphics.drawable.Drawable;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.Toast;
-
 
 public class OpenImages extends Activity {
 	
@@ -38,23 +41,25 @@ public class OpenImages extends Activity {
 	 private static final int PICK_FROM_FILE = 3;
 	 private Bitmap photo = null;
 	 
-	 /** Called when the user clicks the get image button */
-		public void viewPictures(View view) {
-		    // Do something in response to button
-			final Intent intent = new Intent(this, OpenImages.class);
-			startActivity(intent);
-		}
-		
 
 	 @Override
 	 protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_lockit);
-		
+
 		//crop image
 	    final String [] items   = new String [] {"Take Picture with Camera", "Select Picture from Gallery"};    
 	    ArrayAdapter<String> adapter = new ArrayAdapter<String> (this, android.R.layout.select_dialog_item,items);
 	    AlertDialog.Builder builder  = new AlertDialog.Builder(this);
+	    builder.setOnCancelListener(new DialogInterface.OnCancelListener()
+	    {
+	        @Override
+			public
+	        void onCancel(DialogInterface dialog)
+	        {
+	             OpenImages.this.finish();
+	        }
+	    });
 	    
 	    //Empty is if there are no pictures in the SDCard file
 	    //final boolean empty = imageAdapt.empty;
@@ -114,7 +119,6 @@ public class OpenImages extends Activity {
 	   case PICK_FROM_FILE: 
 	   if(resultCode != 0){
 	    mImageCaptureUri = imageReturnedIntent.getData();
-	
 	     doCrop();
 	   }
 	   break;      
@@ -128,8 +132,8 @@ public class OpenImages extends Activity {
 			    photo = extras.getParcelable("data");
 			    try 
 			    {
-					saveImage(photo);		
-					getBaseContext().getFileStreamPath("coordinates").delete();				
+					saveImage(photo);
+					getBaseContext().getFileStreamPath("coordinates").delete();
 					finish();
 			    }catch (IOException e) {
 					// TODO Auto-generated catch block
@@ -185,6 +189,7 @@ public class OpenImages extends Activity {
 		    cropOptionAdapter adapter = new cropOptionAdapter(getApplicationContext(), cropOptions);
 		    AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		    builder.setTitle("Choose Crop App");
+		    builder.setCancelable(true);
 		    builder.setAdapter( adapter, new DialogInterface.OnClickListener() {
 		    public void onClick( DialogInterface dialog, int item ) {
 		      startActivityForResult( cropOptions.get(item).appIntent, CROP_FROM_CAMERA);
@@ -206,37 +211,7 @@ public class OpenImages extends Activity {
 		   }
 	}
  }
-  
-  public void saveImage(String imagePath) throws IOException
-    {  
-        BitmapFactory.Options o = new BitmapFactory.Options();
-        o.inJustDecodeBounds = true;
-        final int size = 70;
-        int scale = 2;
-        while(o.outWidth/scale/2 >= size && o.outHeight/scale/2 >= size)
-        {
-        	scale *= 2;
-        }
-    	BitmapFactory.Options o2 = new BitmapFactory.Options();
-    	o2.inSampleSize=scale;
-    	Bitmap chosenImage = BitmapFactory.decodeFile(imagePath, o2);
-        try {
-        	FileOutputStream fos = openFileOutput("lockimg", Context.MODE_PRIVATE);
-        	chosenImage.compress(CompressFormat.JPEG, 100, fos);
-	        	try {
-	        		fos.close();
-	        		fos = null;
-	        	} 
-	        	catch (IOException e) {
-	        		e.printStackTrace();
-	        	}
-	        	chosenImage.recycle();
-        	} 
-        catch (FileNotFoundException e1) {
-        	e1.printStackTrace();
-        	}
-    }
-    
+ 
     public void saveImage(Bitmap image) throws IOException
     {  
         try {
@@ -255,10 +230,4 @@ public class OpenImages extends Activity {
         	e1.printStackTrace();
         	}
     }
-    
-    @Override
-	 public void onBackPressed() {
-	     finish();
-	     
-	 }
 }
