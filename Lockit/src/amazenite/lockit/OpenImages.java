@@ -6,7 +6,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
 
 import android.net.Uri;
 import android.os.Bundle;
@@ -14,6 +13,7 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.ActivityNotFoundException;
 import android.content.ComponentName;
 import android.content.Context;
@@ -21,15 +21,12 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Bitmap.CompressFormat;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.KeyEvent;
-import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
-import android.widget.Spinner;
 import android.widget.Toast;
 
 public class OpenImages extends Activity {
@@ -45,74 +42,7 @@ public class OpenImages extends Activity {
 	 @Override
 	 protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getPreview();
-		setContentView(R.layout.activity_lockit);
-
-		//crop image
-	    final String [] items   = new String [] {"Take Picture with Camera", "Select Picture from Gallery"};    
-	    ArrayAdapter<String> adapter = new ArrayAdapter<String> (this, android.R.layout.select_dialog_item,items);
-	    AlertDialog.Builder builder  = new AlertDialog.Builder(this);
-	    builder.setOnCancelListener(new DialogInterface.OnCancelListener()
-	    {
-	        @Override
-			public
-	        void onCancel(DialogInterface dialog)
-	        {
-	             OpenImages.this.finish();
-	        }
-	    });
-	    
-	    //Empty is if there are no pictures in the SDCard file
-	    //final boolean empty = imageAdapt.empty;
-	    final boolean empty = !(android.os.Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED));
-	
-		if(!empty)
-		{
-			//crop image
-		   builder.setTitle("Select Image");
-		   builder.setAdapter( adapter, new DialogInterface.OnClickListener() 
-		   {
-			   public void onClick( DialogInterface dialog, int item ) 
-			   { //pick from camera
-				    if (item == 0) 
-				    {
-				    	Intent intent   = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-				    	mImageCaptureUri = Uri.fromFile(new File(Environment.getExternalStorageDirectory(),
-				    	"tmp_avatar_" + String.valueOf(System.currentTimeMillis()) + ".jpg"));
-				    	intent.putExtra(android.provider.MediaStore.EXTRA_OUTPUT, mImageCaptureUri);
-			
-					      try {
-					      intent.putExtra("return-data", true);
-				
-					       startActivityForResult(intent, PICK_FROM_CAMERA);
-					     } catch (ActivityNotFoundException e) {
-					      e.printStackTrace();
-					     }
-				    } else { //pick from file
-				    	Intent intent = new Intent();
-				    	intent.setType("image/*");
-				    	intent.setAction(Intent.ACTION_GET_CONTENT);
-				    	startActivityForResult(Intent.createChooser(intent, "Complete action using"), PICK_FROM_FILE);
-				    }
-			   }
-		   	} );
-	
-		   	final AlertDialog dialog = builder.create();
-		   	dialog.setOnCancelListener(new DialogInterface.OnCancelListener()
-		    {
-		        @Override
-				public
-		        void onCancel(DialogInterface dialog)
-		        {
-		             OpenImages.this.finish();
-		        }
-		    });
-		  	dialog.show();
-	    }
-	    else
-	    {
-		    Toast.makeText(this, "Cannot find gallery", Toast.LENGTH_SHORT).show();
-		}
+        setContentView(R.layout.activity_lockit);
 	}
 	 
 	 public void getPreview(){
@@ -134,47 +64,121 @@ public class OpenImages extends Activity {
 		    }
 	    }
 
-@Override
- protected void onActivityResult(int requestCode, int resultCode, Intent imageReturnedIntent) { 
-   super.onActivityResult(requestCode, resultCode, imageReturnedIntent); 
-   switch(requestCode) 
-   { 
-	  case PICK_FROM_CAMERA:
-	   if(resultCode != 0){
-	    doCrop();
-	   }
-	   break;
-	
-	   case PICK_FROM_FILE: 
-	   if(resultCode != 0){
-	    mImageCaptureUri = imageReturnedIntent.getData();
-	     doCrop();
-	   }
-	   break;      
-	
-	   case CROP_FROM_CAMERA: 
-	   if(resultCode != 0)
-	   {
-		   Bundle extras = imageReturnedIntent.getExtras();
-		    if (extras != null) 
-		    {          
-			    photo = extras.getParcelable("data");
-			    try 
-			    {
-					saveImage(photo);
-					getBaseContext().getFileStreamPath("coordinates").delete();
-					finish();
-			    }catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+	 
+		@Override
+		public void onResume() 
+		{
+			
+			super.onResume();
+			getPreview();
+			//crop image
+		    final String [] items   = new String [] {"Take Picture with Camera", "Select Picture from Gallery"};    
+		    ArrayAdapter<String> adapter = new ArrayAdapter<String> (this, android.R.layout.select_dialog_item,items);
+		    AlertDialog.Builder builder  = new AlertDialog.Builder(this);
+		    
+		    //Empty is if there are no pictures in the SDCard file
+		    //final boolean empty = imageAdapt.empty;
+		    final boolean empty = !(android.os.Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED));
+		
+			if(!empty)
+			{
+				//crop image
+			   builder.setTitle("Select Image");
+			   builder.setAdapter( adapter, new DialogInterface.OnClickListener() 
+			   {
+				   public void onClick( DialogInterface dialog, int item ) 
+				   { //pick from camera
+					    if (item == 0) 
+					    {
+					    	Intent intent   = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+					    	mImageCaptureUri = Uri.fromFile(new File(Environment.getExternalStorageDirectory(),
+					    	"tmp_avatar_" + String.valueOf(System.currentTimeMillis()) + ".jpg"));
+					    	intent.putExtra(android.provider.MediaStore.EXTRA_OUTPUT, mImageCaptureUri);
+				
+						      try {
+						      intent.putExtra("return-data", true);
+					
+						       startActivityForResult(intent, PICK_FROM_CAMERA);
+						     } catch (ActivityNotFoundException e) {
+						      e.printStackTrace();
+						     }
+					    } else { //pick from file
+					    	Intent intent = new Intent();
+					    	intent.setType("image/*");
+					    	intent.setAction(Intent.ACTION_GET_CONTENT);
+					    	startActivityForResult(Intent.createChooser(intent, "Complete action using"), PICK_FROM_FILE);
+					    }
+				   }
+			   	} );
+		
+			   	final AlertDialog dialog = builder.create();
+			   	dialog.setOnKeyListener(new Dialog.OnKeyListener() {
+
+		            @Override
+		            public boolean onKey(DialogInterface arg0, int keyCode,
+		                    KeyEvent event) {
+		                // TODO Auto-generated method stub
+		                if (keyCode == KeyEvent.KEYCODE_BACK) {
+		                    finish();
+		                    Log.d("back pressed????", "plz work");
+		             //       alert.dismiss();
+		                }
+		                return true;
+		            }
+		        });
+			  	dialog.show();
 		    }
+		    else
+		    {
+			    Toast.makeText(this, "Cannot find gallery", Toast.LENGTH_SHORT).show();
+			}
+		}
+	 
+	@Override
+	 protected void onActivityResult(int requestCode, int resultCode, Intent imageReturnedIntent) { 
+	   super.onActivityResult(requestCode, resultCode, imageReturnedIntent); 
+	   switch(requestCode) 
+	   { 
+		  case PICK_FROM_CAMERA:
+		   if(resultCode != 0){
+		    doCrop();
+		   }
+		   break;
+		
+		   case PICK_FROM_FILE: 
+		   if(resultCode != 0){
+		    mImageCaptureUri = imageReturnedIntent.getData();
+		     doCrop();
+		   }
+		   break;      
+		
+		   case CROP_FROM_CAMERA: 
+		   if(resultCode != 0)
+		   {
+			   Bundle extras = imageReturnedIntent.getExtras();
+			    if (extras != null) 
+			    {          
+				    photo = extras.getParcelable("data");
+				    try 
+				    {
+						saveImage(photo);
+						getBaseContext().getFileStreamPath("coordinates").delete();
+						finish();
+				    }catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+			    }
+		   }
+		   default:
+		   {
+			   finish();
+		   }
+		   File f = new File(mImageCaptureUri.getPath());  
+		    if (f.exists()) f.delete();
+		    break;
 	   }
-	   File f = new File(mImageCaptureUri.getPath());  
-	    if (f.exists()) f.delete();
-	    break;
-   }
-}
+	}
 
 	// crop method
   private void doCrop() {
@@ -224,38 +228,27 @@ public class OpenImages extends Activity {
 		      startActivityForResult( cropOptions.get(item).appIntent, CROP_FROM_CAMERA);
 		     }
 		    });
-		
-		     builder.setOnCancelListener( new DialogInterface.OnCancelListener() {
-		     @Override
-		     public void onCancel( DialogInterface dialog ) {
-			       if (mImageCaptureUri != null ) {
-				       getContentResolver().delete(mImageCaptureUri, null, null );
-				       mImageCaptureUri = null;
-			      }
-		     }
-		    } );
-		
+		    
 		     AlertDialog alert = builder.create();
-		     alert.setOnCancelListener(new DialogInterface.OnCancelListener()
-			    {
-			        @Override
-					public
-			        void onCancel(DialogInterface dialog)
-			        {
-			             OpenImages.this.finish();
-			        }
-			    });
+		     alert.setOnKeyListener(new Dialog.OnKeyListener() {
+
+		            @Override
+		            public boolean onKey(DialogInterface arg0, int keyCode,
+		                    KeyEvent event) {
+		                // TODO Auto-generated method stub
+		                if (keyCode == KeyEvent.KEYCODE_BACK) {
+		                    finish();
+		                    Log.d("back pressed????", "plz work");
+		             //       alert.dismiss();
+		                }
+		                return true;
+		            }
+		        });
 		     alert.show();
 		   }
 	}
  }
   
-  @Override
-	public void onBackPressed()
-	{
-	  	finish();
-	}
- 
     public void saveImage(Bitmap image) throws IOException
     {  
         try {

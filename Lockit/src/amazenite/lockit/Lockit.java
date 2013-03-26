@@ -150,6 +150,10 @@ public class Lockit extends Activity {
 		{
 			startService(new Intent(this, myService.class));
 		}
+		else
+		{
+            stopService(new Intent(this, myService.class));
+		}
 		
 	}
 	

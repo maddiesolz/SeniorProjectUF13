@@ -181,7 +181,6 @@ public class LockScreen extends Activity {
 				  y = e1.getY();
 				  x2 = e2.getX();
 				  y2 = e2.getY();
-				    					    
 			      storeMoveCoordinates();
 			  }
 			  return true;
