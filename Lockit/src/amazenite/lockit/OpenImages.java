@@ -45,6 +45,7 @@ public class OpenImages extends Activity {
 	 @Override
 	 protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getPreview();
 		setContentView(R.layout.activity_lockit);
 
 		//crop image
@@ -97,6 +98,15 @@ public class OpenImages extends Activity {
 		   	} );
 	
 		   	final AlertDialog dialog = builder.create();
+		   	dialog.setOnCancelListener(new DialogInterface.OnCancelListener()
+		    {
+		        @Override
+				public
+		        void onCancel(DialogInterface dialog)
+		        {
+		             OpenImages.this.finish();
+		        }
+		    });
 		  	dialog.show();
 	    }
 	    else
@@ -104,6 +114,25 @@ public class OpenImages extends Activity {
 		    Toast.makeText(this, "Cannot find gallery", Toast.LENGTH_SHORT).show();
 		}
 	}
+	 
+	 public void getPreview(){
+			//pictureSettings();
+		    ImageView img = (ImageView) findViewById(R.id.preview);
+		    if(img != null)
+		    {
+			    File file = getBaseContext().getFileStreamPath("lockimg");
+			    String internalPath = "data/data/files/lockimg";
+			    if (file.exists()) {
+			    	 internalPath = file.getAbsolutePath();
+			        	Drawable d = Drawable.createFromPath(internalPath);
+			         if(d!=null)
+			         {
+			        	 img.setImageDrawable(d);
+			        	 img.invalidate();
+			         }
+			    }
+		    }
+	    }
 
 @Override
  protected void onActivityResult(int requestCode, int resultCode, Intent imageReturnedIntent) { 
@@ -207,10 +236,25 @@ public class OpenImages extends Activity {
 		    } );
 		
 		     AlertDialog alert = builder.create();
+		     alert.setOnCancelListener(new DialogInterface.OnCancelListener()
+			    {
+			        @Override
+					public
+			        void onCancel(DialogInterface dialog)
+			        {
+			             OpenImages.this.finish();
+			        }
+			    });
 		     alert.show();
 		   }
 	}
  }
+  
+  @Override
+	public void onBackPressed()
+	{
+	  	finish();
+	}
  
     public void saveImage(Bitmap image) throws IOException
     {  
