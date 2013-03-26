@@ -14,6 +14,9 @@ import android.util.Log;
 import android.media.MediaPlayer;
 
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 
 public class RecordVoice extends Activity
@@ -25,6 +28,11 @@ public class RecordVoice extends Activity
 	private boolean isRecording = false;
 	private boolean hasRecorded = false;
     private boolean isScrolling = false;
+	private byte[] wavArray = new byte[1000];
+	private byte[] initialArray = new byte[1000];
+	private byte[] testArray = new byte[1000];
+
+
     
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -73,6 +81,20 @@ public class RecordVoice extends Activity
 		audioRecorder.release();
 		audioRecorder.reset();
 		hasRecorded = true;
+		mFileName = Environment.getExternalStorageDirectory().getAbsolutePath();
+		if(Constants.voiceOriginalRecord)
+		{
+			mFileName += "/initialSource.wav";
+			convertWav(mFileName,"initial");
+		}
+		else
+		{
+			if(hasRecorded)
+			{
+				mFileName += "/testSource.wav";
+				convertWav(mFileName,"test");
+			}
+		}
 	}
 	
 	public void startPlaying() {
@@ -99,6 +121,34 @@ public class RecordVoice extends Activity
             Log.d("media player", "prepare() failed");
         }
     }
+	
+	public void convertWav(String path, String type)
+	{
+		FileOutputStream fos;
+
+		try {
+			fos = new FileOutputStream(path);
+			try {
+				fos.write(wavArray);
+				fos.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		if(type.equals("initial"))
+		{
+			initialArray = wavArray;
+		}
+		else
+		{
+			testArray = wavArray;
+		}
+	}
 	
 	/*******************************************************************************************
 	 * 									MyGeatureListener Class
