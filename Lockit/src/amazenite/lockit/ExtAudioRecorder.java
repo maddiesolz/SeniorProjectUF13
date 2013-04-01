@@ -121,10 +121,14 @@ public class ExtAudioRecorder
 			audioRecorder.read(buffer, 0, buffer.length); // Fill buffer
 			try
 			{ 
+				//Log.d("file pointer locationnnnnnnnnnnn", "" + randomAccessWriter.getFilePointer());
+				Log.d("in the method", "1");
 				randomAccessWriter.write(buffer); // Write buffer to file
+				Log.d("wrote to buffer", "2");
 				payloadSize += buffer.length;
 				if (bSamples == 16)
 				{
+					Log.d("some if statment", "3");
 					for (int i=0; i<buffer.length/2; i++)
 					{ // 16bit sample size
 						short curSample = getShort(buffer[i*2], buffer[i*2+1]);
@@ -136,6 +140,7 @@ public class ExtAudioRecorder
 				}
 				else	
 				{ // 8bit sample size
+					Log.d("some if statment2", "3");
 					for (int i=0; i<buffer.length; i++)
 					{
 						if (buffer[i] > cAmplitude)
@@ -475,6 +480,7 @@ public class ExtAudioRecorder
 				payloadSize = 0;
 				audioRecorder.startRecording();
 				audioRecorder.read(buffer, 0, buffer.length);
+				Log.d("HOW LONG", ""+buffer.length);
 			}
 			else
 			{
@@ -487,6 +493,7 @@ public class ExtAudioRecorder
 			Log.e(ExtAudioRecorder.class.getName(), "start() called on illegal state");
 			state = State.ERROR;
 		}
+		
 	}
 	
 	/**
@@ -532,6 +539,11 @@ public class ExtAudioRecorder
 			Log.e(ExtAudioRecorder.class.getName(), "stop() called on illegal state");
 			state = State.ERROR;
 		}
+		/*
+		for(int i = 0; i<buffer.length; i++)
+		{
+			Log.d("WHATS IN IT???", ""+buffer[i]);
+		}*/
 	}
 	
 	/* 

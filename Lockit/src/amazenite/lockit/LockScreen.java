@@ -287,8 +287,8 @@ public class LockScreen extends Activity {
 			  }
 			  else
 			  {
-					if(x > (Float.parseFloat(coordinates[1])+50) || (x <  (Float.parseFloat(coordinates[1])-50.0f)) || (y > (Float.parseFloat(coordinates[2])+50.0f)) || (y < (Float.parseFloat(coordinates[2])-50.0f)) ||
-						(x2 > (Float.parseFloat(coordinates[3])+50) || (x2 <  (Float.parseFloat(coordinates[3])-50.0f))) || (y2 > (Float.parseFloat(coordinates[4])+50.0f)) || (y2 < (Float.parseFloat(coordinates[4])-50.0f)))
+					if(x > (Float.parseFloat(coordinates[1])+75) || (x <  (Float.parseFloat(coordinates[1])-75)) || (y > (Float.parseFloat(coordinates[2])+75)) || (y < (Float.parseFloat(coordinates[2])-75)) ||
+						(x2 > (Float.parseFloat(coordinates[3])+75) || (x2 <  (Float.parseFloat(coordinates[3])-75))) || (y2 > (Float.parseFloat(coordinates[4])+75)) || (y2 < (Float.parseFloat(coordinates[4])-75)))
 					{
 				    	correctGestures = false;
 					}
@@ -311,11 +311,11 @@ public class LockScreen extends Activity {
 			  }
 			else
 			{
-				if(midpointX > (Float.parseFloat(coordinates[3])+50) || (midpointX <  (Float.parseFloat(coordinates[3])-50)) || (midpointY > (Float.parseFloat(coordinates[4])+50)) || (midpointY < (Float.parseFloat(coordinates[4])-50)))
+				if(midpointX > (Float.parseFloat(coordinates[3])+75) || (midpointX <  (Float.parseFloat(coordinates[3])-75)) || (midpointY > (Float.parseFloat(coordinates[4])+75)) || (midpointY < (Float.parseFloat(coordinates[4])-75)))
 				{
 					correctGestures = false;
 				}
-				if(averageRadius > (Float.parseFloat(coordinates[5])+50) || (averageRadius <  (Float.parseFloat(coordinates[5])-50)))
+				if(averageRadius > (Float.parseFloat(coordinates[5])+75) || (averageRadius <  (Float.parseFloat(coordinates[5])-75)))
 				{
 					correctGestures = false;
 				}
