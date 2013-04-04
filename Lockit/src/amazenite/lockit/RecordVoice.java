@@ -23,12 +23,17 @@ import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+import java.nio.ShortBuffer;
+import java.nio.channels.FileChannel;
 
 public class RecordVoice extends Activity{
 	private MediaPlayer mPlayer = null;
@@ -201,15 +206,9 @@ public class RecordVoice extends Activity{
 
 	  private AudioRecord mAudioRecord;
 	  private boolean inRecordMode = false;
-	 	private GestureDetectorCompat mDetector;
- 	    private boolean isScrolling = false;
-        private boolean isRecording = false;
-        private AudioTrack audioTrack;
-
-
-
-
-	  
+	  private GestureDetectorCompat mDetector;
+ 	  private boolean isScrolling = false;
+      private boolean isRecording = false;
 
 	  public void onCreate(Bundle savedInstanceState) {
 	    super.onCreate(savedInstanceState);
@@ -261,13 +260,6 @@ public class RecordVoice extends Activity{
 			 final Toast toast = Toast.makeText(getApplicationContext(), "play record", Toast.LENGTH_SHORT);
 		 	    toast.show();
 		 	    
-		 	   Thread t = new Thread(new Runnable() {
-
-			      @Override
-			      public void run() {
-			        //getSamples();
-			      
-		 	    
 		 	    int minBufferSize = AudioTrack.getMinBufferSize(8000, AudioFormat.CHANNEL_CONFIGURATION_MONO, AudioFormat.ENCODING_PCM_16BIT);
 		 	    final int bufferSize = 8192;
 		 	    AudioTrack at = new AudioTrack(AudioManager.STREAM_MUSIC, 8000, AudioFormat.CHANNEL_CONFIGURATION_MONO, AudioFormat.ENCODING_PCM_16BIT, minBufferSize, AudioTrack.MODE_STREAM);
@@ -276,8 +268,8 @@ public class RecordVoice extends Activity{
 		 	    int i = 0;
 		 	    final byte[]s = new byte[bufferSize];
 		 	    final double[] micBufferData = new double[bufferSize];
-			    final double[] highscores = new double[7];
-			    final double[] recordPoints = new double[7];
+			    final double[] highscores = new double[8];
+			    final double[] recordPoints = new double[8];
 			    final Complex[] data = new Complex[bufferSize];
 		        final int bytesPerSample = 2; // As it is 16bit PCM
 		 	    final double amplification = 100.0; // choose a number as you like
@@ -351,15 +343,12 @@ public class RecordVoice extends Activity{
 		 	        e.printStackTrace();
 		 	    }       
 	
-			      }
-			    });
-			    t.start();
 			}
 	    }
 		String filePath;
 		
 		//Find out in which range
-		public static final int[] RANGE = new int[] {1000,2000,3000,4000,5000,6000, 8192+1};
+		public static final int[] RANGE = new int[] {1000,2000,3000,4000,5000,6000,7000, 8192+1};
 		public static int getIndex(int freq) {
 		    int i = 0;
 		    while(RANGE[i] < freq) i++;
@@ -441,7 +430,8 @@ public class RecordVoice extends Activity{
 		
 	  private void getSamples() {
 	    if(mAudioRecord == null) return;
-	    byte[] buffer = new byte[mAudioBufferSampleSize];
+	  //  byte[] buffer = new byte[mAudioBufferSampleSize];
+	    short[] buffer = new short[mAudioBufferSampleSize];
 	    totalBuffer = new byte[1];
 	    mAudioRecord.startRecording();
 	    int audioRecordingState = mAudioRecord.getRecordingState();
@@ -452,7 +442,7 @@ public class RecordVoice extends Activity{
 	    {
 	      int samplesRead =  mAudioRecord.read(buffer, 0, mAudioBufferSampleSize);
 	      Log.d("HOW MANY ARE READDDDDDDD", ""+samplesRead);
-	        if(totalBuffer.length  >= mAudioBufferSampleSize)
+	      /*  if(totalBuffer.length  >= mAudioBufferSampleSize)
 	        {
 		        byte[] tempBuffer = new byte[totalBuffer.length];
 		        tempBuffer = totalBuffer;
@@ -470,11 +460,20 @@ public class RecordVoice extends Activity{
 	        {
 	        	totalBuffer = new byte[mAudioBufferSampleSize];
 	        	totalBuffer = buffer;
-	        }
+	        }*/
 	        
 	        
 	        try {
-					randomAccessWriter.write(buffer);
+				//randomAccessWriter.write(buffer);
+	        	ByteBuffer myByteBuffer = ByteBuffer.allocate(mAudioBufferSampleSize*2);
+	        	myByteBuffer.order(ByteOrder.LITTLE_ENDIAN);
+
+	        	ShortBuffer myShortBuffer = myByteBuffer.asShortBuffer();
+	        	myShortBuffer.put(buffer);
+
+	        	FileChannel out = new FileOutputStream(filePath).getChannel();
+	        	out.write(myByteBuffer);
+	        	out.close();
 
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
@@ -482,15 +481,16 @@ public class RecordVoice extends Activity{
 			} 
 	    }
 	    
-		try {
+		/*try {
 			randomAccessWriter.seek(0);
 			randomAccessWriter.close();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
+		}*/
 	    
 	  }
+
 	 	
 	    	@Override 
 	        public boolean onTouchEvent(MotionEvent event){ 
