@@ -15,28 +15,21 @@ import android.media.AudioFormat;
 import android.media.AudioManager;
 import android.media.AudioRecord;
 import android.media.AudioTrack;
-import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.media.AudioRecord.OnRecordPositionUpdateListener;
 
 import java.io.BufferedInputStream;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.RandomAccessFile;
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-import java.nio.ShortBuffer;
-import java.nio.channels.FileChannel;
+import java.util.Scanner;
 
 public class RecordVoice extends Activity{
-	private MediaPlayer mPlayer = null;
 
  	/*
  	private ExtAudioRecorder audioRecorder;
@@ -254,101 +247,171 @@ public class RecordVoice extends Activity{
 			    mAudioRecord.stop();
 		}
 		
-		
+		static int sampleNumber = 1000;
 		public void startPlaying() {
 			if(inRecordMode==false) {
-			 final Toast toast = Toast.makeText(getApplicationContext(), "play record", Toast.LENGTH_SHORT);
+				final Toast toast = Toast.makeText(getApplicationContext(), "play record", Toast.LENGTH_SHORT);
 		 	    toast.show();
-		 	    
-		 	    int minBufferSize = AudioTrack.getMinBufferSize(8000, AudioFormat.CHANNEL_CONFIGURATION_MONO, AudioFormat.ENCODING_PCM_16BIT);
-		 	    final int bufferSize = 8192;
-		 	    AudioTrack at = new AudioTrack(AudioManager.STREAM_MUSIC, 8000, AudioFormat.CHANNEL_CONFIGURATION_MONO, AudioFormat.ENCODING_PCM_16BIT, minBufferSize, AudioTrack.MODE_STREAM);
+		 	    @SuppressWarnings("deprecation")
+				int minBufferSize = AudioTrack.getMinBufferSize(8000, AudioFormat.CHANNEL_CONFIGURATION_MONO, AudioFormat.ENCODING_PCM_16BIT);
+				@SuppressWarnings("deprecation")
+				AudioTrack at =  new AudioTrack(AudioManager.STREAM_MUSIC, 8000, AudioFormat.CHANNEL_CONFIGURATION_MONO, AudioFormat.ENCODING_PCM_16BIT, minBufferSize, AudioTrack.MODE_STREAM);
+		 	    final int bufferSize = 8192;//8192;
 		 	    String filepath = Environment.getExternalStorageDirectory().getAbsolutePath();
 		 	    File file = new File(filepath + "/initialSource.wav");
-		 	    int i = 0;
 		 	    final byte[]s = new byte[bufferSize];
-		 	    final double[] micBufferData = new double[bufferSize];
-			    final double[] highscores = new double[8];
-			    final double[] recordPoints = new double[8];
-			    final Complex[] data = new Complex[bufferSize];
+			    final double[] highscores = new double[sampleNumber];
+			    final double[] recordPoints = new double[sampleNumber];
 		        final int bytesPerSample = 2; // As it is 16bit PCM
 		 	    final double amplification = 100.0; // choose a number as you like
 
-		 	    try {
+
+			try {
+			 	  int  x = (int)(file.length());//in.read(myByteBuffer);
+				  //final short[] shortArr = new short[x];
+				  final byte[] byteArr = new byte[x];
+				  	// Read the file into the short array.
+			        InputStream input = new FileInputStream(file);
+			        BufferedInputStream bis = new BufferedInputStream(input);
+			        DataInputStream dataIn = new DataInputStream(bis);
+			        int a = 0;
+			        while (dataIn.available() > 0) {
+			          //shortArr[a] = dataIn.readShort();
+			        	byteArr[a] = dataIn.readByte();
+			          a++;
+			        }
+			        //Log.d("HOW BIG IS IT?!",""+shortArr.length);
+			        
+			        Thread t2 = new Thread(new Runnable() {
+
+			 			   @Override
+			 			   public void run() {
+			 				    int arrSize = (int) Math.pow(2,(Math.floor(Math.log(byteArr.length)/Math.log(2))));//(int) Math.pow(2,Math.floor(Math.log(shortArr.length)));
+				 				final double[] micBufferData = new double[byteArr.length];
+
+							    for (int index = 0, floatIndex = 0; index < arrSize - bytesPerSample + 1; index += bytesPerSample, floatIndex++) {
+					 	        double sample = 0;
+					 	        for (int b = 0; b < bytesPerSample; b++) {
+					 	            int v = byteArr[index + b];
+					 	            if (b < bytesPerSample - 1 || bytesPerSample == 1) {
+					 	                v &= 0xFF;
+					 	            }
+					 	            sample += v << (b * 8);
+					 	        }
+					 	        double sample32 = amplification * (sample / 32768.0);
+					 	        micBufferData[floatIndex] = sample32;
+					 	    }
+				 				
+			 			    final Complex[] data = new Complex[arrSize];
+						    for (int c=0; c<arrSize; c++)
+						    {
+						        data[c] = new Complex(micBufferData[c], 0);
+						    }
+						    
+						    Complex[] array = FFT.fft(data);    //calling FFT
+		
+						    for(int b = 0; b < sampleNumber; b++)
+						    {
+						    	RANGE[b] = (int)(arrSize/sampleNumber )* (b+1);
+						    }
+						    RANGE[sampleNumber-1] = arrSize-1;
+						    
+						    for (int freq = 0; freq < arrSize-1; freq++) {
+				    		    //Get the magnitude:
+				    		    double mag = array[freq].abs(); //+ 1;
+				    		    //Find out which range we are in:
+				    		    int index = getIndex(freq);
+
+				    		    //Save the highest magnitude and corresponding frequency:
+				    		    if (mag > highscores[index]) {
+				    		        highscores[index] = mag;
+				    		        recordPoints[index] = freq;
+				    		    }
+						    }
+						    saveVoicePoints(highscores, recordPoints);
+						   // getWavArray();
+						    		//LOG the points 
+						    		for (int c = 0; c < recordPoints.length; c++)
+						    		{
+						    		    Log.d("LAALLALALA", "LOCATION: "+recordPoints[c] + " MAG: "+highscores[c]);
+						    		}
+				 			      }
+				 			});
+						t2.start();
+
+					// Write and play
+			        int i = 0;
 		 	        FileInputStream fin = new FileInputStream(filepath + "/initialSource.wav");
 		 	        DataInputStream dis = new DataInputStream(fin);
-		 	       
+
 		 	        at.play();
-		 	        while((i = dis.read(s, 0, bufferSize)) > -1){
+		 	        while((i = dis.read(s, 0, bufferSize)) > -1)
+		 	        {
 		 	            at.write(s, 0, i);
-		 	            
-		 	           Thread t2 = new Thread(new Runnable() {
-
-		 			      @Override
-		 			      public void run() {
-		 			        //getSamples();
-		 	      
-				 	    for (int index = 0, floatIndex = 0; index < s.length - bytesPerSample + 1; index += bytesPerSample, floatIndex++) {
-				 	        double sample = 0;
-				 	        for (int b = 0; b < bytesPerSample; b++) {
-				 	            int v = s[index + b];
-				 	            if (b < bytesPerSample - 1 || bytesPerSample == 1) {
-				 	                v &= 0xFF;
-				 	            }
-				 	            sample += v << (b * 8);
-				 	        }
-				 	        double sample32 = amplification * (sample / 32768.0);
-				 	        micBufferData[floatIndex] = sample32;
-				 	    }
-				 	    
-					    for (int a=0; a<bufferSize; a++)
-					    {
-					        data[a] = new Complex(micBufferData[a], 0);
-					    }
-					    
-					    Complex[] array = FFT.fft(data);    //calling FFT
-				
-					    for (int freq = 0; freq < 8192-1; freq++) {
-					    		    //Get the magnitude:
-					    		    double mag = array[freq].abs(); //+ 1;
-					    		    //Find out which range we are in:
-					    		    int index = getIndex(freq);
-					    		 
-					    		    //Save the highest magnitude and corresponding frequency:
-					    		    if (mag > highscores[index]) {
-					    		        highscores[index] = mag;
-					    		        recordPoints[index] = freq;
-					    		    }
-					    		}
-					    	 
-					    		//LOG the points 
-					    		for (int a = 0; a < recordPoints.length; a++) {
-					    		    Log.d("LAALLALALA", "LOCATION: "+recordPoints[a] + " MAG: "+highscores[a]);
-					    		}	 
-		 			     }
-					    });
-					    t2.start();
 		 	        }
-		 	         
-		 	        at.stop();
-		 	        at.release();
-		 	        dis.close();
-		 	        fin.close();
-
-		 	    } catch (FileNotFoundException e) {
-		 	        // TODO
-		 	        e.printStackTrace();
-		 	    } catch (IOException e) {
-		 	        // TODO
-		 	        e.printStackTrace();
-		 	    }       
-	
+					    at.stop();
+			 	        at.release();
+				        dis.close();   
+			}
+			catch (FileNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			}
 	    }
 		String filePath;
 		
+		public void saveVoicePoints(double[] highscore, double[] record)
+		{
+			//Full, save the array
+			try {
+				String space = " ";
+	        	FileOutputStream fos = openFileOutput("voiceGraph", Context.MODE_PRIVATE);
+		        for(int i = 0; i<highscore.length; i++)
+		        {
+		        	try {
+						fos.write(( highscore[i] + "," + record[i] + space).getBytes());
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+		        }
+	        	try {
+		        		fos.close();
+		        		fos = null;
+		        	} 
+		        	catch (IOException e) {
+		        		e.printStackTrace();
+		        	}
+	        	} 
+	        catch (FileNotFoundException e1) {
+	        	e1.printStackTrace();
+	        	}
+		}
+		
+		public void getWavArray(){
+			try {
+				File file = getBaseContext().getFileStreamPath("voiceGraph");
+				Scanner sc = new Scanner(new File(file.getAbsolutePath()));
+				String line = sc.nextLine();			
+				String[] wavFile = line.split("\\s+");
+				
+					for(int i = 0; i < wavFile.length; i ++)
+					{
+						Log.d("sup", "" + wavFile[i]);
+					}
+			
+			}
+	        catch (FileNotFoundException e1) {
+	        	e1.printStackTrace();
+	        	}
+		}
+		
 		//Find out in which range
-		public static final int[] RANGE = new int[] {1000,2000,3000,4000,5000,6000,7000, 8192+1};
+		public static final int[] RANGE = new int[sampleNumber];
 		public static int getIndex(int freq) {
 		    int i = 0;
 		    while(RANGE[i] < freq) i++;
@@ -359,17 +422,6 @@ public class RecordVoice extends Activity{
 	  public void onResume() {
 	    super.onResume();
 	    inRecordMode = false;
-	    
-
-
-	    /*Thread t = new Thread(new Runnable() {
-
-	      @Override
-	      public void run() {
-	        getSamples();
-	      }
-	    });
-	    t.start();*/
 	  }
 
 	  protected void onPause() {
@@ -424,15 +476,12 @@ public class RecordVoice extends Activity{
 	    }
 	  }
 	  
-	  	byte[] totalBuffer;
 		private RandomAccessFile randomAccessWriter;
 
 		
 	  private void getSamples() {
 	    if(mAudioRecord == null) return;
-	  //  byte[] buffer = new byte[mAudioBufferSampleSize];
-	    short[] buffer = new short[mAudioBufferSampleSize];
-	    totalBuffer = new byte[1];
+	    byte[] buffer = new byte[mAudioBufferSampleSize];
 	    mAudioRecord.startRecording();
 	    int audioRecordingState = mAudioRecord.getRecordingState();
 	    if(audioRecordingState != AudioRecord.RECORDSTATE_RECORDING) {
@@ -440,99 +489,67 @@ public class RecordVoice extends Activity{
 	    }
 	    while(inRecordMode)
 	    {
-	      int samplesRead =  mAudioRecord.read(buffer, 0, mAudioBufferSampleSize);
-	      Log.d("HOW MANY ARE READDDDDDDD", ""+samplesRead);
-	      /*  if(totalBuffer.length  >= mAudioBufferSampleSize)
-	        {
-		        byte[] tempBuffer = new byte[totalBuffer.length];
-		        tempBuffer = totalBuffer;
-		        totalBuffer = new byte[totalBuffer.length + samplesRead];
-		        for(int i = 0; i < tempBuffer.length; i++)
-		        {
-		        	totalBuffer[i] = tempBuffer[i];
-		        }
-		        for(int i = 0; i < samplesRead; i++)
-		        {
-		        	totalBuffer[i+tempBuffer.length] = buffer[i];
-		        }
-	        }
-	        else
-	        {
-	        	totalBuffer = new byte[mAudioBufferSampleSize];
-	        	totalBuffer = buffer;
-	        }*/
-	        
-	        
-	        try {
-				//randomAccessWriter.write(buffer);
-	        	ByteBuffer myByteBuffer = ByteBuffer.allocate(mAudioBufferSampleSize*2);
-	        	myByteBuffer.order(ByteOrder.LITTLE_ENDIAN);
-
-	        	ShortBuffer myShortBuffer = myByteBuffer.asShortBuffer();
-	        	myShortBuffer.put(buffer);
-
-	        	FileChannel out = new FileOutputStream(filePath).getChannel();
-	        	out.write(myByteBuffer);
-	        	out.close();
-
+	    	int samplesRead =  mAudioRecord.read(buffer, 0, mAudioBufferSampleSize);
+		    Log.d("HOW MANY ARE READDDDDDDD", ""+samplesRead);
+		    try {
+				randomAccessWriter.write(buffer);
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} 
 	    }
 	    
-		/*try {
+		try {
 			randomAccessWriter.seek(0);
 			randomAccessWriter.close();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}*/
+		}
 	    
 	  }
-
-	 	
-	    	@Override 
-	        public boolean onTouchEvent(MotionEvent event){ 
-	            this.mDetector.onTouchEvent(event);
-	            if(event.getAction() == MotionEvent.ACTION_UP) {
-	                if(isScrolling ) {
-	                    isScrolling  = false;
-	                    startPlaying();
-	                };
-	            }
-	            return super.onTouchEvent(event);
-	        }
-	    	
-	    	public class MyGestureListener extends GestureDetector.SimpleOnGestureListener {
-	    		  @SuppressLint("NewApi")
-	    		@Override
-	    		    public boolean onSingleTapConfirmed(MotionEvent event) {
-	    			  if(!isRecording)
-	    			  {
-	    				  isRecording = true;
-	    				  startRecord();
-	    			  }
-	    			  else
-	    			  {
-	    				  isRecording = false;
-	    				  stopRecord();
-	    			  }
-	    			    
-	    			    Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-	    		    	if( v.hasVibrator()) {
-	    					 v.vibrate(50);
-	    		    	}
-	    		        return true;
-	    		    }
-	    	  			  
-	    		  @Override
-	    		  public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY)
-	    		  {
-	    			  isScrolling = true;
-	    			  return true;
-	    		  }		  
-	    	 }
+	  
+    	@Override 
+        public boolean onTouchEvent(MotionEvent event){ 
+            this.mDetector.onTouchEvent(event);
+            if(event.getAction() == MotionEvent.ACTION_UP) {
+                if(isScrolling ) {
+                    isScrolling  = false;
+                    startPlaying();
+                };
+            }
+            return super.onTouchEvent(event);
+        }
+    	
+    	public class MyGestureListener extends GestureDetector.SimpleOnGestureListener {
+    		  @SuppressLint("NewApi")
+    		@Override
+    		    public boolean onSingleTapConfirmed(MotionEvent event) {
+    			  if(!isRecording)
+    			  {
+    				  isRecording = true;
+    				  startRecord();
+    			  }
+    			  else
+    			  {
+    				  isRecording = false;
+    				  stopRecord();
+    			  }
+    			    
+    			    Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+    		    	if( v.hasVibrator()) {
+    					 v.vibrate(50);
+    		    	}
+    		        return true;
+    		    }
+    	  			  
+    		  @Override
+    		  public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY)
+    		  {
+    			  isScrolling = true;
+    			  return true;
+    		  }		  
+    	 }
 	}
 	 
 	
