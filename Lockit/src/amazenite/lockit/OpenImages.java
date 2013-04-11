@@ -37,12 +37,11 @@ public class OpenImages extends Activity {
 	 private static final int CROP_FROM_CAMERA = 2;
 	 private static final int PICK_FROM_FILE = 3;
 	 private Bitmap photo = null;
-	 
+	 private AlertDialog dialog;
 
 	 @Override
 	 protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_lockit);
 	}
 	 
 	 public void getPreview(){
@@ -63,19 +62,27 @@ public class OpenImages extends Activity {
 			    }
 		    }
 	    }
-
+	 
+	 @Override
+	public void onPause() 
+	{
+		 super.onPause();
+		 getPreview();
+		 //finish();
+		 dialog.dismiss();
+	}
+	 	
 	 
 		@Override
 		public void onResume() 
 		{
-			
 			super.onResume();
+	        setContentView(R.layout.activity_lockit);
 			getPreview();
 			//crop image
 		    final String [] items   = new String [] {"Take Picture with Camera", "Select Picture from Gallery"};    
 		    ArrayAdapter<String> adapter = new ArrayAdapter<String> (this, android.R.layout.select_dialog_item,items);
 		    AlertDialog.Builder builder  = new AlertDialog.Builder(this);
-		    
 		    //Empty is if there are no pictures in the SDCard file
 		    //final boolean empty = imageAdapt.empty;
 		    final boolean empty = !(android.os.Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED));
@@ -111,7 +118,7 @@ public class OpenImages extends Activity {
 				   }
 			   	} );
 		
-			   	final AlertDialog dialog = builder.create();
+			   	dialog = builder.create();
 			   	dialog.setOnKeyListener(new Dialog.OnKeyListener() {
 
 		            @Override
@@ -120,13 +127,12 @@ public class OpenImages extends Activity {
 		                // TODO Auto-generated method stub
 		                if (keyCode == KeyEvent.KEYCODE_BACK) {
 		                    finish();
-		                    Log.d("back pressed????", "plz work");
-		             //       alert.dismiss();
 		                }
 		                return true;
 		            }
 		        });
 			  	dialog.show();
+			  	dialog.setCanceledOnTouchOutside(false);
 		    }
 		    else
 		    {

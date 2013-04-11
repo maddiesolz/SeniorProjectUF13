@@ -152,9 +152,4 @@ import android.widget.Toast;
 	        	Constants.gestureColor = color;
 	        }
 	        
-	        @Override
-	   	 public void onBackPressed() {
-	       	Toast.makeText(ColorSelection.this, "" + "back pressed", Toast.LENGTH_SHORT).show();
-	   	    ColorSelection.super.onBackPressed();
-	   	 }
 	}

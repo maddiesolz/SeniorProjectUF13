@@ -49,20 +49,20 @@ public class ColorPickerActivity extends Activity implements
 
         @Override
         protected void onCreate(Bundle savedInstanceState) {
-                // To fight color branding.
-                getWindow().setFormat(PixelFormat.RGBA_8888);
+            // To fight color branding.
+            getWindow().setFormat(PixelFormat.RGBA_8888);
 
-                super.onCreate(savedInstanceState);
-                setContentView(R.layout.activity_color_picker);
+            super.onCreate(savedInstanceState);
+            setContentView(R.layout.activity_color_picker);
 
-                Bundle b = getIntent().getExtras();
-                int initialColor = 0xff000000;
+            Bundle b = getIntent().getExtras();
+            int initialColor = 0xff000000;
 
-                if (b != null) {
-                        initialColor = b.getInt(INTENT_DATA_INITIAL_COLOR);
-                }
+            if (b != null) {
+                    initialColor = b.getInt(INTENT_DATA_INITIAL_COLOR);
+            }
 
-                setUp(initialColor);
+            setUp(initialColor);
 
         }
 

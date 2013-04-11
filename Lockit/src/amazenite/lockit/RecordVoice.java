@@ -31,183 +31,145 @@ import java.util.Scanner;
 
 public class RecordVoice extends Activity{
 
- 	/*
- 	private ExtAudioRecorder audioRecorder;
-	private String mFileName = "";
-	private MediaPlayer mPlayer = null;
-	private boolean isRecording = false;
-	private boolean hasRecorded = false;
-    private boolean isScrolling = false;
-	private byte[] initialArray = new byte[30];
-	private byte[] testArray = new byte[300];
+ 	
+// 	private ExtAudioRecorder audioRecorder;
+//	private MediaPlayer mPlayer = null;
+//	private boolean isRecording = false;
+//    private boolean hasRecorded = false;
+//    private boolean isScrolling = false;
+//	private byte[] initialArray = new byte[30];
+//	private byte[] testArray = new byte[300];
 
 
     
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_record_voice);
-		audioRecorder = ExtAudioRecorder.getInstanse(false);	  
-		mDetector = new GestureDetectorCompat(this, new MyGestureListener());
+//	protected void onCreate(Bundle savedInstanceState) {
+//		super.onCreate(savedInstanceState);
+//		setContentView(R.layout.activity_record_voice);
+//		audioRecorder = ExtAudioRecorder.getInstanse(false);	  
+//		mDetector = new GestureDetectorCompat(this, new MyGestureListener());
+//	
+//	}
+//
+//	 @Override 
+//	    public boolean onTouchEvent(MotionEvent event){ 
+//	        this.mDetector.onTouchEvent(event);
+//	        if(event.getAction() == MotionEvent.ACTION_UP) {
+//	            if(isScrolling ) {
+//	                isScrolling  = false;
+//	                startPlaying();
+//	            };
+//	        }
+//	        return super.onTouchEvent(event);
+//	    }
+//	
+//	public void startRecord()
+//	{
+//		final Toast toast = Toast.makeText(getApplicationContext(), "start record", Toast.LENGTH_SHORT);
+// 	    toast.show();
+//		mFileName = Environment.getExternalStorageDirectory().getAbsolutePath();
+//		if(Constants.voiceOriginalRecord)
+//		{
+//			mFileName += "/initialSource.wav";
+//			Constants.voiceOriginalRecord = true;
+//		}
+//		else
+//		{
+//			mFileName += "/testSource.wav";
+//		}
+//		audioRecorder.setOutputFile(mFileName);
+//		audioRecorder.prepare();
+//		audioRecorder.start();
+//	}
+//	
+//	public void stopRecord()
+//	{
+//		 final Toast toast = Toast.makeText(getApplicationContext(), "stop record", Toast.LENGTH_SHORT);
+//	 	    toast.show();
+//		audioRecorder.stop();
+//		audioRecorder.release();
+//		audioRecorder.reset();
+//		hasRecorded = true;
+//		
+//		mFileName = Environment.getExternalStorageDirectory().getAbsolutePath();
+//		if(Constants.voiceOriginalRecord)
+//		{
+//			mFileName += "/initialSource.wav";
+//			convertWav(mFileName,"initial");
+//		}
+//		else
+//		{
+//			mFileName += "/testSource.wav";
+//			convertWav(mFileName,"test");
+//		}
+//	}
 	
-	}
-
-	 @Override 
-	    public boolean onTouchEvent(MotionEvent event){ 
-	        this.mDetector.onTouchEvent(event);
-	        if(event.getAction() == MotionEvent.ACTION_UP) {
-	            if(isScrolling ) {
-	                isScrolling  = false;
-	                startPlaying();
-	            };
-	        }
-	        return super.onTouchEvent(event);
-	    }
-	
-	public void startRecord()
-	{
-		 final Toast toast = Toast.makeText(getApplicationContext(), "start record", Toast.LENGTH_SHORT);
- 	    toast.show();
-		mFileName = Environment.getExternalStorageDirectory().getAbsolutePath();
-		if(Constants.voiceOriginalRecord)
-		{
-			mFileName += "/initialSource.wav";
-			Constants.voiceOriginalRecord = true;
-		}
-		else
-		{
-			mFileName += "/testSource.wav";
-		}
-		audioRecorder.setOutputFile(mFileName);
-		audioRecorder.prepare();
-		audioRecorder.start();
-	}
-	
-	public void stopRecord()
-	{
-		 final Toast toast = Toast.makeText(getApplicationContext(), "stop record", Toast.LENGTH_SHORT);
-	 	    toast.show();
-		audioRecorder.stop();
-		audioRecorder.release();
-		audioRecorder.reset();
-		hasRecorded = true;
-		
-		mFileName = Environment.getExternalStorageDirectory().getAbsolutePath();
-		if(Constants.voiceOriginalRecord)
-		{
-			mFileName += "/initialSource.wav";
-			convertWav(mFileName,"initial");
-		}
-		else
-		{
-			mFileName += "/testSource.wav";
-			convertWav(mFileName,"test");
-		}
-	}
-	
-	public void startPlaying() {
-		 final Toast toast = Toast.makeText(getApplicationContext(), "play record", Toast.LENGTH_SHORT);
-	 	    toast.show();
-        mPlayer = new MediaPlayer();
-        try {
-        	mFileName = Environment.getExternalStorageDirectory().getAbsolutePath();
-    		if(Constants.voiceOriginalRecord)
-    		{
-    			mFileName += "/initialSource.wav";
-    		}
-    		else
-    		{
-    			if(hasRecorded)
-    			{
-    				mFileName += "/testSource.wav";
-    			}
-    		}
-            mPlayer.setDataSource(mFileName);
-            mPlayer.prepare();
-            mPlayer.start();
-            
-           if(!(mPlayer.isPlaying()))
-            		{
-            mPlayer.release();
-            mPlayer.reset();
-            		}
-
-        } catch (IOException e) {
-            Log.d("media player", "prepare() failed");
-        }
-    }
-	
-	public void convertWav(String path, String type)
-	{
-		/*FileInputStream fis;
-
-		try {
-			fis = new FileInputStream(path);
-			try {
-				if(type.equals("initial"))
-				{
-					fis.read(initialArray);
-					fis.close();
-				}
-				else {
-					fis.read(testArray);
-					fis.close();
-				}
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}*/
-		
-	/*	ByteArrayOutputStream out = new ByteArrayOutputStream();
-		BufferedInputStream in;
-		try {
-			in = new BufferedInputStream(new FileInputStream(path));
-			int read;
-			byte[] buff = new byte[30];
-			try {
-				while ((read = in.read(buff)) > 0)
-				{
-				    out.write(buff, 0, read);
-				}
-				out.flush();
-
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			initialArray = out.toByteArray();
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} ssjdklfjlskd
-
-		
-		Log.d("HOW LONG IS IT? ", ""+initialArray.length);
-		for(int i = 0; i < initialArray.length; i ++)
-		{
-			Log.d("whats in init", "" + initialArray[i]);
-		}
-	}
-	*/
-	
+//	public void startPlaying() {
+//		 final Toast toast = Toast.makeText(getApplicationContext(), "play record", Toast.LENGTH_SHORT);
+//	 	    toast.show();
+//        mPlayer = new MediaPlayer();
+//        try {
+//        	mFileName = Environment.getExternalStorageDirectory().getAbsolutePath();
+//    		if(Constants.voiceOriginalRecord)
+//    		{
+//    			mFileName += "/initialSource.wav";
+//    		}
+//    		else
+//    		{
+//    			if(hasRecorded)
+//    			{
+//    				mFileName += "/testSource.wav";
+//    			}
+//    		}
+//            mPlayer.setDataSource(mFileName);
+//            mPlayer.prepare();
+//            mPlayer.start();
+//            
+//           if(!(mPlayer.isPlaying()))
+//            		{
+//            mPlayer.release();
+//            mPlayer.reset();
+//            		}
+//
+//        } catch (IOException e) {
+//            Log.d("media player", "prepare() failed");
+//        }
+//    }
+//	
 
 	  private int mAudioBufferSize;
 	  private int mAudioBufferSampleSize;
-
 	  private AudioRecord mAudioRecord;
 	  private boolean inRecordMode = false;
 	  private GestureDetectorCompat mDetector;
  	  private boolean isScrolling = false;
       private boolean isRecording = false;
+      private boolean hasRecorded = false;
+      String filePath;
 
 	  public void onCreate(Bundle savedInstanceState) {
 	    super.onCreate(savedInstanceState);
 		mDetector = new GestureDetectorCompat(this, new MyGestureListener());
 	    initAudioRecord();
+	    checkIfHasRecorded();
 	 }
+	  
+	  public void checkIfHasRecorded()
+	  {
+		  filePath = Environment.getExternalStorageDirectory().getAbsolutePath();
+		  filePath += "/initialSource.wav";
+	
+		    File file = new File(filePath);
+		    if(file.exists())
+		    {
+		    	hasRecorded = true;
+		    }
+		    else
+		    {
+		    	final Toast toast = Toast.makeText(getApplicationContext(), "Please go back and set the voice password", Toast.LENGTH_SHORT);
+		 	    toast.show();
+		    }
+		  
+	  }
 
 	  public void startRecord()
 		{
@@ -215,9 +177,20 @@ public class RecordVoice extends Activity{
 	 	    toast.show();
 	 	    inRecordMode = true;
 	 	    
-	 	    filePath = Environment.getExternalStorageDirectory().getAbsolutePath();
-		    filePath += "/initialSource.wav";
-		    
+	 	   filePath = Environment.getExternalStorageDirectory().getAbsolutePath();
+	 	    
+			if(Constants.inSetVoice)
+			{
+				filePath += "/initialSource.wav";
+			}
+			else
+			{
+				if(hasRecorded)
+				{
+					filePath += "/testSource.wav";
+				}
+			}
+	 	    
 		    File file = new File(filePath);
 		    if(file.exists())
 		    {
@@ -244,27 +217,49 @@ public class RecordVoice extends Activity{
 			 final Toast toast = Toast.makeText(getApplicationContext(), "stop record", Toast.LENGTH_SHORT);
 		 	    toast.show();
 		 	    inRecordMode = false;
+				
+				filePath = Environment.getExternalStorageDirectory().getAbsolutePath();
+				if(Constants.inSetVoice)
+				{
+					filePath += "/initialSource.wav";
+				}
+				else
+				{ 
+					filePath += "/testSource.wav";
+				}
+		 	    
 			    mAudioRecord.stop();
 		}
 		
-		static int sampleNumber = 1000;
+		static int sampleNumber = 500;
+		
+	    @SuppressWarnings("deprecation")
 		public void startPlaying() {
 			if(inRecordMode==false) {
 				final Toast toast = Toast.makeText(getApplicationContext(), "play record", Toast.LENGTH_SHORT);
 		 	    toast.show();
-		 	    @SuppressWarnings("deprecation")
 				int minBufferSize = AudioTrack.getMinBufferSize(8000, AudioFormat.CHANNEL_CONFIGURATION_MONO, AudioFormat.ENCODING_PCM_16BIT);
-				@SuppressWarnings("deprecation")
 				AudioTrack at =  new AudioTrack(AudioManager.STREAM_MUSIC, 8000, AudioFormat.CHANNEL_CONFIGURATION_MONO, AudioFormat.ENCODING_PCM_16BIT, minBufferSize, AudioTrack.MODE_STREAM);
 		 	    final int bufferSize = 8192;//8192;
 		 	    String filepath = Environment.getExternalStorageDirectory().getAbsolutePath();
-		 	    File file = new File(filepath + "/initialSource.wav");
+	    		if(Constants.inSetVoice)
+	    		{
+	    			filepath += "/initialSource.wav";
+	    		}
+	    		else
+	    		{
+	    			if(hasRecorded)
+	    			{
+	    				filepath += "/testSource.wav";
+	    			}
+	    		}
+	    		
+		 	    File file = new File(filepath);
 		 	    final byte[]s = new byte[bufferSize];
 			    final double[] highscores = new double[sampleNumber];
 			    final double[] recordPoints = new double[sampleNumber];
 		        final int bytesPerSample = 2; // As it is 16bit PCM
 		 	    final double amplification = 100.0; // choose a number as you like
-
 
 			try {
 			 	  int  x = (int)(file.length());//in.read(myByteBuffer);
@@ -341,7 +336,7 @@ public class RecordVoice extends Activity{
 
 					// Write and play
 			        int i = 0;
-		 	        FileInputStream fin = new FileInputStream(filepath + "/initialSource.wav");
+		 	        FileInputStream fin = new FileInputStream(filepath);
 		 	        DataInputStream dis = new DataInputStream(fin);
 
 		 	        at.play();
@@ -362,14 +357,21 @@ public class RecordVoice extends Activity{
 			}
 			}
 	    }
-		String filePath;
 		
 		public void saveVoicePoints(double[] highscore, double[] record)
 		{
 			//Full, save the array
 			try {
 				String space = " ";
-	        	FileOutputStream fos = openFileOutput("voiceGraph", Context.MODE_PRIVATE);
+				FileOutputStream fos;
+				if(Constants.inSetVoice)
+				{
+					 fos = openFileOutput("setVoice", Context.MODE_PRIVATE);
+				}
+				else
+				{
+					 fos = openFileOutput("testVoice", Context.MODE_PRIVATE);
+				}
 		        for(int i = 0; i<highscore.length; i++)
 		        {
 		        	try {
@@ -394,7 +396,15 @@ public class RecordVoice extends Activity{
 		
 		public void getWavArray(){
 			try {
-				File file = getBaseContext().getFileStreamPath("voiceGraph");
+				File file;
+				if(Constants.inSetVoice)
+				{
+					 file = getBaseContext().getFileStreamPath("setVoice");
+				}
+				else
+				{
+					 file = getBaseContext().getFileStreamPath("testVoice");
+				}
 				Scanner sc = new Scanner(new File(file.getAbsolutePath()));
 				String line = sc.nextLine();			
 				String[] wavFile = line.split("\\s+");
@@ -476,9 +486,7 @@ public class RecordVoice extends Activity{
 	    }
 	  }
 	  
-		private RandomAccessFile randomAccessWriter;
-
-		
+	  private RandomAccessFile randomAccessWriter;
 	  private void getSamples() {
 	    if(mAudioRecord == null) return;
 	    byte[] buffer = new byte[mAudioBufferSampleSize];

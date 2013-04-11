@@ -29,14 +29,14 @@ public class VoiceSettings extends Activity {
 	
 	public void recordVoice(View view)
 	{
-		Constants.voiceOriginalRecord = true;
+		Constants.inSetVoice = true;
 		Intent intent = new Intent(this, RecordVoice.class);
 		startActivity(intent);
 	}
 	
 	public void testVoice(View view)
 	{
-		Constants.voiceOriginalRecord = false;
+		Constants.inSetVoice = false;
 		Intent intent = new Intent(this, RecordVoice.class);
 		startActivity(intent);
 	}
