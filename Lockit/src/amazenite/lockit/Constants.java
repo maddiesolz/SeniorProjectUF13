@@ -10,4 +10,13 @@ public class Constants
         static boolean gestureVisibility = true;
         static int gestureColor = -1644123449;
         static int gestureCount = 3;
+        static double[] originalMagnitude = new double [0];
+        static double[] originalLocation = new double [0];
+        static double[] testMagnitude = new double [0];
+        static double[] testLocation = new double [0];
+		public static boolean inTestPic = false;
+		public static boolean inTestVoice = false;
+		public static boolean inOpenImages = false;
+		public static boolean picPasswordSet = false;
+		public static boolean picPasswordHasTested = false;
 }

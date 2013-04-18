@@ -30,126 +30,143 @@ import android.widget.Toast;
 	 * limitations under the License.
 	 */
 
-	public class ColorSelection extends PreferenceActivity implements
-	                Preference.OnPreferenceClickListener {
+public class ColorSelection extends PreferenceActivity implements Preference.OnPreferenceClickListener {
 
         private final static int ACTIVITY_COLOR_PICKER_REQUEST_CODE = 1000;
-
         private Preference mDialogPreference;
         private Preference mActivityPreference;
         private Preference mGetSourceCodePreference;
         private int chosenColor = 0xff33CCCC;  //default color
+        private ColorPickerDialog d;
+        
+        @SuppressWarnings("deprecation")
+		@Override
+        public void onCreate(Bundle savedInstanceState)
+        {
+                super.onCreate(savedInstanceState);
+                getWindow().setFormat(PixelFormat.RGBA_8888);
 
-	        @SuppressWarnings("deprecation")
-			@Override
-	        public void onCreate(Bundle savedInstanceState)
-	        {
-	                super.onCreate(savedInstanceState);
-	                getWindow().setFormat(PixelFormat.RGBA_8888);
+                addPreferencesFromResource(R.xml.color_selection);
+                final SharedPreferences prefs = PreferenceManager .getDefaultSharedPreferences(ColorSelection.this);
+                d = new ColorPickerDialog(this, prefs.getInt("dialog", 0xffffffff));
+                d.setAlphaSliderVisible(true);
+                d.setOnCancelListener(new DialogInterface.OnCancelListener()
+        	    {
+        	        @Override
+        			public
+        	        void onCancel(DialogInterface dialog)
+        	        {
+        	             ColorSelection.this.finish();
+        			     Intent goBackMain = new Intent(ColorSelection.this,Lockit.class);
+        			     startActivity(goBackMain); 
+        		        
+        	        }
+        	    });
 
-	                addPreferencesFromResource(R.xml.color_selection);
-	                final SharedPreferences prefs = PreferenceManager .getDefaultSharedPreferences(ColorSelection.this);
-	                final ColorPickerDialog d = new ColorPickerDialog(this, prefs.getInt("dialog", 0xffffffff));
-	                d.setAlphaSliderVisible(true);
-	                d.setOnCancelListener(new DialogInterface.OnCancelListener()
-	        	    {
-	        	        @Override
-	        			public
-	        	        void onCancel(DialogInterface dialog)
-	        	        {
-	        	             ColorSelection.this.finish();
-	        	        }
-	        	    });
+                d.setButton("Ok", new DialogInterface.OnClickListener()
+                {
 
-                    d.setButton("Ok", new DialogInterface.OnClickListener()
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) 
                     {
+                            SharedPreferences.Editor editor = prefs.edit();
+                            editor.putInt("dialog", d.getColor());
+                            chosenColor = d.getColor();
+                            saveColor(chosenColor);
+                            editor.commit();	
+                            ColorSelection.this.finish();
+                            Intent goBackMain = new Intent(ColorSelection.this,Lockit.class);
+  	        			     startActivity(goBackMain); 
+                    }
+                });
 
-	                    @Override
-	                    public void onClick(DialogInterface dialog, int which) 
-	                    {
-	                            SharedPreferences.Editor editor = prefs.edit();
-	                            editor.putInt("dialog", d.getColor());
-	                            chosenColor = d.getColor();
-	                            saveColor(chosenColor);
-	                            editor.commit();	
-	                            finish();
-	                    }
-                    });
+                d.setButton2("Cancel", new DialogInterface.OnClickListener() {
 
-                    d.setButton2("Cancel", new DialogInterface.OnClickListener() {
-	
-	                    @Override
-	                    public void onClick(DialogInterface dialog, int which)
-	                    {
-	                    		finish();
-	                    }
-                    });
+                    @Override
+                    public void onClick(DialogInterface dialog, int which)
+                    {
+                    	ColorSelection.this.finish();
+        			     Intent goBackMain = new Intent(ColorSelection.this,Lockit.class);
+        			     startActivity(goBackMain); 
+                    }
+                });
 
-                    d.show();
+                d.show();
 
-	        }
+        }
 
-	        @SuppressWarnings("deprecation")
-			@Override
-	        public boolean onPreferenceClick(Preference preference) {
+        @SuppressWarnings("deprecation")
+		@Override
+        public boolean onPreferenceClick(Preference preference) {
 
-	                final SharedPreferences prefs = PreferenceManager
-	                                .getDefaultSharedPreferences(ColorSelection.this);
-	                String key = preference.getKey();
+                final SharedPreferences prefs = PreferenceManager
+                                .getDefaultSharedPreferences(ColorSelection.this);
+                String key = preference.getKey();
 
-	                if (key.equals("dialog")) {
+                if (key.equals("dialog")) {
 
-	                        final ColorPickerDialog d = new ColorPickerDialog(this, prefs
-	                                        .getInt("dialog", 0xffffffff));
-	                        d.setAlphaSliderVisible(true);
+                        final ColorPickerDialog d = new ColorPickerDialog(this, prefs
+                                        .getInt("dialog", 0xffffffff));
+                        d.setAlphaSliderVisible(true);
 
-	                        d.setButton("Ok", new DialogInterface.OnClickListener() {
+                        d.setButton("Ok", new DialogInterface.OnClickListener() {
 
-	                                @Override
-	                                public void onClick(DialogInterface dialog, int which) {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
 
-	                                        SharedPreferences.Editor editor = prefs.edit();
-	                                        editor.putInt("dialog", d.getColor());
-	                                        editor.commit();
+                                        SharedPreferences.Editor editor = prefs.edit();
+                                        editor.putInt("dialog", d.getColor());
+                                        editor.commit();
+                                }
+                        });
 
-	                                }
-	                        });
+                        d.setButton2("Cancel", new DialogInterface.OnClickListener() {
 
-	                        d.setButton2("Cancel", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
 
-	                                @Override
-	                                public void onClick(DialogInterface dialog, int which) {
+                                }
+                        });
 
-	                                }
-	                        });
+                        d.show();
 
-	                        d.show();
+                        return true;
+                } 
 
-	                        return true;
-	                } 
+                return false;
+        }
 
-	                return false;
-	        }
+        @Override
+        protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-	        @Override
-	        protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+                if (requestCode == ACTIVITY_COLOR_PICKER_REQUEST_CODE
+                                && resultCode == Activity.RESULT_OK) {
 
-	                if (requestCode == ACTIVITY_COLOR_PICKER_REQUEST_CODE
-	                                && resultCode == Activity.RESULT_OK) {
-
-	                        SharedPreferences customSharedPreference = PreferenceManager
-	                                        .getDefaultSharedPreferences(ColorSelection.this);
-	                        SharedPreferences.Editor editor = customSharedPreference.edit();
-	                        editor.putInt("activity", data.getIntExtra(
-	                                        ColorPickerActivity.RESULT_COLOR, 0xff000000));
-	                        editor.commit();
-	                }
-	        }
-	        
-	        public void saveColor(int color)
-	        {
-	        	Log.d("save color", "" + color);
-	        	Constants.gestureColor = color;
-	        }
-	        
-	}
+                        SharedPreferences customSharedPreference = PreferenceManager
+                                        .getDefaultSharedPreferences(ColorSelection.this);
+                        SharedPreferences.Editor editor = customSharedPreference.edit();
+                        editor.putInt("activity", data.getIntExtra(
+                                        ColorPickerActivity.RESULT_COLOR, 0xff000000));
+                        editor.commit();
+                }
+        }
+        
+        public void saveColor(int color)
+        {
+        	Constants.gestureColor = color;
+        }
+        
+        @Override
+    	public void onPause() 
+    	{
+        	super.onPause();
+        	 if (ScreenReceiver.wasScreenOn) {
+        		 d.dismiss();
+    			 finish();
+    		 }
+        	 else
+        	 {
+    			 d.dismiss();
+        	 }
+    	}
+}

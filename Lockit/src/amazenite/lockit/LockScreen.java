@@ -2,27 +2,37 @@ package amazenite.lockit;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.lang.reflect.Method;
 import java.util.Scanner;
 
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.os.Vibrator;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.ComponentName;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Paint.Style;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.GestureDetector;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.support.v4.view.GestureDetectorCompat;
 import android.widget.Toast;
+
+
 
 public class LockScreen extends Activity {	
 	
@@ -45,6 +55,7 @@ public class LockScreen extends Activity {
  	private boolean isVisible = true;
  	private int chosenColor;
 
+
 	
 	@Override
 	@SuppressLint("NewApi")
@@ -58,9 +69,10 @@ public class LockScreen extends Activity {
 		 graphView = new GraphicView(this);
 		 counter = 0;
 		
-		 requestWindowFeature(Window.FEATURE_NO_TITLE);
+		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		 getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
 		                      WindowManager.LayoutParams.FLAG_FULLSCREEN);
+		 
 		 
 		//Set As Background Image
 	    File file = getBaseContext().getFileStreamPath("lockimg");
@@ -87,7 +99,7 @@ public class LockScreen extends Activity {
 		getCoordinates();
 		isVisible = Constants.gestureVisibility;
 		chosenColor = Constants.gestureColor;
-		//openStatus("visible","togVisible");  //status of visibility
+
 	}
 	
 	public void loadNumberGestures()
@@ -106,11 +118,22 @@ public class LockScreen extends Activity {
 			Scanner sc = new Scanner(new File(file.getAbsolutePath()));
 			String line = sc.nextLine();			
 			String[] coordinatesFile = line.split("\\s+");
+			if(!file.exists())
+			{
+				final Toast toast = Toast.makeText(getApplicationContext(), "Please set gestures", Toast.LENGTH_SHORT);
+				toast.show();
+				finish();
+		        Intent goBackMain = new Intent(LockScreen.this,Lockit.class);
+		        startActivity(goBackMain); 
+			}
+			
 			if(coordinatesFile.length != numbers.length)
 			{
 				final Toast toast = Toast.makeText(getApplicationContext(), "Please set the correct number of gestures", Toast.LENGTH_SHORT);
 				toast.show();
 				finish();
+		        Intent goBackMain = new Intent(LockScreen.this,Lockit.class);
+		        startActivity(goBackMain); 
 			}
 			else
 			{
@@ -170,6 +193,18 @@ public class LockScreen extends Activity {
 			    	checkFinished(counter);
 				}
 			    return true;
+		    }
+
+		  
+		  @Override
+		    public void onLongPress(MotionEvent event) 
+		    {
+			  if(Constants.voiceSettingEnable)
+			  {
+				  Constants.inSetVoice = false; 
+				  Intent i=new Intent(LockScreen.this, RecordVoice.class);
+		          startActivity(i);
+			  }	
 		    }
 		  
 		  @Override
@@ -415,7 +450,18 @@ public class LockScreen extends Activity {
     		               toast.cancel(); 
     		           }
     		        }, 1000);
-	    			finish();
+    		        if (Constants.inTestPic)
+    		        {
+    		        	Constants.inTestPic = false;
+    		        	Constants.picPasswordHasTested = true;
+    		        	finish();
+    		        	Intent goBackMain = new Intent(LockScreen.this,Lockit.class);
+    		        	startActivity(goBackMain); 
+    		        }
+    		        else
+    		        {
+    		        	finish();
+    		        }
     			}
     			else
     			{
@@ -479,5 +525,38 @@ public class LockScreen extends Activity {
 	        	type = "";
 	        }	          
 	   }
+	 
+	    @Override
+	    public void onBackPressed() {
+	    	if(Constants.inTestPic)
+	    	{
+		    	Constants.inTestPic = false;
+		    	finish();
+		        Intent goBackMain = new Intent(LockScreen.this,Lockit.class);
+		        startActivity(goBackMain); 
+		        return;
+	    	}
+	    }  
+	    
+
+        @Override
+        public boolean onKeyDown(int keyCode, android.view.KeyEvent event) 
+        {
+        	
+              if((keyCode == KeyEvent.KEYCODE_HOME)){
+                   return true;
+              }
+        	
+        	return false;
+        }
+        
+        @Override
+        public void startActivity(Intent intent)
+        {
+            super.startActivity(intent);
+
+        }
+
+
 }
 

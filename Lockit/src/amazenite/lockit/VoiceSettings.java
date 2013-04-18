@@ -21,6 +21,20 @@ public class VoiceSettings extends Activity {
 		return true;
 	}
 	
+	public void enableVoice(View view)
+	{
+		Constants.voiceSettingEnable = !Constants.voiceSettingEnable;
+		
+		if(Constants.voiceSettingEnable)
+		{
+			startService(new Intent(this, myService.class));
+		}
+		else
+		{
+            stopService(new Intent(this, myService.class));
+		}
+	}
+	
 	public void pictureSettings(View view)
 	{
 		final Intent intent = new Intent(this, Lockit.class);
@@ -37,8 +51,16 @@ public class VoiceSettings extends Activity {
 	public void testVoice(View view)
 	{
 		Constants.inSetVoice = false;
+		Constants.inTestVoice = true;
 		Intent intent = new Intent(this, RecordVoice.class);
 		startActivity(intent);
 	}
+	
+    @Override
+    public void onBackPressed() {
+        Intent goBackMain = new Intent(VoiceSettings.this,Lockit.class);
+        startActivity(goBackMain); 
+        return;
+    }   
 
 }

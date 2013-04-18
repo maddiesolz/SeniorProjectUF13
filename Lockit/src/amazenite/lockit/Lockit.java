@@ -34,6 +34,7 @@ public class Lockit extends Activity {
 	/** Called when the user clicks the get image button */
 	public void viewPictures(View view) {
 	    // Do something in response to button
+		Constants.inOpenImages = true;
 		final Intent intent = new Intent(this, OpenImages.class);
 		startActivity(intent);
 	}
@@ -41,6 +42,7 @@ public class Lockit extends Activity {
 	/** Lockscreen Test Points */
 	public void debugLockscreen(View view) {
 	    // debug the lockscreen
+		Constants.inTestPic = true;
 		final Intent intent = new Intent(this, LockScreen.class);
 		startActivity(intent);
 	}
@@ -203,4 +205,11 @@ public class Lockit extends Activity {
 		final Intent intent = new Intent(this, VoiceSettings.class);
 		startActivity(intent);
 	}
+	
+    @Override
+    public void onBackPressed() 
+    {
+    		finish();
+    		return;
+    }  
 }

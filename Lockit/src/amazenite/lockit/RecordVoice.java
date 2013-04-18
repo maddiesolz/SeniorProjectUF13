@@ -3,6 +3,7 @@ package amazenite.lockit;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Vibrator;
@@ -30,112 +31,6 @@ import java.io.RandomAccessFile;
 import java.util.Scanner;
 
 public class RecordVoice extends Activity{
-
- 	
-// 	private ExtAudioRecorder audioRecorder;
-//	private MediaPlayer mPlayer = null;
-//	private boolean isRecording = false;
-//    private boolean hasRecorded = false;
-//    private boolean isScrolling = false;
-//	private byte[] initialArray = new byte[30];
-//	private byte[] testArray = new byte[300];
-
-
-    
-//	protected void onCreate(Bundle savedInstanceState) {
-//		super.onCreate(savedInstanceState);
-//		setContentView(R.layout.activity_record_voice);
-//		audioRecorder = ExtAudioRecorder.getInstanse(false);	  
-//		mDetector = new GestureDetectorCompat(this, new MyGestureListener());
-//	
-//	}
-//
-//	 @Override 
-//	    public boolean onTouchEvent(MotionEvent event){ 
-//	        this.mDetector.onTouchEvent(event);
-//	        if(event.getAction() == MotionEvent.ACTION_UP) {
-//	            if(isScrolling ) {
-//	                isScrolling  = false;
-//	                startPlaying();
-//	            };
-//	        }
-//	        return super.onTouchEvent(event);
-//	    }
-//	
-//	public void startRecord()
-//	{
-//		final Toast toast = Toast.makeText(getApplicationContext(), "start record", Toast.LENGTH_SHORT);
-// 	    toast.show();
-//		mFileName = Environment.getExternalStorageDirectory().getAbsolutePath();
-//		if(Constants.voiceOriginalRecord)
-//		{
-//			mFileName += "/initialSource.wav";
-//			Constants.voiceOriginalRecord = true;
-//		}
-//		else
-//		{
-//			mFileName += "/testSource.wav";
-//		}
-//		audioRecorder.setOutputFile(mFileName);
-//		audioRecorder.prepare();
-//		audioRecorder.start();
-//	}
-//	
-//	public void stopRecord()
-//	{
-//		 final Toast toast = Toast.makeText(getApplicationContext(), "stop record", Toast.LENGTH_SHORT);
-//	 	    toast.show();
-//		audioRecorder.stop();
-//		audioRecorder.release();
-//		audioRecorder.reset();
-//		hasRecorded = true;
-//		
-//		mFileName = Environment.getExternalStorageDirectory().getAbsolutePath();
-//		if(Constants.voiceOriginalRecord)
-//		{
-//			mFileName += "/initialSource.wav";
-//			convertWav(mFileName,"initial");
-//		}
-//		else
-//		{
-//			mFileName += "/testSource.wav";
-//			convertWav(mFileName,"test");
-//		}
-//	}
-	
-//	public void startPlaying() {
-//		 final Toast toast = Toast.makeText(getApplicationContext(), "play record", Toast.LENGTH_SHORT);
-//	 	    toast.show();
-//        mPlayer = new MediaPlayer();
-//        try {
-//        	mFileName = Environment.getExternalStorageDirectory().getAbsolutePath();
-//    		if(Constants.voiceOriginalRecord)
-//    		{
-//    			mFileName += "/initialSource.wav";
-//    		}
-//    		else
-//    		{
-//    			if(hasRecorded)
-//    			{
-//    				mFileName += "/testSource.wav";
-//    			}
-//    		}
-//            mPlayer.setDataSource(mFileName);
-//            mPlayer.prepare();
-//            mPlayer.start();
-//            
-//           if(!(mPlayer.isPlaying()))
-//            		{
-//            mPlayer.release();
-//            mPlayer.reset();
-//            		}
-//
-//        } catch (IOException e) {
-//            Log.d("media player", "prepare() failed");
-//        }
-//    }
-//	
-
 	  private int mAudioBufferSize;
 	  private int mAudioBufferSampleSize;
 	  private AudioRecord mAudioRecord;
@@ -148,6 +43,8 @@ public class RecordVoice extends Activity{
 
 	  public void onCreate(Bundle savedInstanceState) {
 	    super.onCreate(savedInstanceState);
+		  setContentView(R.layout.activity_record_voice); 
+
 		mDetector = new GestureDetectorCompat(this, new MyGestureListener());
 	    initAudioRecord();
 	    checkIfHasRecorded();
@@ -173,13 +70,10 @@ public class RecordVoice extends Activity{
 
 	  public void startRecord()
 		{
-			final Toast toast = Toast.makeText(getApplicationContext(), "start record", Toast.LENGTH_SHORT);
-	 	    toast.show();
-	 	    inRecordMode = true;
+	 	   inRecordMode = true;
 	 	    
 	 	   filePath = Environment.getExternalStorageDirectory().getAbsolutePath();
-	 	    
-			if(Constants.inSetVoice)
+	 	   if(Constants.inSetVoice)
 			{
 				filePath += "/initialSource.wav";
 			}
@@ -203,35 +97,133 @@ public class RecordVoice extends Activity{
 				e.printStackTrace();
 			}
 	 	    
-	 	   Thread t = new Thread(new Runnable() {
-	 	      @Override
-	 	      public void run() {
-	 	        getSamples();
-	 	      }
-	 	    });
-	 	    t.start();
+	 	  getSamples();
 		}
 		
 		public void stopRecord()
 		{
-			 final Toast toast = Toast.makeText(getApplicationContext(), "stop record", Toast.LENGTH_SHORT);
-		 	    toast.show();
-		 	    inRecordMode = false;
-				
-				filePath = Environment.getExternalStorageDirectory().getAbsolutePath();
-				if(Constants.inSetVoice)
-				{
-					filePath += "/initialSource.wav";
-				}
-				else
-				{ 
-					filePath += "/testSource.wav";
-				}
-		 	    
-			    mAudioRecord.stop();
+			final Toast toast = Toast.makeText(getApplicationContext(), "stop record", Toast.LENGTH_SHORT);
+	 	    toast.show();
+	 	    mAudioRecord.stop();
+	 	    inRecordMode = false;
+			performFFT();
 		}
 		
-		static int sampleNumber = 500;
+		static int sampleNumber = 50;
+		public void performFFT()
+		{
+			String filepath = Environment.getExternalStorageDirectory().getAbsolutePath();
+    		if(Constants.inSetVoice)
+    		{
+    			filepath += "/initialSource.wav";
+    		}
+    		else
+    		{
+    			if(hasRecorded)
+    			{
+    				filepath += "/testSource.wav";
+    			}
+    		}
+	 	    File file = new File(filepath);
+		    final double[] highscores = new double[sampleNumber];
+		    final double[] recordPoints = new double[sampleNumber];
+	        final int bytesPerSample = 2; // As it is 16bit PCM
+	 	    final double amplification = 100.0; // choose a number as you like
+	 	    
+	 	    try {
+				t.join();
+			} catch (InterruptedException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		try {
+		 	  int  x = (int)(file.length());//in.read(myByteBuffer);
+			  final byte[] byteArr = new byte[x];
+			  	// Read the file into the short array.
+		        InputStream input = new FileInputStream(file);
+		        BufferedInputStream bis = new BufferedInputStream(input);
+		        DataInputStream dataIn = new DataInputStream(bis);
+		        int a = 0;
+		        while (dataIn.available() > 0) {
+		        	byteArr[a] = dataIn.readByte();
+		        	a++;
+		        }
+		        
+		        Thread t2 = new Thread(new Runnable() {
+		 			   @Override
+		 			   public void run() {
+		 				    int arrSize = (int) Math.pow(2,(Math.floor(Math.log(byteArr.length)/Math.log(2))));//(int) Math.pow(2,Math.floor(Math.log(shortArr.length)));
+			 				final double[] micBufferData = new double[byteArr.length];
+
+						    for (int index = 0, floatIndex = 0; index < arrSize - bytesPerSample + 1; index += bytesPerSample, floatIndex++) {
+				 	        double sample = 0;
+				 	        for (int b = 0; b < bytesPerSample; b++) {
+				 	            int v = byteArr[index + b];
+				 	            if (b < bytesPerSample - 1 || bytesPerSample == 1) {
+				 	                v &= 0xFF;
+				 	            }
+				 	            sample += v << (b * 8);
+				 	        }
+				 	        double sample32 = amplification * (sample / 32768.0);
+				 	        micBufferData[floatIndex] = sample32;
+				 	    }
+			 				
+		 			    final Complex[] data = new Complex[arrSize];
+					    for (int c=0; c<arrSize; c++)
+					    {
+					        data[c] = new Complex(micBufferData[c], 0);
+					    }
+					    
+					    Complex[] array = FFT.fft(data);    //calling FFT
+	
+					    for(int b = 0; b < sampleNumber; b++)
+					    {
+					    	RANGE[b] = (int)(arrSize/sampleNumber )* (b+1);
+					    }
+					    RANGE[sampleNumber-1] = arrSize-1;
+					    
+					    for (int freq = 0; freq < arrSize-1; freq++) {
+			    		    //Get the magnitude:
+			    		    double mag = array[freq].abs(); //+ 1;
+			    		    //Find out which range we are in:
+			    		    int index = getIndex(freq);
+
+			    		    //Save the highest magnitude and corresponding frequency:
+			    		    if (mag > highscores[index]) {
+			    		        highscores[index] = mag;
+			    		        recordPoints[index] = freq;
+			    		    }
+					    }
+					    saveVoicePoints(highscores, recordPoints);
+					   // getWavArray();
+			    		//LOG the points 
+			    		for (int c = 0; c < Constants.originalLocation.length/2; c++)
+			    		{
+			    		   Log.d("LAALLALALA", "LOCATION: "+Constants.originalLocation[c] + " MAG: "+Constants.originalMagnitude[c]);
+			    		}
+
+			    		for (int c = 0; c < Constants.testLocation.length/2; c++)
+			    		{
+			    		   Log.d("LAALLALALA2", "LOCATION: "+Constants.testLocation[c] + " MAG: "+Constants.testMagnitude[c]);
+			    		}
+			    		
+			    		if(!Constants.inSetVoice)
+						{
+							compareFFTs();
+						}
+	 			      }
+		 			});
+					t2.start();
+
+			}
+			catch (FileNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 		
 	    @SuppressWarnings("deprecation")
 		public void startPlaying() {
@@ -253,92 +245,14 @@ public class RecordVoice extends Activity{
 	    				filepath += "/testSource.wav";
 	    			}
 	    		}
-	    		
-		 	    File file = new File(filepath);
-		 	    final byte[]s = new byte[bufferSize];
-			    final double[] highscores = new double[sampleNumber];
-			    final double[] recordPoints = new double[sampleNumber];
-		        final int bytesPerSample = 2; // As it is 16bit PCM
-		 	    final double amplification = 100.0; // choose a number as you like
 
-			try {
-			 	  int  x = (int)(file.length());//in.read(myByteBuffer);
-				  //final short[] shortArr = new short[x];
-				  final byte[] byteArr = new byte[x];
-				  	// Read the file into the short array.
-			        InputStream input = new FileInputStream(file);
-			        BufferedInputStream bis = new BufferedInputStream(input);
-			        DataInputStream dataIn = new DataInputStream(bis);
-			        int a = 0;
-			        while (dataIn.available() > 0) {
-			          //shortArr[a] = dataIn.readShort();
-			        	byteArr[a] = dataIn.readByte();
-			          a++;
-			        }
-			        //Log.d("HOW BIG IS IT?!",""+shortArr.length);
-			        
-			        Thread t2 = new Thread(new Runnable() {
-
-			 			   @Override
-			 			   public void run() {
-			 				    int arrSize = (int) Math.pow(2,(Math.floor(Math.log(byteArr.length)/Math.log(2))));//(int) Math.pow(2,Math.floor(Math.log(shortArr.length)));
-				 				final double[] micBufferData = new double[byteArr.length];
-
-							    for (int index = 0, floatIndex = 0; index < arrSize - bytesPerSample + 1; index += bytesPerSample, floatIndex++) {
-					 	        double sample = 0;
-					 	        for (int b = 0; b < bytesPerSample; b++) {
-					 	            int v = byteArr[index + b];
-					 	            if (b < bytesPerSample - 1 || bytesPerSample == 1) {
-					 	                v &= 0xFF;
-					 	            }
-					 	            sample += v << (b * 8);
-					 	        }
-					 	        double sample32 = amplification * (sample / 32768.0);
-					 	        micBufferData[floatIndex] = sample32;
-					 	    }
-				 				
-			 			    final Complex[] data = new Complex[arrSize];
-						    for (int c=0; c<arrSize; c++)
-						    {
-						        data[c] = new Complex(micBufferData[c], 0);
-						    }
-						    
-						    Complex[] array = FFT.fft(data);    //calling FFT
-		
-						    for(int b = 0; b < sampleNumber; b++)
-						    {
-						    	RANGE[b] = (int)(arrSize/sampleNumber )* (b+1);
-						    }
-						    RANGE[sampleNumber-1] = arrSize-1;
-						    
-						    for (int freq = 0; freq < arrSize-1; freq++) {
-				    		    //Get the magnitude:
-				    		    double mag = array[freq].abs(); //+ 1;
-				    		    //Find out which range we are in:
-				    		    int index = getIndex(freq);
-
-				    		    //Save the highest magnitude and corresponding frequency:
-				    		    if (mag > highscores[index]) {
-				    		        highscores[index] = mag;
-				    		        recordPoints[index] = freq;
-				    		    }
-						    }
-						    saveVoicePoints(highscores, recordPoints);
-						   // getWavArray();
-						    		//LOG the points 
-						    		for (int c = 0; c < recordPoints.length; c++)
-						    		{
-						    		    Log.d("LAALLALALA", "LOCATION: "+recordPoints[c] + " MAG: "+highscores[c]);
-						    		}
-				 			      }
-				 			});
-						t2.start();
-
-					// Write and play
-			        int i = 0;
-		 	        FileInputStream fin = new FileInputStream(filepath);
-		 	        DataInputStream dis = new DataInputStream(fin);
-
+	 	    	final byte[]s = new byte[bufferSize];
+				// Write and play
+		        int i = 0;
+	 	        FileInputStream fin;
+				try {
+					fin = new FileInputStream(filepath);
+					DataInputStream dis = new DataInputStream(fin);
 		 	        at.play();
 		 	        while((i = dis.read(s, 0, bufferSize)) > -1)
 		 	        {
@@ -347,51 +261,120 @@ public class RecordVoice extends Activity{
 					    at.stop();
 			 	        at.release();
 				        dis.close();   
+				} catch (FileNotFoundException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
-			catch (FileNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			}
-	    }
-		
-		public void saveVoicePoints(double[] highscore, double[] record)
+		}
+	    
+		double [] trimArray(double [] input, int newsize)
 		{
-			//Full, save the array
-			try {
-				String space = " ";
-				FileOutputStream fos;
-				if(Constants.inSetVoice)
+		double result[] = new double[newsize];
+		for(int i=0;i<newsize;i++) result[i] = input[i];
+		return result;
+		}
+
+		public void compareFFTs()
+		{
+			Log.d("IN COMPAREFFT", ""+Constants.originalLocation.length);
+			Log.d("IN COMPAREFFT", ""+Constants.testLocation.length);
+			if(Constants.originalLocation.length == Constants.testLocation.length)
+			{
+				Log.d("IN COMPAREFFT", "");
+				double sumOriginal = 0;
+				double sumTestOriginal = 0;
+				double[] originalMag = trimArray(Constants.originalMagnitude,Constants.originalMagnitude.length/2);
+				double[] testMag = trimArray(Constants.testMagnitude,Constants.testMagnitude.length/2);
+				int start = 0;
+			
+
+			for(int i = 0; i < 14; i++)	
+			{
+				if(Constants.originalMagnitude[i] < 1000 && Constants.testMagnitude[i] < 1000)
 				{
-					 fos = openFileOutput("setVoice", Context.MODE_PRIVATE);
+					start = i;
+					break;
+				}		
+			}
+			Log.d("THAT STARTING POINT?",""+start);
+			double sumAverage = 0;
+				for(int i = start; i < Constants.originalMagnitude.length; i++)
+				{
+					sumOriginal = Constants.originalMagnitude[i]+sumOriginal;
+					sumTestOriginal = Constants.testMagnitude[i]+sumTestOriginal;
+					sumAverage+= (Constants.originalMagnitude[i]/Constants.testMagnitude[i]);
+					
+				}
+				sumAverage = sumAverage/(Constants.originalMagnitude.length-start);
+				double factor = sumAverage;//-1;
+				Log.d("WHATS FACTOR",""+factor);
+				if(sumOriginal > sumTestOriginal)
+				{
+					//factor = sumTestOriginal/sumOriginal;
+					for(int i = 0; i < originalMag.length; i++)
+					{
+						if(factor <= 1)
+						{	
+							originalMag[i] = originalMag[i]*factor;
+						}
+						else
+						{
+							originalMag[i] = originalMag[i]/factor;
+						}
+					}
 				}
 				else
 				{
-					 fos = openFileOutput("testVoice", Context.MODE_PRIVATE);
-				}
-		        for(int i = 0; i<highscore.length; i++)
-		        {
-		        	try {
-						fos.write(( highscore[i] + "," + record[i] + space).getBytes());
-					} catch (IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+					//factor = sumOriginal/sumTestOriginal;
+					for(int i = 0; i < testMag.length; i++)
+					{
+						if(factor <= 1)
+						{
+							testMag[i] = testMag[i]*factor;
+						}
+						else
+						{
+							testMag[i] = testMag[i]/factor;
+						}
 					}
-		        }
-	        	try {
-		        		fos.close();
-		        		fos = null;
-		        	} 
-		        	catch (IOException e) {
-		        		e.printStackTrace();
-		        	}
-	        	} 
-	        catch (FileNotFoundException e1) {
-	        	e1.printStackTrace();
-	        	}
+				}
+				int totalSum = 0;
+				for(int i = start; i < testMag.length; i++)
+				{
+					totalSum+= Math.abs(testMag[i]-originalMag[i]);
+					Log.d("ABS SUM", ""+totalSum);
+				}
+				
+				for(int i = 0; i < testMag.length; i++)
+				{
+					Log.d("TEST MAGNITUDE", ""+testMag[i]);
+				}
+				for(int i = 0; i < originalMag.length; i++)
+				{
+					Log.d("ORIGINAL MAGNITUDE", ""+originalMag[i]);
+				}
+				
+	
+
+			}
+		}
+	    
+		public void saveVoicePoints(double[] highscore, double[] record)
+		{
+			if(Constants.inSetVoice)
+			{
+				 Constants.originalLocation = record;
+				 Constants.originalMagnitude = highscore;
+			}
+			else
+			{
+				Constants.testLocation = record;
+				 Constants.testMagnitude = highscore;
+			}
 		}
 		
 		public void getWavArray(){
@@ -452,8 +435,7 @@ public class RecordVoice extends Activity{
 	    public void onPeriodicNotification(AudioRecord recorder) 
 	    {
 	    }
-
-	        public void onMarkerReached(AudioRecord recorder) {
+	    public void onMarkerReached(AudioRecord recorder) {
 	       // inRecordMode = false;
 	        }
 	    };
@@ -498,7 +480,6 @@ public class RecordVoice extends Activity{
 	    while(inRecordMode)
 	    {
 	    	int samplesRead =  mAudioRecord.read(buffer, 0, mAudioBufferSampleSize);
-		    Log.d("HOW MANY ARE READDDDDDDD", ""+samplesRead);
 		    try {
 				randomAccessWriter.write(buffer);
 			} catch (IOException e) {
@@ -529,6 +510,7 @@ public class RecordVoice extends Activity{
             return super.onTouchEvent(event);
         }
     	
+    	Thread t;
     	public class MyGestureListener extends GestureDetector.SimpleOnGestureListener {
     		  @SuppressLint("NewApi")
     		@Override
@@ -536,7 +518,16 @@ public class RecordVoice extends Activity{
     			  if(!isRecording)
     			  {
     				  isRecording = true;
-    				  startRecord();
+    				  final Toast toast = Toast.makeText(getApplicationContext(), "start record", Toast.LENGTH_SHORT);
+    			 	    toast.show();
+    				   t = new Thread(new Runnable() {
+    			 	      @Override
+    			 	      public void run() {
+    			 	        startRecord();
+    			 	      }
+    			 	    });
+    			 	    t.start();
+    				  //startRecord();
     			  }
     			  else
     			  {
@@ -558,7 +549,18 @@ public class RecordVoice extends Activity{
     			  return true;
     		  }		  
     	 }
-	}
+    	
+        @Override
+        public void onBackPressed() {
+        	if(Constants.inSetVoice || Constants.inTestVoice)
+        	{
+	            Constants.inTestVoice = false;
+	            Intent goBackMain = new Intent(RecordVoice.this,VoiceSettings.class);
+	            startActivity(goBackMain); 
+	            return;
+        	}
+        }
+}
 	 
 	
 

@@ -11,6 +11,7 @@ import android.os.Handler;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Paint.Style;
@@ -394,7 +395,10 @@ public class SetPoints extends Activity {
 	        	e1.printStackTrace();
 	        	}
 			  Toast.makeText(SetPoints.this, "Coordinates Saved", Toast.LENGTH_SHORT).show();
+			  Constants.picPasswordSet = true;
 			  finish();
+			  Intent goBackMain = new Intent(SetPoints.this,Lockit.class);
+		      startActivity(goBackMain); 
 		}
 	}
 	
@@ -456,6 +460,14 @@ public class SetPoints extends Activity {
 	        	type = "";
 	        }
 	   }
+	 
+	    @Override
+	    public void onBackPressed() {
+	    	finish();
+	        Intent goBackMain = new Intent(SetPoints.this,Lockit.class);
+	        startActivity(goBackMain); 
+	        return;
+	    }   
 }
 
 

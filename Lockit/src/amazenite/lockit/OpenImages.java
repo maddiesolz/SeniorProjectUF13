@@ -64,13 +64,20 @@ public class OpenImages extends Activity {
 	    }
 	 
 	 @Override
-	public void onPause() 
-	{
-		 super.onPause();
-		 getPreview();
-		 //finish();
-		 dialog.dismiss();
-	}
+	 public void onPause() 
+		{
+			 super.onPause();
+			 if (ScreenReceiver.wasScreenOn && !Constants.inOpenImages) {
+				 dialog.dismiss();
+				 finish();
+			 }
+			 else
+			 {
+				 getPreview();
+				 dialog.dismiss();
+			 }
+		}
+		 
 	 	
 	 
 		@Override
@@ -104,7 +111,6 @@ public class OpenImages extends Activity {
 				
 						      try {
 						      intent.putExtra("return-data", true);
-					
 						       startActivityForResult(intent, PICK_FROM_CAMERA);
 						     } catch (ActivityNotFoundException e) {
 						      e.printStackTrace();
@@ -113,6 +119,7 @@ public class OpenImages extends Activity {
 					    	Intent intent = new Intent();
 					    	intent.setType("image/*");
 					    	intent.setAction(Intent.ACTION_GET_CONTENT);
+					    	Log.d("PICK FROM FILE", "WGTTTTTTTTTT" );
 					    	startActivityForResult(Intent.createChooser(intent, "Complete action using"), PICK_FROM_FILE);
 					    }
 				   }
@@ -126,7 +133,9 @@ public class OpenImages extends Activity {
 		                    KeyEvent event) {
 		                // TODO Auto-generated method stub
 		                if (keyCode == KeyEvent.KEYCODE_BACK) {
-		                    finish();
+		                	Intent goBackMain = new Intent(OpenImages.this,Lockit.class);
+							   finish();
+			      		       startActivity(goBackMain); 
 		                }
 		                return true;
 		            }
@@ -148,12 +157,14 @@ public class OpenImages extends Activity {
 		  case PICK_FROM_CAMERA:
 		   if(resultCode != 0){
 		    doCrop();
+		    Log.d("pick from camera", "do crop");
 		   }
 		   break;
 		
 		   case PICK_FROM_FILE: 
 		   if(resultCode != 0){
 		    mImageCaptureUri = imageReturnedIntent.getData();
+		    Log.d("pick from file", "do crop");
 		     doCrop();
 		   }
 		   break;      
@@ -188,6 +199,7 @@ public class OpenImages extends Activity {
 
 	// crop method
   private void doCrop() {
+	  Log.d("in do crop", "indo crop");
 	  final ArrayList<cropOption> cropOptions = new ArrayList<cropOption>();
 	
 	   Intent intent = new Intent("com.android.camera.action.CROP");
@@ -231,25 +243,12 @@ public class OpenImages extends Activity {
 		    builder.setCancelable(true);
 		    builder.setAdapter( adapter, new DialogInterface.OnClickListener() {
 		    public void onClick( DialogInterface dialog, int item ) {
+		    	Log.d("pick from file", "do crop from camra");
 		      startActivityForResult( cropOptions.get(item).appIntent, CROP_FROM_CAMERA);
 		     }
 		    });
 		    
 		     AlertDialog alert = builder.create();
-		     alert.setOnKeyListener(new Dialog.OnKeyListener() {
-
-		            @Override
-		            public boolean onKey(DialogInterface arg0, int keyCode,
-		                    KeyEvent event) {
-		                // TODO Auto-generated method stub
-		                if (keyCode == KeyEvent.KEYCODE_BACK) {
-		                    finish();
-		                    Log.d("back pressed????", "plz work");
-		             //       alert.dismiss();
-		                }
-		                return true;
-		            }
-		        });
 		     alert.show();
 		   }
 	}
