@@ -180,7 +180,11 @@ public class OpenImages extends Activity {
 				    {
 						saveImage(photo);
 						getBaseContext().getFileStreamPath("coordinates").delete();
+						Constants.picPasswordSet = false;
+						Constants.picPasswordHasTested = false;
 						finish();
+						Intent goBackMain = new Intent(OpenImages.this,Lockit.class);
+				        startActivity(goBackMain); 
 				    }catch (IOException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();

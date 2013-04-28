@@ -22,14 +22,15 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
-
 
 public class Lockit extends Activity {	
 	Spinner NumberofGestures;
 	boolean enabled	= false;
 	boolean visible = true;
 	int chosenColor = 0xff33CCCC;
+
 	
 	/** Called when the user clicks the get image button */
 	public void viewPictures(View view) {
@@ -43,8 +44,16 @@ public class Lockit extends Activity {
 	public void debugLockscreen(View view) {
 	    // debug the lockscreen
 		Constants.inTestPic = true;
-		final Intent intent = new Intent(this, LockScreen.class);
-		startActivity(intent);
+		if(Constants.picPasswordSet == false && Constants.inTestPic)
+		{
+			final Toast toast = Toast.makeText(getApplicationContext(), "Please Set Gestures!", Toast.LENGTH_SHORT);
+			toast.show();
+		}
+		else
+		{
+			final Intent intent = new Intent(this, LockScreen.class);
+			startActivity(intent);
+		}
 	}
 	
 	/** Lockscreen Gesture Visibility */
@@ -52,6 +61,16 @@ public class Lockit extends Activity {
 	    // toggle gesture visibility
 		visible = !visible;
 		Constants.gestureVisibility = visible;
+  		ImageView img = (ImageView) findViewById(R.id.visiblebutton);
+  		 if(Constants.gestureVisibility)
+	     {
+  			img.invalidate();
+  			img.setImageResource(R.drawable.setvisible2);
+	     }
+	     else
+	     {
+	    	 img.setImageResource(R.drawable.setvisible);
+	     }
 	}
 	
 	/** Lockscreen Gesture Color Picker */
@@ -61,11 +80,18 @@ public class Lockit extends Activity {
 	}
 	
 	@Override
+	public void onPause() {
+		super.onPause();
+		overridePendingTransition(0,0);
+	}
+	
+	@Override
 	public void onResume() {
 		super.onResume();
 		addItemsToSpinner();
 		addListenerOnSpinnerItemSelection();
 		getPreview();
+		overridePendingTransition(0,0);
 		visible = Constants.gestureVisibility;
 		enabled = Constants.LOCKSCREEN_SETTING;
 		chosenColor = Constants.gestureColor;
@@ -128,35 +154,55 @@ public class Lockit extends Activity {
 		 		 try {
 			        	FileOutputStream fos = openFileOutput("lockimg", Context.MODE_PRIVATE);
 			        	samplePic.compress(CompressFormat.JPEG, 100, fos);
-				        	try {
-				        		fos.close();
-				        		fos = null;
-				        	} 
-				        	catch (IOException e) {
-				        		e.printStackTrace();
-				        	}
-				        	samplePic.recycle();
+			        	try {
+			        		fos.close();
+			        		fos = null;
 			        	} 
-				        catch (FileNotFoundException e1) {
-				        	e1.printStackTrace();
+			        	catch (IOException e) {
+			        		e.printStackTrace();
+			        	}
+			        	samplePic.recycle();
+		        	} 
+			        catch (FileNotFoundException e1) {
+			        	e1.printStackTrace();
 				  }
 	 		}
 	}
 	    
 	public void enablePicPw(View view)
 	{
-		enabled = !enabled;
-		Constants.LOCKSCREEN_SETTING = enabled;
+  		ImageView img2 = (ImageView) findViewById(R.id.enablePicturePassword);
+
 		
-		if(enabled)
+		if(!Constants.picPasswordHasTested)
 		{
-			startService(new Intent(this, myService.class));
+	    	Toast.makeText(Lockit.this, "Please Test Your Gestures Before Enabling!" ,Toast.LENGTH_SHORT).show();
 		}
 		else
 		{
-            stopService(new Intent(this, myService.class));
+			enabled = !enabled;
+			Constants.LOCKSCREEN_SETTING = enabled;
+			
+			if(enabled)
+			{
+				startService(new Intent(this, myService.class));
+			}
+			else
+			{
+	            stopService(new Intent(this, myService.class));
+			}
 		}
 		
+		 if(Constants.LOCKSCREEN_SETTING && Constants.picPasswordHasTested)
+	     {
+  			img2.invalidate();
+  			img2.setImageResource(R.drawable.enable2);
+	     }
+	     else
+	     {
+	    	 img2.setImageResource(R.drawable.enable);
+	     }  
+
 	}
 	
 	@Override
@@ -170,6 +216,31 @@ public class Lockit extends Activity {
 		enabled = Constants.LOCKSCREEN_SETTING;
 		chosenColor = Constants.gestureColor;
 		NumberofGestures.setSelection(Constants.gestureCount-2);
+		ImageView img = (ImageView) findViewById(R.id.pictureSettings);
+	  	img.invalidate();
+	  	img.setImageResource(R.drawable.picture);
+  		ImageView img2 = (ImageView) findViewById(R.id.enablePicturePassword);
+  		ImageView img3 = (ImageView) findViewById(R.id.visiblebutton);
+  		 if(Constants.LOCKSCREEN_SETTING && Constants.picPasswordHasTested)
+		     {
+	  			img2.invalidate();
+	  			img2.setImageResource(R.drawable.enable2);
+		     }
+		     else
+		     {
+		    	 img2.setImageResource(R.drawable.enable);
+		     }  
+ 		 if(Constants.gestureVisibility)
+	     {
+  			img3.invalidate();
+  			img3.setImageResource(R.drawable.setvisible2);
+	     }
+	     else
+	     {
+	    	 img3.setImageResource(R.drawable.setvisible);
+	     }
+		
+		
 	}
 	
 	public void addItemsToSpinner()
@@ -181,7 +252,7 @@ public class Lockit extends Activity {
 		list.add("4");
 		list.add("5");
 		ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this,
-		android.R.layout.simple_spinner_item, list);
+		R.layout.spinner_view, list);
 		dataAdapter.setDropDownViewResource
 
 		(android.R.layout.simple_spinner_dropdown_item);
@@ -202,6 +273,7 @@ public class Lockit extends Activity {
 	
 	public void voiceSettings(View view)
 	{
+		
 		final Intent intent = new Intent(this, VoiceSettings.class);
 		startActivity(intent);
 	}

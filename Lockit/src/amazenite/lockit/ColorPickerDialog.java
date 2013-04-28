@@ -1,9 +1,7 @@
 package amazenite.lockit;
 
 import amazenite.lockit.ColorPickerView.OnColorChangedListener;
-import android.os.Bundle;
-import android.app.Activity;
-import android.view.Menu;
+
 
 /*
  * Copyright (C) 2010 Daniel Nilsson

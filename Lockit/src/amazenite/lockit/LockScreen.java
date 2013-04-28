@@ -2,29 +2,21 @@ package amazenite.lockit;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.lang.reflect.Method;
 import java.util.Scanner;
 
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Looper;
-import android.os.Message;
 import android.os.Vibrator;
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
-import android.content.pm.PackageManager;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Paint.Style;
 import android.graphics.drawable.Drawable;
-import android.util.Log;
 import android.view.GestureDetector;
-import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
@@ -62,6 +54,7 @@ public class LockScreen extends Activity {
 	//@SuppressWarnings("deprecation")
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		//Log.d("on create", "ON CREATEEEEE");
 		 x = -50;
 		 y = -50;
 		 x2 = -50;
@@ -99,7 +92,15 @@ public class LockScreen extends Activity {
 		getCoordinates();
 		isVisible = Constants.gestureVisibility;
 		chosenColor = Constants.gestureColor;
-
+    	//moveTaskToBack (true);				//set activity to background
+		
+//
+//	    Intent alarmintent = new Intent(getApplicationContext(), AlarmReceiver.class);
+//	    PendingIntent sender = PendingIntent.getBroadcast(getApplicationContext(), 0, alarmintent, 0);
+//	    AlarmManager am = (AlarmManager) getSystemService(ALARM_SERVICE);
+//	    am.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + 10000, sender);
+//	    
+		
 	}
 	
 	public void loadNumberGestures()
@@ -196,12 +197,19 @@ public class LockScreen extends Activity {
 		    }
 
 		  
+		  public void clearMoveCoordinates()
+			{
+				float[] temp =  {-50, -50, -50, -50};
+				moveCoordinates = temp;
+			}
+		  
 		  @Override
 		    public void onLongPress(MotionEvent event) 
 		    {
 			  if(Constants.voiceSettingEnable)
 			  {
 				  Constants.inSetVoice = false; 
+				  Constants.voicePassVisible = true;
 				  Intent i=new Intent(LockScreen.this, RecordVoice.class);
 		          startActivity(i);
 			  }	
@@ -469,7 +477,10 @@ public class LockScreen extends Activity {
     				correctGestures=true;
 		    		final Toast toast = Toast.makeText(getApplicationContext(), "Incorrect Password! Please try again.", Toast.LENGTH_SHORT);
 		    	    toast.show();
-    				Handler handler = new Handler();
+   	    
+
+		    	    
+				Handler handler = new Handler();
     		        handler.postDelayed(new Runnable() {
     		           @Override
     		           public void run() {
@@ -536,27 +547,70 @@ public class LockScreen extends Activity {
 		        startActivity(goBackMain); 
 		        return;
 	    	}
+	    	else
+	    	{
+	    		 clearMoveCoordinates();
+				  counter = 0;
+				  final Toast toast = Toast.makeText(getApplicationContext(), "Gestures reset, please make "+Constants.gestureCount+" gestures again.", Toast.LENGTH_SHORT);
+		    	    toast.show();
+					Handler handler = new Handler();
+			        handler.postDelayed(new Runnable() {
+			           @Override
+			           public void run() {
+			               toast.cancel(); 
+			           }
+			        }, 1000);
+				  x = -100;
+				  y = -100;
+				  graphView.invalidate();
+	    	}
 	    }  
-	    
-
-        @Override
-        public boolean onKeyDown(int keyCode, android.view.KeyEvent event) 
-        {
-        	
-              if((keyCode == KeyEvent.KEYCODE_HOME)){
-                   return true;
-              }
-        	
-        	return false;
-        }
-        
+//
+//	    public boolean onKeyDown(int keyCode, KeyEvent event) {
+//	        if (!(event.getKeyCode() == KeyEvent.KEYCODE_POWER)) {
+//	        	moveTaskToBack (true);
+//	        	return true;
+//	        }
+//	        return super.onKeyDown(keyCode, event);
+//	    }
+//        
         @Override
         public void startActivity(Intent intent)
         {
             super.startActivity(intent);
-
         }
+        
+//        @Override
+//        public void onPause() 
+//        {
+//        		super.onPause();
+//        		ActivityManager am = (ActivityManager) LockScreen.this.getSystemService(Activity.ACTIVITY_SERVICE);
+//        		String test = am.getRunningTasks(1).get(0).topActivity.getPackageName();
+//    			Log.d("PLZZZZZZZZZZZZZZZZ WORKKKKKKKKKKKKKKK", "OH HAI          " + test);
+//        		if( am.getRunningTasks(1).get(0).topActivity.getPackageName().contains("launcher"))
+//        		{
+//        			Log.d("PLZZZZZZZZZZZZZZZZ WORKKKKKKKKKKKKKKK", "OH HAI");
+//                    LockScreen.this.finish();
+//                    Intent goBackMain = new Intent(LockScreen.this,Lockit.class);
+//      			     startActivity(goBackMain); 
+//        		}
+//        		return;
+//        } 
 
+//
+//        @Override
+//        public void onPause()
+//        {
+//        	super.onPause();
+//        	Log.d("on RESUME", "ON pauseeeeee");
+//        	if(!Constants.showScreenLock)
+//        	{
+//        		
+//        	}
+//        		
+//        }
 
+        
+        
 }
 

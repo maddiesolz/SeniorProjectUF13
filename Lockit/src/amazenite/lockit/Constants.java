@@ -19,4 +19,10 @@ public class Constants
 		public static boolean inOpenImages = false;
 		public static boolean picPasswordSet = false;
 		public static boolean picPasswordHasTested = false;
+		public static boolean showScreenLock = false;
+		public static boolean voicePassSet = false;
+		public static boolean voicePassHasTested = false;
+		public static boolean voicePassVisible = false;
+	    public static boolean noMatch = false;
+
 }

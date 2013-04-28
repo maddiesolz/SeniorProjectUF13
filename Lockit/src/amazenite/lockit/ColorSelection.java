@@ -11,8 +11,7 @@ import android.graphics.PixelFormat;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
-import android.util.Log;
-import android.widget.Toast;
+
 
 	/*
 	 * Copyright (C) 2010 Daniel Nilsson

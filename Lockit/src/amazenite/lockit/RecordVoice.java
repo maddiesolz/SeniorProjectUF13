@@ -9,9 +9,9 @@ import android.os.Environment;
 import android.os.Vibrator;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
+import android.widget.ImageView;
 import android.widget.Toast;
 import android.support.v4.view.GestureDetectorCompat;
-import android.util.Log;
 import android.media.AudioFormat;
 import android.media.AudioManager;
 import android.media.AudioRecord;
@@ -24,7 +24,6 @@ import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.RandomAccessFile;
@@ -39,6 +38,7 @@ public class RecordVoice extends Activity{
  	  private boolean isScrolling = false;
       private boolean isRecording = false;
       private boolean hasRecorded = false;
+      private boolean toggleButtonSwitch = false;
       String filePath;
 
 	  public void onCreate(Bundle savedInstanceState) {
@@ -48,6 +48,13 @@ public class RecordVoice extends Activity{
 		mDetector = new GestureDetectorCompat(this, new MyGestureListener());
 	    initAudioRecord();
 	    checkIfHasRecorded();
+	    if(hasRecorded && Constants.inSetVoice)
+	    {
+    		ImageView arrowImg = (ImageView) findViewById(R.id.playvoice);
+    		arrowImg.invalidate();
+		    arrowImg.setImageResource(R.drawable.replaybutton);
+	    }
+	    	
 	 }
 	  
 	  public void checkIfHasRecorded()
@@ -70,6 +77,7 @@ public class RecordVoice extends Activity{
 
 	  public void startRecord()
 		{
+
 	 	   inRecordMode = true;
 	 	    
 	 	   filePath = Environment.getExternalStorageDirectory().getAbsolutePath();
@@ -98,15 +106,50 @@ public class RecordVoice extends Activity{
 			}
 	 	    
 	 	  getSamples();
+	 	  if(Constants.inSetVoice)
+	 	  {
+	 	  Constants.voicePassSet = false;
+	 	  }
+	 	  
 		}
 		
 		public void stopRecord()
 		{
-			final Toast toast = Toast.makeText(getApplicationContext(), "stop record", Toast.LENGTH_SHORT);
-	 	    toast.show();
 	 	    mAudioRecord.stop();
 	 	    inRecordMode = false;
 			performFFT();
+			if(Constants.inSetVoice)
+			{
+				Constants.voicePassSet = true;
+				Constants.voicePassHasTested = false;
+			}
+			if(Constants.inTestVoice)
+			{
+				Constants.voicePassHasTested = true;
+
+				if(compareFFTs())
+				{
+					final Toast voiceUnlock = Toast.makeText(getApplicationContext(), "Voice Match!", Toast.LENGTH_SHORT);
+					Constants.noMatch = false;
+					voiceUnlock.show();
+					RecordVoice.this.finish();
+					if(Constants.voicePassVisible)
+					{
+					}
+					else
+					{
+	                    Intent goBackVoice = new Intent(RecordVoice.this,VoiceSettings.class);
+	      			    startActivity(goBackVoice); 
+					}
+				}
+				else
+				{
+					final Toast voiceError = Toast.makeText(getApplicationContext(), "No Match Detected, Please Re-Record.", Toast.LENGTH_SHORT);
+					Constants.noMatch = true;
+					voiceError.show();
+				}
+			}
+		
 		}
 		
 		static int sampleNumber = 50;
@@ -197,20 +240,11 @@ public class RecordVoice extends Activity{
 					    saveVoicePoints(highscores, recordPoints);
 					   // getWavArray();
 			    		//LOG the points 
-			    		for (int c = 0; c < Constants.originalLocation.length/2; c++)
-			    		{
-			    		   Log.d("LAALLALALA", "LOCATION: "+Constants.originalLocation[c] + " MAG: "+Constants.originalMagnitude[c]);
-			    		}
-
-			    		for (int c = 0; c < Constants.testLocation.length/2; c++)
-			    		{
-			    		   Log.d("LAALLALALA2", "LOCATION: "+Constants.testLocation[c] + " MAG: "+Constants.testMagnitude[c]);
-			    		}
-			    		
-			    		if(!Constants.inSetVoice)
-						{
-							compareFFTs();
-						}
+			    	
+//			    		if(!Constants.inSetVoice)
+//						{
+//			    			compareFFTs();
+//						}
 	 			      }
 		 			});
 					t2.start();
@@ -228,7 +262,7 @@ public class RecordVoice extends Activity{
 	    @SuppressWarnings("deprecation")
 		public void startPlaying() {
 			if(inRecordMode==false) {
-				final Toast toast = Toast.makeText(getApplicationContext(), "play record", Toast.LENGTH_SHORT);
+				final Toast toast = Toast.makeText(getApplicationContext(), "Play Back", Toast.LENGTH_SHORT);
 		 	    toast.show();
 				int minBufferSize = AudioTrack.getMinBufferSize(8000, AudioFormat.CHANNEL_CONFIGURATION_MONO, AudioFormat.ENCODING_PCM_16BIT);
 				AudioTrack at =  new AudioTrack(AudioManager.STREAM_MUSIC, 8000, AudioFormat.CHANNEL_CONFIGURATION_MONO, AudioFormat.ENCODING_PCM_16BIT, minBufferSize, AudioTrack.MODE_STREAM);
@@ -278,13 +312,12 @@ public class RecordVoice extends Activity{
 		return result;
 		}
 
-		public void compareFFTs()
+		public boolean compareFFTs()
 		{
-			Log.d("IN COMPAREFFT", ""+Constants.originalLocation.length);
-			Log.d("IN COMPAREFFT", ""+Constants.testLocation.length);
+
+			int totalSum = 0;
 			if(Constants.originalLocation.length == Constants.testLocation.length)
 			{
-				Log.d("IN COMPAREFFT", "");
 				double sumOriginal = 0;
 				double sumTestOriginal = 0;
 				double[] originalMag = trimArray(Constants.originalMagnitude,Constants.originalMagnitude.length/2);
@@ -300,7 +333,7 @@ public class RecordVoice extends Activity{
 					break;
 				}		
 			}
-			Log.d("THAT STARTING POINT?",""+start);
+
 			double sumAverage = 0;
 				for(int i = start; i < Constants.originalMagnitude.length; i++)
 				{
@@ -311,7 +344,6 @@ public class RecordVoice extends Activity{
 				}
 				sumAverage = sumAverage/(Constants.originalMagnitude.length-start);
 				double factor = sumAverage;//-1;
-				Log.d("WHATS FACTOR",""+factor);
 				if(sumOriginal > sumTestOriginal)
 				{
 					//factor = sumTestOriginal/sumOriginal;
@@ -342,25 +374,34 @@ public class RecordVoice extends Activity{
 						}
 					}
 				}
-				int totalSum = 0;
+			
 				for(int i = start; i < testMag.length; i++)
 				{
 					totalSum+= Math.abs(testMag[i]-originalMag[i]);
-					Log.d("ABS SUM", ""+totalSum);
 				}
 				
-				for(int i = 0; i < testMag.length; i++)
-				{
-					Log.d("TEST MAGNITUDE", ""+testMag[i]);
-				}
-				for(int i = 0; i < originalMag.length; i++)
-				{
-					Log.d("ORIGINAL MAGNITUDE", ""+originalMag[i]);
-				}
+//				for(int i = 0; i < testMag.length; i++)
+//				{
+//					Log.d("TEST MAGNITUDE", ""+testMag[i]);
+//				}
+//				for(int i = 0; i < originalMag.length; i++)
+//				{
+//					Log.d("ORIGINAL MAGNITUDE", ""+originalMag[i]);
+//				}
 				
 	
 
 			}
+			
+			if(totalSum <= 1000)
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+			
 		}
 	    
 		public void saveVoicePoints(double[] highscore, double[] record)
@@ -377,32 +418,7 @@ public class RecordVoice extends Activity{
 			}
 		}
 		
-		public void getWavArray(){
-			try {
-				File file;
-				if(Constants.inSetVoice)
-				{
-					 file = getBaseContext().getFileStreamPath("setVoice");
-				}
-				else
-				{
-					 file = getBaseContext().getFileStreamPath("testVoice");
-				}
-				Scanner sc = new Scanner(new File(file.getAbsolutePath()));
-				String line = sc.nextLine();			
-				String[] wavFile = line.split("\\s+");
-				
-					for(int i = 0; i < wavFile.length; i ++)
-					{
-						Log.d("sup", "" + wavFile[i]);
-					}
-			
-			}
-	        catch (FileNotFoundException e1) {
-	        	e1.printStackTrace();
-	        	}
-		}
-		
+
 		//Find out in which range
 		public static final int[] RANGE = new int[sampleNumber];
 		public static int getIndex(int freq) {
@@ -504,22 +520,52 @@ public class RecordVoice extends Activity{
             if(event.getAction() == MotionEvent.ACTION_UP) {
                 if(isScrolling ) {
                     isScrolling  = false;
-                    startPlaying();
+                    if(Constants.inSetVoice)
+                    {
+	                    startPlaying();
+                    }
                 };
             }
             return super.onTouchEvent(event);
         }
     	
     	Thread t;
+    	Thread t2;
     	public class MyGestureListener extends GestureDetector.SimpleOnGestureListener {
     		  @SuppressLint("NewApi")
+    		    
     		@Override
     		    public boolean onSingleTapConfirmed(MotionEvent event) {
+    			  
+    			  toggleButtonSwitch = !toggleButtonSwitch;
+    			  
+    		    		ImageView img = (ImageView) findViewById(R.id.playvoice);
+
+    		 	    if(img != null)
+    		 	    {
+    		 		     img.invalidate();
+    		 		     if(toggleButtonSwitch)
+    		 		     {
+    		 		    	 img.setImageResource(R.drawable.stopbutton);
+    		 		     }
+    		 		     else
+    		 		     {
+    		 			    if(hasRecorded && Constants.inSetVoice)
+    		 			    {
+           		 	    	 	img.setImageResource(R.drawable.replaybutton);
+    		 			    }
+    		 			    else
+    		 			    {
+    		 			    	img.setImageResource(R.drawable.playbutton);
+    		 			    }
+
+    		 		     }
+    		 		}
+    			  
+    			  
     			  if(!isRecording)
     			  {
     				  isRecording = true;
-    				  final Toast toast = Toast.makeText(getApplicationContext(), "start record", Toast.LENGTH_SHORT);
-    			 	    toast.show();
     				   t = new Thread(new Runnable() {
     			 	      @Override
     			 	      public void run() {
@@ -539,6 +585,9 @@ public class RecordVoice extends Activity{
     		    	if( v.hasVibrator()) {
     					 v.vibrate(50);
     		    	}
+    		    	
+
+    		    	
     		        return true;
     		    }
     	  			  

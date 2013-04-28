@@ -1,11 +1,11 @@
 package amazenite.lockit;
 
-import android.app.KeyguardManager;
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.IBinder;
+import android.util.Log;
 public class myService  extends Service{
 	      BroadcastReceiver mReceiver;
 	      // Intent myIntent;
@@ -21,6 +21,8 @@ public class myService  extends Service{
 	            IntentFilter filter = new IntentFilter(Intent.ACTION_SCREEN_ON);
 	            filter.addAction(Intent.ACTION_SCREEN_OFF);
 	            filter.addAction(Intent.ACTION_USER_PRESENT);
+
+	            Log.d("IS THE FREAKING SERICE STARTED OR WHAT","HUH!?");
 	            
 	            mReceiver = new ScreenReceiver();
 	            registerReceiver(mReceiver, filter);
